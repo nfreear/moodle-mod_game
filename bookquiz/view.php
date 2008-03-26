@@ -1,4 +1,4 @@
-<?PHP // $Id: view.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?PHP // $Id: view.php,v 1.2 2008/03/26 21:56:39 bdaloukas Exp $
 
 require_once('../../config.php');
 require_once('lib.php');
@@ -54,7 +54,7 @@ unset($id);
 unset($chapterid);
 
 /// chapter is hidden for students
-if (!$allowedit $chapter->hidden) {
+if (!$allowedit and $chapter->hidden) {
     error('Error reading book chapters.');
 }
 

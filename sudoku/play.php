@@ -86,7 +86,7 @@ function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow=false, $show
 {
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
 
-	game_sudoku_showsudoku( $sudoku->data, $sudoku->guess, true, $showsolution, $offsetquestions, $correctquestions, $id, $attempt);
+	game_sudoku_showsudoku( $sudoku->data, $sudoku->guess, true, $showsolution, $offsetquestions, $correctquestions, $id, $attempt, $game);
 	switch( $game->sourcemodule)
 	{
 	case 'quiz':
@@ -187,7 +187,7 @@ function game_sudoku_getclosed( $data)
 	return $a;
 }
 
-function game_sudoku_showsudoku( $data, $guess, $bShowLegend, $bShowSolution, $offsetquestions, $correctquestions, $id, $attempt)
+function game_sudoku_showsudoku( $data, $guess, $bShowLegend, $bShowSolution, $offsetquestions, $correctquestions, $id, $attempt, $game)
 {
 	global $CFG;
 	
@@ -391,16 +391,22 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
 			error( 'game_sudoku_showquestions_quiz: problem');
 		}
 		
-		$state->last_graded = 0;
+		$state->last_graded = new StdClass;
+		$state->last_graded->event = QUESTION_EVENTOPEN;
 		$state->event = QUESTION_EVENTOPEN;
+		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';
+		$cmoptions->optionflags = 0;
+		$options->correct_responses = 0;
+		$options->feedback = 0;
+		$options->readonly = 0;
 
 		if( $showsolution){
 			$state->responses = $QTYPES[$question->qtype]->get_correct_responses($question, $state);
 		}
 		
-		print_question($question, $state, $number, $cmoptions);
+		print_question($question, $state, $number, $cmoptions, $options);
     }
 
     echo "</div>";

@@ -2,7 +2,7 @@
 /**
  * This script lists student attempts
  *
- * @version $Id: report.php,v 1.1 2008/03/26 17:40:44 arborrow Exp $
+ * @version $Id: report.php,v 1.2 2008/04/21 17:56:02 bdaloukas Exp $
  * @author bdaloukas.
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
@@ -48,7 +48,7 @@ class game_report extends game_default_report {
                         if (!record_exists('game_attempts', 'userid', $userid, 'gameid', $game->id)) {
                             delete_records('game_grades', 'userid', $userid,'gameid', $game->id);
                         } else {
-                            game_save_best_grade( $game, $userid);
+                            game_save_best_score( $game, $userid);
                         }
                     }
                 }

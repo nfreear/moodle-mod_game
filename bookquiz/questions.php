@@ -1,8 +1,8 @@
-<?php // $Id: questions.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php // $Id: questions.php,v 1.2 2008/05/13 22:52:10 bdaloukas Exp $
 /**
  * The script supports book
  *
- * @version $Id: questions.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+ * @version $Id: questions.php,v 1.2 2008/05/13 22:52:10 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
  **/
@@ -40,11 +40,28 @@
 	
 	$a = array();
 	$a[ 0] = '';
-	if( ($recs = get_records_select( 'question_categories', "course=$cm->course", 'name', 'id,name')) != false){
-		foreach( $recs as $rec){
-			$a[ $rec->id] = $rec->name;
+	$select = '';
+	$recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
+	foreach( $recs as $rec){
+		if( array_key_exists( 'course', $rec)){
+			$select = "course=$cm->course";
+		}else{
+			$context = get_context_instance(50, $cm->course);
+	    		$select = " contextid in ($context->id)";
 		}
+		break;
 	}
+
+	$a = array();
+        if( $recs = get_records_select( 'question_categories', $select, 'id,name')){
+            foreach( $recs as $rec){
+                $s = $rec->name;
+                if( ($count = count_records_select( 'question', "category={$rec->id}")) != 0){
+                    $s .= " ($count)";
+                }
+                $a[ $rec->id] = $s;
+            }
+        }
 	
 	$sql = "SELECT chapterid, COUNT(*) as c ".
 				"FROM {$CFG->prefix}game_bookquiz_questions,{$CFG->prefix}question ".

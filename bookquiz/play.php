@@ -142,7 +142,7 @@ require( 'toc.php');
 $tocwidth = '10%';
 
 	if( $showquestions){
-		game_bookquiz_showquestions( $id, $questionid, $chapter->id, $nextid, $scoreattempt);
+		game_bookquiz_showquestions( $id, $questionid, $chapter->id, $nextid, $scoreattempt, $game);
 	}
 
 	
@@ -206,7 +206,7 @@ $tocwidth = '10%';
 
 <?php
 	if( $showquestions){
-		game_bookquiz_showquestions( $id, $questionid, $chapter->id, $nextid, $scoreattempt);
+		game_bookquiz_showquestions( $id, $questionid, $chapter->id, $nextid, $scoreattempt, $game);
 	}
 }
 
@@ -225,7 +225,7 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz)
 	}
 }
 
-function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapterid, $scoreattempt)
+function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapterid, $scoreattempt, $game)
 {
 	$onlyshow  = false;
 	$showsolution = false;
@@ -258,23 +258,35 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
     foreach ($questions as $question) {
 	
 		global $QTYPES;
-		$cmoptions = 0;
+		
+		unset( $cmoptions);
+        $cmoptions->course = $game->course;
+        $cmoptions->optionflags->optionflags = 0;
+		$cmoptions->id = 0;
+		$cmoptions->shuffleanswers = 1;
+		
 		$attempt = 0;
 		if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
 			error( 'game_bookquiz_showquestions: problem');
 		}
 		
-		$state->last_graded = 0;
+		$state->last_graded = new StdClass;
+		$state->last_graded->event = QUESTION_EVENTOPEN;
 		$state->event = QUESTION_EVENTOPEN;
+		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';
+		$cmoptions->optionflags = 0;
+		$options->correct_responses = 0;
+		$options->feedback = 0;
+		$options->readonly = 0;
 
 		if( $showsolution){
 			$state->responses = $QTYPES[$question->qtype]->get_correct_responses($question, $state);
 		}
 		
 		$number++;
-		print_question($question, $state, $number, $cmoptions);
+		print_question($question, $state, $number, $cmoptions, $options);
     }
 
     echo "</div>";

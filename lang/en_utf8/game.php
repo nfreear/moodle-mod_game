@@ -41,8 +41,8 @@ $string[ 'grade'] = 'Grade';
 $string[ 'game_bookquiz'] = 'Book with questions';
 $string[ 'cryptex_win'] = 'Congratulations !!!!';
 $string[ 'cryptex_giveanswer'] = 'Give the answer';
-$string[ 'convertfrom1'] = 'ΆΈΉΊΌΎΏ';
-$string[ 'convertto1'] = 'ΑΕΗΙΟΥΩ';
+$string[ 'convertfrom1'] = '';
+$string[ 'convertto1'] = '';
 $string[ 'hangman_gradeinstance'] = 'Grade in whole game';
 $string[ 'hangman_grade'] = 'Grade';
 $string[ 'hangman_letters'] = 'Letters: ';
@@ -51,7 +51,7 @@ $string[ 'hangman_restletters_many'] = 'You have <b>$a</b> tries';
 $string[ 'hangman_restletters_one'] = 'You have <b>ONLY 1</b> try';
 $string[ 'hangman_restletters'] = 'You have <b>$a</b> tries';
 $string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
+$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'letters';
 $string[ 'letter'] = 'letter';
 $string[ 'millionaire_info_people'] = 'People say';
@@ -209,8 +209,8 @@ $string['overview'] = 'Overview';
 $string['allstudents'] = 'Show all $a';
 
 //from quiz_overview.php
-$string['allattempts'] = 'Δείξε όλες τις προσπάθειες';
-$string['allstudents'] = 'Δείξε όλα $a';
+$string['allattempts'] = 'Show all tries';
+$string['allstudents'] = 'Show all $a';
 
 //English 
 $string['attemptduration'] = 'Time taken';

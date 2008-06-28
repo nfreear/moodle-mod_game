@@ -454,29 +454,31 @@ function game_questions_shortanswer_question( $game)
 	//score is between 0 and 1
 	function game_updateattempts( $game, $attempt, $score, $finished)
 	{
-		$updrec->id = $attempt->id;
-		$updrec->timelastattempt = time();
-		$updrec->lastip = getremoteaddr();
-		if( isset( $_SERVER[ 'REMOTE_HOST'])){
-			$updrec->lastremotehost = $_SERVER[ 'REMOTE_HOST'];
-		}
-		else{
-			$updrec->lastremotehost = gethostbyaddr( $updrec->lastip);
-		}
+	    if( $attempt != false){	    
+		    $updrec->id = $attempt->id;
+    		$updrec->timelastattempt = time();
+    		$updrec->lastip = getremoteaddr();
+	    	if( isset( $_SERVER[ 'REMOTE_HOST'])){
+	    		$updrec->lastremotehost = $_SERVER[ 'REMOTE_HOST'];
+	    	}
+	    	else{
+	    		$updrec->lastremotehost = gethostbyaddr( $updrec->lastip);
+	    	}
 
-		if( $score >= 0){
-			$updrec->score = $score;
-		}
-		
-		if( $finished){
-			$updrec->timefinish = $updrec->timelastattempt;
-		}
-		
-		$updrec->attempts = $attempt->attempts + 1;
+	    	if( $score >= 0){
+	    		$updrec->score = $score;
+	    	}
 
-		if( !update_record( 'game_attempts', $updrec)){
-			error( "game_updateattempts: Can't update game_attempts id=$updrec->id");
-		}
+	    	if( $finished){
+	    		$updrec->timefinish = $updrec->timelastattempt;
+		    }
+		
+    		$updrec->attempts = $attempt->attempts + 1;
+
+	    	if( !update_record( 'game_attempts', $updrec)){
+	    		error( "game_updateattempts: Can't update game_attempts id=$updrec->id");
+	    	}
+	    }
 		
 		//Update table game_grades
 		if( $finished){

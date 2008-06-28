@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php  // $Id: attempt.php,v 1.2 2008/06/28 08:55:15 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+ * @version $Id: attempt.php,v 1.2 2008/06/28 08:55:15 bdaloukas Exp $
  * @package game
  **/
  
@@ -78,7 +78,7 @@
 		game_hiddenpicture_check_mainquestion( $id, $game, $attempt, $detail, $endofgame);
         break;        
 	case "":
-		game_create( $game, $id, $forcenew);
+		game_create( $game, $id, $forcenew, $course);
 		break;
 	default:
 		error( 'Not found action='.$action);
@@ -87,9 +87,9 @@
     print_footer($course);
 
 
-	function game_create( $game, $id, $forcenew)
+	function game_create( $game, $id, $forcenew, $course)
 	{
-		global $USER;
+		global $USER, $CFG;
 		
 		$attempt = game_getattempt( $game, $detail);
 
@@ -132,7 +132,8 @@
 			game_hiddenpicture_continue( $id, $game, $attempt, $detail);
 			break;
 		case '':
-			error( get_string( 'useupdategame', 'game'));
+			echo get_string( 'useupdategame', 'game');
+			print_continue($CFG->wwwroot . '/course/view.php?id=' . $course->id);
 			break;
 		default:
 			error( "Game {$game->gamekind} not found");

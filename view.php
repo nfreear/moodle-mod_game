@@ -1,4 +1,4 @@
-<?php  // $Id: view.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php  // $Id: view.php,v 1.2 2008/06/28 08:55:15 bdaloukas Exp $
 
 // This page prints a particular instance of game
 
@@ -43,7 +43,7 @@
     // Check login and get context.
     require_login($course->id, false, $cm);
     
-    if( $USER->username == 'guest'){       
+    if( $USER->username == 'guest'){
         redirect( "{$CFG->wwwroot}/mod/game/attempt.php?id=$id");
     }
     
@@ -116,7 +116,12 @@ if( isteacher( $game->course, $USER->id)){
 }        
 //    }
     //if (has_capability('mod/game:attempt', $context)) {
+    if( $game->gamekind != ''){
+        //Only if the teacher sets the parameters allow playing
 		game_view_capability_attempt( $game, $context, $course, $available, $cm);
+    }else{
+        echo get_string( 'useeditgame', 'game');
+    }
 	//}
     // Should we not be seeing if we need to print right-hand-side blocks?
 

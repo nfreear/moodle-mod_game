@@ -75,6 +75,7 @@ $string[ 'timestart'] = 'Start';
 $string[ 'and'] = 'and';
 $string[ 'snakes_background'] = 'Background';
 $string[ 'useupdategame'] = 'Use the button \"Update this game\" to set the details of the game';
+$string[ 'useeditgame'] = 'Use the Edit to set the details of the game';
 $string[ 'cryptex_nowords'] = 'Not found any word';
 $string[ 'millionaire_nowords'] = 'Not found any word';
 $string[ 'tries'] = 'Tries';

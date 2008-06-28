@@ -14,6 +14,7 @@ function game_snakes_continue( $id, $game, $attempt, $snakes)
 	$newrec->snakesdatabaseid = $game->param3;
 	$newrec->position = 1;
 	$newrec->queryid = 0;
+    $newrec->dice = rand( 1, 6);
 	if( !game_insert_record(  'game_snakes', $newrec)){
 		error( 'game_snakes_continue: error inserting in game_snakes');
 	}
@@ -28,7 +29,6 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 	global $CFG;
 	
 	$board = get_record_select( 'game_snakes_database', "id=$snakes->snakesdatabaseid");
-	$pos = game_snakes_computeplayerposition( $snakes, $board);
 
 	if( $snakes->position > $board->cols * $board->rows && $snakes->queryid <> 0){
 		$finish = true;
@@ -68,16 +68,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 
 <?php
 if( $finish  == false){
-?>
-<DIV ID="player1" STYLE="position:relative; left:<?php p( $pos->x);?>px;top:<?php p( $pos->y - $board->height);?>px; width:0px; height:23px;"><br>
-<center><img src="snakes/1/player1.gif"></img></center>
-</DIV>	
-
-
-	<DIV ID="dice" STYLE="position:relative; left:<?php p( $board->width + round($board->width/3));?>px;top:<?php p( round($board->height/2) - $board->height);?>px; width:0px; height:0px;"><br>
-	<img src="snakes/1/dice<?php  p( $snakes->dice);?>.gif"></img>
-	</DIV>	
-<?php
+    game_snakes_showdice( $snakes, $board);
 }
 ?>
 		</td>
@@ -88,6 +79,20 @@ if( $finish  == false){
 	if( $game->bottomtext != ''){
 		echo '<br><br>'.$game->bottomtext;
 	}
+}
+
+function game_snakes_showdice( $snakes, $board)
+{
+	$pos = game_snakes_computeplayerposition( $snakes, $board);
+?>
+<DIV ID="player1" STYLE="position:relative; left:<?php p( $pos->x);?>px;top:<?php p( $pos->y - $board->height);?>px; width:0px; height:23px;"><br>
+<center><img src="snakes/1/player1.gif"></img></center>
+</DIV>	
+
+	<DIV ID="dice" STYLE="position:relative; left:<?php p( $board->width + round($board->width/3));?>px;top:<?php p( round($board->height/2) - $board->height);?>px; width:0px; height:0px;"><br>
+	<img src="snakes/1/dice<?php  p( $snakes->dice);?>.gif"></img>
+	</DIV>	
+<?php
 }
 
 function game_snakes_computeplayerposition( $snakes, $board)
@@ -130,10 +135,8 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query)
 		$query->sourcemodule = $game->sourcemodule;
 		$query->questionid = $rec->questionid;
 		$query->glossaryentryid = $rec->glossaryentryid;
-		//$query->questiontext = $rec->questiontext;
 		$query->score = 0;
 		$query->timelastattempt = time();
-		//$query->answertext = $rec->answertext;
 		if( !($query->id = insert_record( 'game_queries', $query))){
 			error( "Can't insert to table game_queries");
 		}

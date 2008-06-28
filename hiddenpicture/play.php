@@ -205,43 +205,7 @@ function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpict
     
     $cells = substr( $cells, 1);
     $foundcells = substr( $foundcells, 1);
-	//$filename = $query->attachment;
-    //$filenamenumbers = "$CFG->dirroot/mod/game/hiddenpicture/numbers.png";
-    //$cols = $game->param1;
-    //$rows = $game->param2;
     game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, true);
-/*
-    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p=$filename&n=$filenamenumbers";
-    $imagesrc = "hiddenpicture/picture.php?$params";  
-
-    $size = getimagesize ($filename);
-    if( $game->param4 > 10){
-        $width = $game->param4;
-        $height = $size[ 1] * $width / $size[ 0];        
-    }else if( $game->param5 > 10){
-        $height = $game->param5;
-        $width = $size[ 0] * $height / $size[ 1];
-    }else
-    {
-        $width = $size[ 0];
-        $height = $size[ 1];
-    }
-    
-    echo "<IMG SRC=\"$imagesrc\" width=$width USEMAP=\"#mapname\" BORDER=\"1\">\r\n";
-    echo "<MAP NAME=\"mapname\">\r\n";
-    $pos=0;
-    for($row=0; $row < $rows; $row++){
-        for( $col=0; $col < $cols; $col++){
-            $pos++;
-            $x1 = $col * $width / $cols;
-            $y1 = $row * $height / $rows;
-            $x2 = $x1 + $width / $cols;
-            $y2 = $y1 + $height / $rows;
-            $q = "a$pos";
-            echo "<AREA SHAPE=\"rect\" COORDS=\"$x1,$y1,$x2,$y2\" HREF=\"#$q\" ALT=\"$pos\">\r\n";
-        }
-    }
-    echo "</MAP>";*/
 }
 
 function game_hiddenpicture_showquestion_glossary( $id, $query)

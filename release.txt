@@ -1,3 +1,9 @@
+28/06/08
+    * Removes greeks from English translation
+    * CONTRIB-427 : At the end of game "the hidden picture" doesn't show the hidden picture
+    * CONTRIB-426 : The first time doesn't show the dice
+    * CONTRIB-446 : When an answer is wrong in millionaire game, the correct answer shown by the system is also wrong
+
 ver 1.6.8
     * Fix: Show grades only to students
     * New: Translation to Basque (thanks to Juan Ezeiza)

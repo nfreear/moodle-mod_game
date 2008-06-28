@@ -285,7 +285,7 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 
 	$count = count( $aAnswer);
 	for($i=1; $i <= $count; $i++){
-		$sel = rand(0, $count-1);
+		$sel = mt_rand(0, $count-1);
 		
 		$temp = array_splice( $aAnswer, $sel, 1);
 		$aAnswer[ ] = $temp[ 0];
@@ -482,7 +482,7 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
 
 		$score = $millionaire->level / 15;
 		
-		game_update_queries( $attempt, $query, $scorequestion, $answer);
+		game_update_queries( $game, $attempt, $query, $scorequestion, $answer);
 		game_updateattempts( $game, $attempt, $score, $finish);
 
 		$updrec->id = $millionaire->id;
@@ -508,7 +508,7 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
 		{
 			//wrong answer
 			$info = get_string( 'millionaire_info_wrong_answer', 'game').
-					'<br><br><b><center>'.$aAnswer[ $query->correct].'</b>';
+					'<br><br><b><center>'.$aAnswer[ $query->correct-1].'</b>';
 				
 			$millionaire->state = 15;
 			game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, $info);

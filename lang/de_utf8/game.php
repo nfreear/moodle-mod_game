@@ -1,10 +1,10 @@
-﻿<?php
+<?php
 //By Dimitris Mpelos
 $string[ 'after_add_can_change_game'] = 'Erst nachdem die Änderungen gespeichert sind, kann man das Spiel ändern.';
 $string[ 'and'] = 'und';
 $string[ 'bookquiz_import_odt'] = 'OpenOffice Datei hinzufügen (odt)';
-$string[ 'convertfrom1'] = 'ΆΈΉΊΌΎΏ';
-$string[ 'convertto1'] = 'ΑΕΗΙΟΥΩ';
+$string[ 'convertfrom1'] = '';
+$string[ 'convertto1'] = '';
 
 $string[ 'cross_across'] = 'waagerecht';
 $string[ 'cross_checkbutton'] = 'Kreuzworträtsel kontrollieren';
@@ -72,7 +72,7 @@ $string[ 'hangman_win'] = 'Glückwünsch!';
 $string[ 'hangman_wrongnum'] = 'Falsch: %%d out of %%d';
 
 $string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
+$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'Buchstaben';
 $string[ 'letter'] = 'Buchstabe';
 

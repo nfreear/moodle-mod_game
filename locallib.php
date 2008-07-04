@@ -537,7 +537,11 @@ function game_questions_shortanswer_question( $game)
 		
 		$updrec->id = $recq->id;
 		$updrec->timelastattempt = time();
-		$updrec->score = $score;
+		
+        if( $score >= 0){
+            $updrec->score = $score;
+        }
+		
 		if( $studentanswer != ''){
 			$updrec->studentanswer = $studentanswer;
 		}

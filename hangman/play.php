@@ -31,7 +31,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 			continue;
 		}
 
-        $answer = game_upper( $rec->answertext);
+        $answer = game_upper( $rec->answertext, $game->language);
         
         $answer2 = $answer;
         if( $game->param7){
@@ -41,6 +41,9 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
         if( $game->param8){
             //Have to delete -
             $answer2 = str_replace( '-', '', $answer2);
+        }
+        if( $game->language == ''){
+            $game->language = game_detectlanguage( $answer2);
         }
         $allletters = game_getallletters( $answer2, $game->language);
 		

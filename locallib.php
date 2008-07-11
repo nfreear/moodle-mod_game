@@ -19,12 +19,32 @@ $GAME_GRADE_METHOD = array ( GAME_GRADEMETHOD_HIGHEST => get_string("gradehighes
 /**#@-*/
 
 
-function game_upper( $str)
+function game_upper( $str, $lang='')
 {
+    global  $CFG;
+    
 	$textlib = textlib_get_instance();
-
-    $str = $textlib->strtoupper( $str);
-
+    $str = $textlib->strtoupper( $str);	
+	
+    if( $lang != ''){
+        $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
+        if (file_exists($langfile)) {
+            if ($result = get_string_from_file('convertfrom1', $langfile, "\$convert1")) {
+                eval($result);
+                if ($result = get_string_from_file('convertto1', $langfile, "\$convert2")) {
+                    eval($result);
+                    if( $convert1 != '' and $convert2 != ''){
+		                $len = $textlib->strlen( $convert1);
+                        for($i=0; $i < $len; $i++){
+                            $str = str_replace( $textlib->substr( $convert1, $i, 1), $textlib->substr( $convert2, $i, 1), $str);
+                        }
+                        return $str;
+                    }
+                }
+            }
+       }
+    }
+	
     $convert1 = get_string( 'convertfrom1', 'game');
     if( $convert1 != ""){
 		$convert2 = get_string( 'convertto1', 'game');
@@ -293,6 +313,32 @@ function game_questions_selectrandom_detail( $table, $select, $id_field="id", $c
 	}
 }
 
+//Tries to detect the language of word
+function game_detectlanguage( $word){
+    global $CFG;
+    
+    $langs = get_list_of_languages();
+    
+    foreach( $langs as $lang => $name){
+        $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
+        if (file_exists($langfile)) {
+            for( $i=1; $i <= 2; $i++){            
+                if ($result = get_string_from_file('lettersall'.$i, $langfile, "\$letters")) {
+                    eval($result);
+                    if( $letters != ''){
+                        $word2 = game_upper( $word, $lang);
+                        if( hangman_existall( $word2, $letters)){
+                            return $lang;
+                		}
+                    }
+                }
+            }
+       }    
+    }
+    
+    return false;
+}
+
 //The words maybe are in two languages e.g. greek or english
 //so I try to find the correct one.
 function game_getallletters( $word, $lang='')
@@ -302,16 +348,17 @@ function game_getallletters( $word, $lang='')
     if( $lang != ''){
         $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
         if (file_exists($langfile)) {
-            if ($result = get_string_from_file('lettersall1', $langfile, "\$letters")) {
-                eval($result);
-                $letters = game_upper( $letters);
-                if( $letters != ''){
-                    if( hangman_existall( $word, $letters)){
-                        return $letters;
-            		}                    
+            for( $i=1; $i <= 2; $i++){            
+                if ($result = get_string_from_file('lettersall'.$i, $langfile, "\$letters")) {
+                    eval($result);
+                    if( $letters != ''){
+                        if( hangman_existall( $word, $letters)){
+                            return $letters;
+                		}
+                    }
                 }
             }
-       }        
+       }
     }
     
     for( $i=1; $i <= 2; $i++){
@@ -1048,23 +1095,7 @@ function game_get_question_states(&$questions, $cmoptions, $attempt, $lastattemp
     $states = get_records_sql($sql);
 	
     // loop through all questions and set the last_graded states
-    foreach ($ids as $i) {
-/*		
-		// create a new empty state
-		$states[$i] = new object;
-
-        // now fill/overide initial values
-        $states[$i]->attempt = $attempt->id;
-        $states[$i]->question = (int) $i;
-        $states[$i]->seq_number = 0;
-		$states[$i]->timestamp = $attempt->timestart;
-        $states[$i]->event = ($attempt->timefinish) ? QUESTION_EVENTCLOSE : QUESTION_EVENTOPEN;
-        $states[$i]->grade = 0;
-        $states[$i]->raw_grade = 0;
-        $states[$i]->penalty = 0;
-        $states[$i]->sumpenalty = 0;
-*/		
-
+    foreach ($ids as $i) {	
 		// Create the empty question type specific information
         if (!$QTYPES[$questions[$i]->qtype]->create_session_and_responses(
 			$questions[$i], $states[$i], $cmoptions, $attempt)) {

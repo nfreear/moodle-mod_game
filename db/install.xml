@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="2008031401" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="2008071101" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -34,7 +34,8 @@
             <FIELD NAME="review" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="popup" NEXT="attempts" />
             <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="review" NEXT="glossaryid2"/>
             <FIELD NAME="glossaryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="attempts" NEXT="glossarycategoryid2"/>
-            <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="glossaryid2"  />
+            <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="glossaryid2" NEXT="language" />
+            <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossarycategoryid2"  />
 PREVIOUS="glossarycategoryid2" />
         </FIELDS>
         <KEYS>

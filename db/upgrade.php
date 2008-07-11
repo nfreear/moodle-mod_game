@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.1 2008/03/26 17:40:43 arborrow Exp $
+<?php  //$Id: upgrade.php,v 1.2 2008/07/11 12:49:22 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1070,7 +1070,7 @@ function xmldb_game_upgrade($oldversion=0) {
 	}
 	
 	//game_queries.language
-    if ($result && $oldversion < 2008031002) {
+    if ($result && $oldversion < 2008071101) {
         $table = new XMLDBTable('game');
         $field = new XMLDBField('language');
         $field->setAttributes(XMLDB_TYPE_CHAR, '10', null, null, null, null, null, '');

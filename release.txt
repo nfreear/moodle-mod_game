@@ -1,3 +1,6 @@
+12/07/08 
+    * No cellpadding at parameters screen 
+    
 11/07/08
     * Problem when the language of hangman words is different from current language
     * Auto detects the language of words for the game hangman    

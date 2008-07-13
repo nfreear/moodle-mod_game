@@ -1,4 +1,4 @@
-<?php //$Id: backuplib.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+<?php //$Id: backuplib.php,v 1.2 2008/07/13 07:01:36 bdaloukas Exp $
     //This php script contains all the stuff to backup games
 
 //This version uses only the table game
@@ -36,6 +36,7 @@
         if( ($recs = get_records_sql( $sql)) == false){
             return true;
         }
+        $status = true;
         $table = 'question_categories';
         foreach( $recs as $rec){
             if( $rec->id == 0){

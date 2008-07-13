@@ -1,4 +1,4 @@
-<?php //$Id: restorelib.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+<?php //$Id: restorelib.php,v 1.2 2008/07/13 07:01:36 bdaloukas Exp $
     //This php script contains all the stuff to restore game mods
 
 // Todo:
@@ -46,8 +46,9 @@
             $mod_info = $info[ 'MOD'];
 
 			$fields = array( 'name', 'sourcemodule', 'quizid', 'glossaryid', 'glossarycategoryid', 'questioncategoryid',
-					'bookid', 'gameinputid', 'gamekind', 'param1', 'param2', 'param3', 'param4', 'param5', 'param6', 'param7',
-					'timemodified', 'bottomtext', 'grademethod', 'grade', 'decimalpoints', 'popup', 'review', 'attempts');					
+					'bookid', 'gameinputid', 'gamekind', 'param1', 'param2', 'param3', 'param4', 'param5', 'param6', 'param7', 'param8',
+					'timemodified', 'bottomtext', 'grademethod', 'grade', 'decimalpoints', 'popup', 'review', 'attempts',
+					'glossaryid2', 'glossarycategoryid2', 'language');
 			game_restore_record( $mod_info, $game, $fields);
 			
 			game_recode( $restore->backup_unique_code, $game, 'quizid', 'quiz');
@@ -386,7 +387,7 @@
         //Now, build the game_hangman record structure
         $game_hangman = new stdClass;
         $game_hangman->id = $newattemptid;
-        $fields = array( 'queryid', 'lettets', 'allletters', 'try', 'maxtries', 'finishedword', 'corrects', 'iscorrect');
+        $fields = array( 'queryid', 'letters', 'allletters', 'try', 'maxtries', 'finishedword', 'corrects', 'iscorrect');
         game_restore_record( $info, $game_hangman, $fields);
 
         //We have to recode the some

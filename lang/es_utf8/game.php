@@ -1,9 +1,9 @@
-<?PHP // $Id: game.php,v 1.3 2008/07/16 05:25:52 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.4 2008/07/16 10:50:07 thepurpleblob Exp $ 
       // game.php - created with Moodle 1.9.1+ (Build: 20080702) (2007101514)
       // local modifications from http://ludens.es/pruebas_moodle
       // thanks to Wilmack Sanchez, Antonio Vicent
 
-﻿//students
+//students
 $string[ 'cross_across'] = 'Horizontal';
 $string[ 'cross_checkbutton'] = 'Revisar crucigrama';
 $string[ 'cross_congratulations'] = 'Felicitaciones';

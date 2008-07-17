@@ -201,11 +201,18 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 			error( 'game_sudoku_showquestions_quiz: problem');
 		}
 		
-		$state->last_graded = 0;
+		$state->last_graded = new StdClass;
+		$state->last_graded->event = QUESTION_EVENTOPEN;
 		$state->event = QUESTION_EVENTOPEN;
+		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';
-		print_question($question, $state, '', $cmoptions);
+		$cmoptions->optionflags = 0;
+		$options->correct_responses = 0;
+		$options->feedback = 0;
+		$options->readonly = 0;
+		
+		print_question($question, $state, '', $cmoptions, $options);
 		break;
     }
 

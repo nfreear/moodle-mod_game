@@ -1,3 +1,6 @@
+17/7/08
+    * Warnings on sudoku in multiple choice questions
+    
 12/07/08 
     * No cellpadding at parameters screen 
     

@@ -262,4 +262,5 @@ $string[ 'createbottomtext'] = 'Set the text at the bottom';
 //1.6.4
 $string[ 'hiddenpicture_nomainquestion'] = 'There are no glossary entries on glossary $a->name with an attached picture';
 
+$string[ 'export'] = 'Export';
 ?>

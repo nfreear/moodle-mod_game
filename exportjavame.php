@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.3 2008/07/22 07:01:33 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.3 2008/07/22 07:01:33 bdaloukas Exp $
  * @package game
  **/
     
@@ -28,6 +28,11 @@
 			if($item != '.' && $item != '..') {
 				if(!is_dir($src.'/'.$item)) {
 				    $itemdest = $item;
+				    
+				    if( substr( $item, -5) == '.java'){
+				        continue;   //don't copy the java source code files
+				    }
+				    
 				    if( substr( $itemdest, -8) == '-1.class'){
 				        $itemdest = substr( $itemdest, 0, -8).'$1.class';
 				    }

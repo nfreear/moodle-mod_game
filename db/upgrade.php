@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.2 2008/07/11 12:49:22 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.3 2008/07/22 06:24:19 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1042,7 +1042,7 @@ function xmldb_game_upgrade($oldversion=0) {
     
 	//new table game_hiddenpicture
     if ($result && $oldversion < 2008011504) {
-        /// Define table scorm_scoes_data to be created
+        /// Define table game_hiddenpicture to be created
         $table = new XMLDBTable( 'game_hiddenpicture');
 
         /// Adding fields to table scorm_scoes_data
@@ -1079,6 +1079,30 @@ function xmldb_game_upgrade($oldversion=0) {
         $result = $result && add_field($table, $field);
     }
 
+	//new table game_export_javame
+    if ($result && $oldversion < 2008072204) {
+        /// Define table game_export_javame to be created
+        $table = new XMLDBTable( 'game_export_javame');
+
+        /// Adding fields to table scorm_scoes_data
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('filename', XMLDB_TYPE_CHAR, '20');
+        $table->addFieldInfo('icon', XMLDB_TYPE_CHAR, '100');
+        $table->addFieldInfo('createdby', XMLDB_TYPE_CHAR, '50');
+        $table->addFieldInfo('vendor', XMLDB_TYPE_CHAR, '50');
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, '20');
+        $table->addFieldInfo('description', XMLDB_TYPE_CHAR, '100');
+        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, '10');
+
+		/// Adding keys to table scorm_scoes_data
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        
+        $table->addIndexInfo('gameid', XMLDB_INDEX_UNIQUE, array('gameid'));        
+
+        /// Launch create table
+        $result = $result && create_table($table);
+	} 
 	
     
     return $result;

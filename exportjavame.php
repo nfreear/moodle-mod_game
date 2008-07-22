@@ -1,14 +1,18 @@
-<?php  // $Id: exportjavame.php,v 1.1 2008/07/21 21:10:36 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.1 2008/07/21 21:10:36 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
  * @package game
  **/
     
-    function game_OnExportJavaME( $gameid){
+    function game_OnExportJavaME( $gameid, $javame){
         global $CFG;
+        
+        if( $javame->filename == ''){
+            $javame->filename = 'moodlehangman';
+        }
         
         $game = get_record_select( 'game', "id=$gameid");
         
@@ -37,14 +41,14 @@
 		
 		game_exportjavame_exportdata( $destdir, $game);
 		
-		game_create_manifest_mf( $destdir.'/META-INF');
+		game_create_manifest_mf( $destdir.'/META-INF', $javame);
 		
-		game_create_jar( $destdir, $course);
+		game_create_jar( $destdir, $course, $javame);
                 
         if( $destdir != ''){
             remove_dir( $destdir);
             
-            echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/moodlehangman.jar\">Hangman</a>";
+            echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/{$javame->filename}.jar\">Hangman</a>";
         }
     }
     
@@ -184,27 +188,28 @@
         return $map;
     }
             
-    function game_create_manifest_mf( $dir){
+    function game_create_manifest_mf( $dir, $javame){
+                        
         $fp = fopen( $dir.'/MANIFEST.MF',"w");
         fputs( $fp, "Manifest-Version: 1.0\r\n");
         fputs( $fp, "Ant-Version: Apache Ant 1.7.0\r\n");
-        fputs( $fp, "Created-By: module Game\r\n");
+        fputs( $fp, "Created-By: {$javame->createdby}\r\n");
         fputs( $fp, "MIDlet-1: MoodleHangman,,hangman\r\n");
-        fputs( $fp, "MIDlet-Vendor: module Game\r\n");
-        fputs( $fp, "MIDlet-Name: moodlehangman\r\n");
-        fputs( $fp, "MIDlet-Description: MoodleHangman\r\n");
-        fputs( $fp, "MIDlet-Version: 1.0\r\n");
+        fputs( $fp, "MIDlet-Vendor: {$javame->vendor}\r\n");
+        fputs( $fp, "MIDlet-Name: {$javame->vendor}\r\n");
+        fputs( $fp, "MIDlet-Description: {$javame->description}\r\n");
+        fputs( $fp, "MIDlet-Version: {$javame->version}\r\n");
         fputs( $fp, "MicroEdition-Configuration: CLDC-1.0\r\n");
         fputs( $fp, "MicroEdition-Profile: MIDP-2.0\r\n");
         
         fclose( $fp);
     }
     
-    function game_create_jar( $dest, $course){
+    function game_create_jar( $dest, $course, $javame){
         global $CFG;
         
         $dir = $CFG->dataroot . '/' . $course->id;
-        $filejar = $dir . '/moodlehangman.jar';
+        $filejar = $dir . "/{$javame->filename}.jar";
         if (!file_exists( $dir)){
             mkdir( $dir);
         }

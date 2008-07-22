@@ -263,4 +263,12 @@ $string[ 'createbottomtext'] = 'Set the text at the bottom';
 $string[ 'hiddenpicture_nomainquestion'] = 'There are no glossary entries on glossary $a->name with an attached picture';
 
 $string[ 'export'] = 'Export';
+$string[ 'javame_filename'] = 'Filename:';
+$string[ 'javame_icon'] = 'Icon:';
+$string[ 'javame_createdby'] = 'Created by:';
+$string[ 'javame_vendor'] = 'Vendor:';
+$string[ 'javame_name'] = 'Name:';
+$string[ 'javame_description'] = 'Description:';
+$string[ 'javame_version'] = 'Version:';
+
 ?>

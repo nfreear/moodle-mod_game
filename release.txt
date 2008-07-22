@@ -1,3 +1,6 @@
+21/7/08
+    * New: Ability to export hangman to javame for use in mobile phones
+    
 17/7/08
     * Warnings on sudoku in multiple choice questions
     

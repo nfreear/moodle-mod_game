@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+<?php  // $Id: lib.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+ * @version $Id: lib.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
  * @package game
  **/
 
@@ -133,7 +133,7 @@ function game_delete_instance($gameid) {
 		}
 	}
 		    
-    $tables = array( 'game_attempts', 'game_grades', 'game_bookquiz_questions', 'game_queries');
+    $tables = array( 'game_attempts', 'game_grades', 'game_export_javame', 'game_bookquiz_questions', 'game_queries');
     foreach( $tables as $t){
         if( $result == false){
             break;

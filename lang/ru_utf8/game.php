@@ -1,5 +1,6 @@
-<?PHP // $Id: game.php,v 1.1 2008/07/22 11:19:46 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.2 2008/07/22 11:23:24 bdaloukas Exp $ 
       // game.php - created with Moodle 1.6.3
+      // translated by Ивченко Анатолий
 
 //students
 $string[ 'cross_across'] = 'По горизонтали';

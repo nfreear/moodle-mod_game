@@ -794,7 +794,19 @@ function showanswers_question_select( $form, $table, $select, $fields='*', $orde
 	
 	$categorynames = array();
 	if( $showcategoryname){
-		if( ($categories = get_records_select( 'question_categories', "course=$courseid", '', 'id,name'))){
+	    $select = '';
+    	$recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
+	    foreach( $recs as $rec){
+	    	if( array_key_exists( 'course', $rec)){
+	    		$select = "course=$courseid";
+	    	}else{
+	    		$context = get_context_instance(50, $courseid);
+	        		$select = " contextid in ($context->id)";
+	    	}
+	    	break;
+    	}
+
+		if( ($categories = get_records_select( 'question_categories', $select, '', 'id,name'))){
 			foreach( $categories as $rec){
 				$categorynames[ $rec->id] = $rec->name;
 			}

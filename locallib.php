@@ -155,7 +155,7 @@ function game_question_shortanswer_quiz( $game)
 	$select = "{$CFG->prefix}question.id=$id AND {$CFG->prefix}question_answers.question=$id".
 					" AND {$CFG->prefix}question.hidden=0";
 	$table = "question,{$CFG->prefix}question_answers";
-	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, {$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, 0 as glossaryentryid";
+	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, {$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, 0 as glossaryentryid, '' as attachment";
     
 	return get_record_select( $table, $select, $fields);
 }

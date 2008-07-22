@@ -249,7 +249,7 @@ PREVIOUS="glossarycategoryid2" />
 
     
     
-    <TABLE NAME="game_bookquiz_questions" PREVIOUS="game_bookquiz_chapters" NEXT="game_snakes" COMMENT="game_bookquiz">
+    <TABLE NAME="game_bookquiz_questions" PREVIOUS="game_bookquiz_chapters" NEXT="game_export_javame" COMMENT="game_bookquiz">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="gameid"/>
         <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="chapterid" />
@@ -270,7 +270,7 @@ PREVIOUS="glossarycategoryid2" />
         <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="filename"  />
         <FIELD NAME="filename" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="icon"/>
         <FIELD NAME="icon" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="filename" NEXT="createdby"/>
-        <FIELD NAME="createdby" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="icon" NEXT="name"/>
+        <FIELD NAME="createdby" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="icon" NEXT="vendor"/>
         <FIELD NAME="vendor" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="createdby" NEXT="name"/>
         <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="vendor" NEXT="description"/>
         <FIELD NAME="description" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="version"/>

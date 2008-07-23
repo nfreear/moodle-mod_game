@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.3 2008/07/22 07:01:33 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.4 2008/07/23 06:09:20 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.3 2008/07/22 07:01:33 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.4 2008/07/23 06:09:20 bdaloukas Exp $
  * @package game
  **/
     
@@ -48,13 +48,23 @@
 		
 		game_create_manifest_mf( $destdir.'/META-INF', $javame);
 		
-		game_create_jar( $destdir, $course, $javame);
-                
+		$filejar = game_create_jar( $destdir, $course, $javame);
+		if( $filejar == ''){
+    		$filezip = game_create_zip( $destdir, $course, $javame);
+        }else{
+            $filezip = '';
+        }
+
         if( $destdir != ''){
             remove_dir( $destdir);
-            
-            echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/{$javame->filename}.jar\">Hangman</a>";
         }
+        
+        if( $filezip != ''){
+            echo "unzip the $filezip in a directory and when you are in this directory use the command <br><b>jar cvfm {$javame->filename}.jar META-INF/MANIFEST.MF<br></b> to produce the jar files<br><br>";
+        }
+        
+        $file = ($filejar != '' ? $filejar : $filezip);
+        echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/$file\">{$javame->name}</a>";
     }
     
     function game_exportjavame_exportdata( $destdir, $game){
@@ -210,7 +220,7 @@
         fclose( $fp);
     }
     
-    function game_create_jar( $dest, $course, $javame){
+    function game_create_jar( $srcdir, $course, $javame){
         global $CFG;
         
         $dir = $CFG->dataroot . '/' . $course->id;
@@ -223,10 +233,31 @@
             unlink( $filejar);
         }
     
-        $cmd = "cd $dest;jar cvfm $filejar META-INF/MANIFEST.MF *";
+        $cmd = "cd $srcdir;jar cvfm $filejar META-INF/MANIFEST.MF *";
         exec( $cmd);
+
+        return (file_exists( $filejar) ? "{$javame->filename}.jar" : '');
+    }
+
+    function game_create_zip( $srcdir, $course, $javame){
+        global $CFG;
         
-        return $filejar;
+        $dir = $CFG->dataroot . '/' . $course->id;
+        $filezip = $dir . "/{$javame->filename}.zip";
+
+        if (file_exists( $filezip)){
+            unlink( $filezip);
+        }
+        
+        $srcfiles = get_directory_list( $srcdir, '', true, true, true);
+        $fullsrcfiles = array();
+        foreach( $srcfiles as $file){
+            $fullsrcfiles[] = $srcdir.'/'.$file;
+        }
+                
+        zip_files( $fullsrcfiles, $filezip);
+            
+        return (file_exists( $filezip) ? "{$javame->filename}.zip" : '');
     }
     
     

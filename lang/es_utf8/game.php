@@ -1,6 +1,5 @@
-<?PHP // $Id: game.php,v 1.4 2008/07/16 10:50:07 thepurpleblob Exp $ 
+<?PHP // $Id: game.php,v 1.5 2008/07/23 11:26:48 bdaloukas Exp $ 
       // game.php - created with Moodle 1.9.1+ (Build: 20080702) (2007101514)
-      // local modifications from http://ludens.es/pruebas_moodle
       // thanks to Wilmack Sanchez, Antonio Vicent
 
 //students
@@ -29,7 +28,7 @@ $string[ 'cross_nowords'] = 'No encontró ninguna palabra';
 $string['cross_pleasewait'] = 'Por favor espere mientras se carga el crucigrama';
 $string[ 'cross_spaces'] = 'espacios';
 $string[ 'cross_space'] = 'espacio';
-$string['cross_welcome'] = '<h3>Bienvenido!</h3><p>Haga click en una palabra para comenzar.</p>';
+$string['cross_welcome'] = '<h3>¡Bienvenido!</h3><p>Haga clic en una palabra para comenzar.</p>';
 $string['cross_win'] = '¡¡¡ Felicitaciones !!!';
 $string[ 'cross_words'] = 'palabras';
 $string[ 'cross_word'] = 'palabra';
@@ -62,12 +61,12 @@ $string[ 'letters'] = 'letras';
 $string[ 'letter'] = 'letra';
 $string[ 'millionaire_info_people'] = 'La gente dice';
 $string[ 'millionaire_info_telephone'] = 'Yo pienso que la respuesta correcta es';
-$string[ 'millionaire_info_wrong_answer'] = 'Su respuesta esta mal<br>La respuesta correcta es:';
+$string[ 'millionaire_info_wrong_answer'] = 'Su respuesta es incorrecta<br>La respuesta correcta es:';
 $string[ 'millionaire_letters_answers'] = 'ABCD';
 $string[ 'hangman_wrongnum'] = 'Malas: %%d de %%d';
 $string[ 'millionaire_no_questions'] = 'No se encontraron preguntas ';
 $string[ 'hangman_win'] = 'Felicitaciones';
-$string[ 'millionaire_win'] = 'Felicitaciones !!!!';
+$string[ 'millionaire_win'] = '¡¡¡ Felicitaciones !!!!';
 $string[ 'modulename'] = 'Juego';
 $string[ 'modulenameplural'] = 'Juegos';
 $string[ 'nextgame'] = 'Siguiente juego';
@@ -95,7 +94,7 @@ $string[ 'marks'] = 'Marcas';
 $string[ 'feedback'] = 'Retroalimentación';
 $string[ 'nomoreattempts'] = 'No se permiten más intentos';
 $string[ 'gradesofar'] = '$a->method: $a->mygrade / $a->gamegrade.';
-$string[ 'yourfinalgradeis'] = 'Su nota final para este juego es $a.';
+$string[ 'yourfinalgradeis'] = 'Su nota final en este juego es $a.';
 $string[ 'continueattemptgame'] = 'Continue un intento previo de juego';
 $string[ 'attemptgamenow'] = 'Intente jugar ahora';
 $string[ 'temporaryblocked'] = 'Usted no puede reintentar el juego temporalmente.<br /> Ud. podrá realizar otro intento en:';
@@ -106,7 +105,7 @@ $string[ 'noscript'] = '¡JavaScript debe estar habilitado para continuar!';
 $string[ 'info'] = 'Info';
 $string[ 'results'] = 'Resultados';
 $string[ 'preview'] = 'Visualizar';
-$string[ 'selectall'] = '¡Seleccione todosl';
+$string[ 'selectall'] = 'Seleccione todos';
 $string[ 'regrade'] = 'Recalificar todos los intentos';
 $string[ 'numattempts'] = '$a->studentnum $a->studentstring ha hecho $a->attemptnum intentos';
 $string[ 'attempt'] = 'Intento $a';
@@ -134,10 +133,10 @@ $string[ 'hangman_showfirst'] = 'Mostrar la primera letra de ahorcado';
 $string[ 'hangman_showlast'] = 'Mostrar la última letra del ahorcado';
 $string['hangman_showquestion'] = '¿ Mostrar las preguntas ?';
 $string[ 'hangman_language'] = 'Idioma de las palabras';
-$string[ 'millionaire_must_select_questioncategory'] = 'Ud debe seleccionar una categoría de preguntas';
-$string[ 'millionaire_must_select_quiz'] = 'Ud debe seleccionar un cuestionario';
+$string[ 'millionaire_must_select_questioncategory'] = 'Usted debe seleccionar una categoría de preguntas';
+$string[ 'millionaire_must_select_quiz'] = 'Usted debe seleccionar un cuestionario';
 $string[ 'millionaire_sourcemodule_must_quiz_question'] = 'Para millonario la fuente debe ser $a o preguntas y no';
-$string[ 'only_teachers'] = 'Solo el profesor puede ver esta página';
+$string[ 'only_teachers'] = 'Sólo el profesor puede ver esta página';
 $string[ 'preview'] = 'Visualizar';
 $string[ 'selectgame'] = 'Seleccionar juego';
 $string[ 'showsolution'] = 'solución';
@@ -161,7 +160,7 @@ $string[ 'bookquiz_questions'] = 'Asocie categorías de preguntas con capítulos
 $string[ 'sudoku_maxquestions'] = 'Máximo número de preguntas';
 $string[ 'bookquiz_empty'] = 'El libro está vacío';
 $string[ 'bookquiz_chapters'] = 'Capítulos';
-$string[ 'bookquiz_categories'] = 'Categorias';
+$string[ 'bookquiz_categories'] = 'Categorías';
 $string[ 'bookquiz_numquestions'] = 'Preguntas';
 $string[ 'showanswers'] = 'Mostrar respuestas';
 $string[ 'sudoku_create'] = 'Crear una base de datos de nuevos sudokus';
@@ -184,7 +183,7 @@ $string['cross_layout1'] = 'Frases en la parte derecha del crucigrama';
 
 
 //1.4
-$string['popupblockerwarning'] = 'Alerta de ventana pop-up bloqueada';
+$string['popupblockerwarning'] = 'Alerta de ventana emergente bloqueada';
 $string['attemptsallowed'] = 'Intentos permitidos';
 $string['gamenotavailable'] = 'Este cuestionario no estará disponible hasta : $a';
 
@@ -222,11 +221,7 @@ $string['analysis'] = 'Mostrar detalles de marca';
 $string['showdetailedmarks'] = 'Mostrar detalles de marca';
 $string['noattemptsonly'] = 'Mostrar $a unicamente sin intentos';
 $string[ 'downloadods'] = 'Descargar en formato ODS';
-
-
-
-//overviewdownload
-//showdetailedmarks
+
 
 
 $string[ 'reattemptgame'] = 'Juego de reintento';
@@ -259,6 +254,13 @@ $string[ 'hiddenpicture_submit'] = 'Calificar respuestas';
 $string[ 'hiddenpicture_width'] = 'Establecer el ancho de la imagen en';
 $string[ 'hiddenpicture_win'] = 'Felicidades';
 $string[ 'useeditgame'] = 'Utilice la Edición para establecer los detalles del juego';
+$string[ 'export'] = 'Exporta a móvil';
 
-
+$string[ 'javame_createdby'] = 'Creado por:';
+$string[ 'javame_description'] = 'Descripción:';
+$string[ 'javame_filename'] = 'Nombe del archivo:';
+$string[ 'javame_icon'] = 'Icono:';
+$string[ 'javame_name'] = 'Nombre:';
+$string[ 'javame_vendor'] = 'Vendedor:';
+$string[ 'javame_version'] = 'Versión';
 ?>

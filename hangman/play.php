@@ -1,4 +1,6 @@
-<?php
+<?php  // $Id: play.php,v 1.3 2008/07/25 11:26:15 bdaloukas Exp $
+
+// This files plays the game hangman
 
 function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $action)
 {

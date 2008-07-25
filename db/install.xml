@@ -123,12 +123,8 @@ PREVIOUS="glossarycategoryid2" />
     <TABLE NAME="game_hangman" PREVIOUS="game_queries" NEXT="game_cross" COMMENT="game_hangman">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" NEXT="queryid"/>
-        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="id" NEXT="quizid"/>
-        <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="queryid" NEXT="glossaryid"/>
-        <FIELD NAME="glossaryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="quizid" NEXT="questioncategoryid"/>
-        <FIELD NAME="questioncategoryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="glossaryid" NEXT="gameinputid"/>
-        <FIELD NAME="gameinputid" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="questioncategoryid" NEXT="letters" />
-        <FIELD NAME="letters" TYPE="char" LENGTH="100" NOTNULL="false" ENUM="false" PREVIOUS="gameinputid" NEXT="allletters"/>
+        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="id" NEXT="letters"/>
+        <FIELD NAME="letters" TYPE="char" LENGTH="100" NOTNULL="false" ENUM="false" PREVIOUS="queryid" NEXT="allletters"/>
         <FIELD NAME="allletters" TYPE="char" LENGTH="100" NOTNULL="false" ENUM="false" PREVIOUS="letters" NEXT="try"/>
         <FIELD NAME="try" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="allletters" NEXT="maxtries" />
         <FIELD NAME="maxtries" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="try" NEXT="finishedword" />

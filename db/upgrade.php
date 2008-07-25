@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.3 2008/07/22 06:24:19 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.4 2008/07/25 11:26:15 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1103,6 +1103,43 @@ function xmldb_game_upgrade($oldversion=0) {
         /// Launch create table
         $result = $result && create_table($table);
 	} 
+	
+	//Delete field game_hangman.quizid
+    if ($result && $oldversion < 2008072501) {
+        $table = new XMLDBTable('game_hangman');
+        $field = new XMLDBField('quizid');
+
+    /// Launch drop field grade_high
+        $result = $result && drop_field($table, $field);
+    }
+
+	//Delete field game_hangman.glossaryid
+    if ($result && $oldversion < 2008072502) {
+        $table = new XMLDBTable('game_hangman');
+        $field = new XMLDBField('glossaryid');
+
+    /// Launch drop field grade_high
+        $result = $result && drop_field($table, $field);
+    }
+    
+	//Delete field game_hangman.questioncategoryid
+    if ($result && $oldversion < 2008072503) {
+        $table = new XMLDBTable('game_hangman');
+        $field = new XMLDBField('questioncategoryid');
+
+    /// Launch drop field grade_high
+        $result = $result && drop_field($table, $field);
+    }
+
+	//Delete field game_hangman.gameinputid
+    if ($result && $oldversion < 2008072504) {
+        $table = new XMLDBTable('game_hangman');
+        $field = new XMLDBField('gameinputid');
+
+    /// Launch drop field grade_high
+        $result = $result && drop_field($table, $field);
+    }
+    
 	
     
     return $result;

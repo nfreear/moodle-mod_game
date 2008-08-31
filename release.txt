@@ -1,3 +1,6 @@
+20/8/08
+    * New: translation to Dutch
+
 21/7/08
     * New: Ability to export hangman to javame for use in mobile phones
     

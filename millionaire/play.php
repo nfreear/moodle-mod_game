@@ -82,7 +82,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 	echo '<form name="Form1" method="post" action="attempt.php" id="Form1">';
 	echo "<table cellpadding=0 cellspacing=0 border=0>\r\n";
 	echo "<tr $background>";
-	echo "<td rowspan=21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+	echo "<td rowspan=".(17+count( $aAnswer)).">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 	echo "<td colspan=6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 	echo "<td rowspan=21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 	echo "</tr>\r\n";
@@ -179,17 +179,18 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
         echo "<td style='color:white;$back'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
       else
         echo "<td style='$back'></td>";
-      echo "<td style='color:white;$back' align=right>".sprintf( "%10d", $aVal[ $i-1])."</td>\n";
+      echo "<td style='color:white;$back' align=right>".sprintf( "%10d", $aVal[ $i-1])."</td>\r\n";
       if( $bTR)
         echo "</tr>\r\n";
     }
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
 
     $bFirst = true;
+    $letters = get_string( 'millionaire_letters_answers', 'game');
     for( $i=0; $i < count( $aAnswer); $i++)
     {
-		$name = "btAnswer".substr( "ABCD", $i, 1);
-		$s = $textlib->substr(  get_string( 'millionaire_letters_answers', 'game'), $i, 1);
+		$name = "btAnswer".substr( 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', $i, 1);
+		$s = substr( $letters, $i, 1);
       
 		$disabled = ( $state == 15 ? "disabled=1" : "");
         
@@ -205,9 +206,9 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 			echo '<td style="background:Black;color:white" width=100%> &nbsp; '.$answer.'</td>';
 			if( $bFirst){
 				$bFirst = false;
-				echo "<td $background rowspan=4 colspan=3>$info</td>";
+				echo "<td $background rowspan=".count( $aAnswer)." colspan=3>$info</td>";
 			}
-    		echo "</tr>\r\n";
+    		echo "\r\n</tr>\r\n";
 		}
 	}
 	echo "<tr><td colspan=10 $background>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";

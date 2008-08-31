@@ -82,9 +82,9 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 	echo '<form name="Form1" method="post" action="attempt.php" id="Form1">';
 	echo "<table cellpadding=0 cellspacing=0 border=0>\r\n";
 	echo "<tr $background>";
-	echo "<td rowspan=".(17+count( $aAnswer)).">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+	echo '<td rowspan='.(17+count( $aAnswer)).'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 	echo "<td colspan=6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-	echo "<td rowspan=21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+	echo '<td rowspan='.(17+count( $aAnswer)).'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 	echo "</tr>\r\n";
 
 	echo "<tr height=10%>";
@@ -135,7 +135,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
       switch( $i)
       {
       case 15:
-        echo "<td rowspan=20 $background>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\r\n";
+        echo "<td rowspan=".(16+count( $aAnswer))." $background>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\r\n";
         $bTR = true;
         break;
       case 14:

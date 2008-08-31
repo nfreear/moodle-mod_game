@@ -40,14 +40,22 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire)
 		$query = new StdClass;
 	}
     
-	if( array_key_exists( "btAnswerA", $_POST) or array_key_exists( "btAnswerA1", $_POST))
-		game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, 1);
-	else if( array_key_exists( "btAnswerB", $_POST) or array_key_exists( "btAnswerB1", $_POST))
-		game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, 2);
-	else if( array_key_exists( "btAnswerC", $_POST) or array_key_exists( "btAnswerC1", $_POST))
-		game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, 3);
-	else if( array_key_exists( "btAnswerD", $_POST) or array_key_exists( "btAnswerD1", $_POST))
-		game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, 4);
+    if( array_key_exists( 'buttons', $_POST))
+        $buttons = $_POST[ 'buttons'];
+    else
+        $buttons = 0;
+        
+    $found = 0;
+    for($i=1; $i <= $buttons; $i++){
+        $letter = substr( 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', $i-1, 1);
+    	if( array_key_exists( 'btAnswer'.$letter, $_POST) or array_key_exists( "btAnswer{$letter}1", $_POST)){
+	    	game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, $i);
+	    	$found = 1;
+	    }
+	}
+		
+	if( $found == 1)
+	    ;//nothing
 	else if( array_key_exists( "Help5050_x", $_POST))
 		game_millionaire_OnHelp5050( $id,  $millionaire, $game, $query);
 	else if( array_key_exists( "HelpTelephone_x", $_POST))
@@ -214,6 +222,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 	echo "<tr><td colspan=10 $background>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
 	echo "<input type=hidden name=state value=\"$state\">\r\n";
 	echo '<input type=hidden name=id value="'.$id.'">';
+	echo "<input type=hidden name=buttons value=\"".count( $aAnswer)."\">\r\n";
 
     echo "</table>\r\n";
     echo "</form>\r\n";
@@ -466,7 +475,7 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
     function game_millionaire_OnAnswer( $id, $game, $attempt, &$millionaire, $query, $answer)
     {
 		global $CFG;
-	
+
 		game_millionaire_loadquestions( $millionaire, $query, $aAnswer);
 		if( $answer == $query->correct)
 		{

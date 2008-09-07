@@ -181,7 +181,10 @@ class CryptexDB extends CrossDB
 		{
 			foreach ($recs as $rec)
 			{
-				$key = $this->gethash( $rec->questiontext).'-'.$rec->answertext.'-'.$rec->id;				
+			    if( $rec->questiontext == ''){
+			        $rec->questiontext = ' ';
+			    }
+				$key = $this->gethash( $rec->questiontext).'-'.$rec->answertext.'-'.$rec->id;
 				$questions[ $key] = $rec;
 				
 				$word = $rec->answertext;

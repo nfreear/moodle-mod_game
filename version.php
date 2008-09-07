@@ -1,14 +1,14 @@
-<?php // $Id: version.php,v 1.10 2008/07/25 11:26:15 bdaloukas Exp $
+<?php // $Id: version.php,v 1.11 2008/09/07 06:57:44 bdaloukas Exp $
 /**
  * Code fragment to define the version of game
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
  *
  * @author 
- * @version $Id: version.php,v 1.10 2008/07/25 11:26:15 bdaloukas Exp $
+ * @version $Id: version.php,v 1.11 2008/09/07 06:57:44 bdaloukas Exp $
  * @package game
  **/
 
-$module->version  = 2008072504;  // The current module version (Date: YYYYMMDDXX)
+$module->version  = 2008090101;  // The current module version (Date: YYYYMMDDXX)
 $module->release = 'v2'.substr( $module->version, 4);
 $module->cron     = 0;           // Period for cron to check this module (secs)
 

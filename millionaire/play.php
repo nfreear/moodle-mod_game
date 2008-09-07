@@ -264,8 +264,18 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	{
 		if( $game->questioncategoryid == 0){
 			error( get_string( 'must_select_questioncategory', 'game'));
-		}		
-		$select = "qtype='multichoice' AND category='$game->questioncategoryid' ";
+		}	
+		
+		//include subcategories				
+		$select = 'category='.$game->questioncategoryid;
+        if( $game->subcategories){
+            $cats = question_categorylist( $game->questioncategoryid);
+            if( strpos( $cats, ',') > 0){
+                $select = 'category in ('.$cats.')';
+            }
+        }  						
+		$select .= " AND qtype='multichoice'";
+		
 		$table = "question";
 	}
 	$select .= " AND {$CFG->prefix}question.hidden=0";

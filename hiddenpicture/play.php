@@ -95,7 +95,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     $select .= " AND (attachment LIKE '%.jpg' OR attachment LIKE '%.gif' OR attachment LIKE '%.png')";
     if( ($id = game_question_selectrandom( $table, $select, "ge.id")) == false){
         $a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
-	    print_r( $game);
+	    /* print_r( $game);
 	    
 	    echo "<br>select=$select<br>";
 	    $recs = get_records_select( 'glossary_entries', "glossaryid={$game->glossaryid2}", '', "id,attachment,concept");
@@ -103,7 +103,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
 	    foreach( $recs as $rec)
 	    {
 	        echo $rec->id."#".$rec->concept.'#'.$rec->attachment." @&nbsp;&nbsp;&nbsp;&nbsp;";
-	    }
+	    }*/
 	    
         error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;

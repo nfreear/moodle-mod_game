@@ -35,8 +35,8 @@
             <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="review" NEXT="glossaryid2"/>
             <FIELD NAME="glossaryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="attempts" NEXT="glossarycategoryid2"/>
             <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="glossaryid2" NEXT="language" />
-            <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossarycategoryid2"  />
-PREVIOUS="glossarycategoryid2" />
+            <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossarycategoryid2" NEXT="subcategories" />
+            <FIELD NAME="subcategories" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="language"  />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -11,6 +11,7 @@
 require_once( "lib.php");
 require_once( "$CFG->dirroot/lib/ddllib.php");
 require_once $CFG->dirroot.'/lib/accesslib.php';
+require_once $CFG->dirroot.'/lib/questionlib.php';
 
 
 /// First we check that form variables have been initialised
@@ -254,6 +255,17 @@ if( $form->sourcemodule == 'question' and $form->gamekind != 'bookquiz' ){
 		echo game_showselectcontrol( 'questioncategoryid', $a, $form->questioncategoryid); 
        ?>
 	</td></tr>
+	
+
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_include_subcategories', 'game'); ?>:</b></td><td align="left">
+       <?php
+		$a = array();
+		$a[ 0] = 'no';
+		$a[ 1] = 'yes';
+        echo game_showselectcontrol( 'subcategories', $a, $form->subcategories); 
+       ?>
+    </td></tr>
+	
 <?php
 }
 
@@ -762,8 +774,17 @@ function showanswers_appendselect( $form)
 
 function showanswers_question( $form)
 {
-    $select = 'hidden = 0 AND category='.$form->questioncategoryid;
     
+    $select = ' category='.$form->questioncategoryid;
+        
+    if( $form->subcategories){
+        $cats = question_categorylist( $form->questioncategoryid);
+        if( strpos( $cats, ',') > 0){
+            $select = ' category in ('.$cats.')';
+        }
+    }
+    
+    $select .= ' AND hidden = 0 ';
     $select .= showanswers_appendselect( $form);
     
     showanswers_question_select( $form, 'question', $select, '*', 'questiontext', false, $form->course);
@@ -811,7 +832,6 @@ function showanswers_question_select( $form, $table, $select, $fields='*', $orde
 				$categorynames[ $rec->id] = $rec->name;
 			}
 		}
-		
 	}
     
     echo '<table border="1">';

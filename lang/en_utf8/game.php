@@ -255,7 +255,7 @@ $string[ 'hiddenpicture_grade'] = 'Grade';
 $string[ 'game_hiddenpicture'] = 'Hidden Picture';
 $string[ 'hiddenpicture_across'] = 'Cells horizontal';
 $string[ 'hiddenpicture_down'] = 'Cells down';
-$string[ 'hiddenpicture_pictureglossary'] = 'The glossary for main question';
+$string[ 'hiddenpicture_pictureglossary'] = 'The glossary for main question and picture';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'The category of glossary for main question';
 $string[ 'createbottomtext'] = 'Set the text at the bottom';
 
@@ -270,5 +270,5 @@ $string[ 'javame_vendor'] = 'Vendor:';
 $string[ 'javame_name'] = 'Name:';
 $string[ 'javame_description'] = 'Description:';
 $string[ 'javame_version'] = 'Version:';
-
+$string[ 'sourcemodule_include_subcategories'] = 'Include subcategories';
 ?>

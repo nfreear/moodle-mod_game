@@ -168,8 +168,16 @@ function game_question_shortanswer_question( $game)
 	if( $game->questioncategoryid == 0){
 		error( get_string( 'must_select_questioncategory', 'game'));
 	}
-    
-	$select = "qtype='shortanswer'  AND category=$game->questioncategoryid";
+        		
+    $select = $CFG->prefix.'question.category='.$game->questioncategoryid;        
+    if( $game->subcategories){
+        $cats = question_categorylist( $game->questioncategoryid);
+        if( strpos( $cats, ',') > 0){
+            $select = $CFG->prefix.'question.category in ('.$cats.')';
+        }
+    }        
+	$select .= " AND qtype='shortanswer'";
+	
 	$table = "question";
 	$fields = "{$CFG->prefix}question.id";
 		
@@ -249,8 +257,17 @@ function game_questions_selectrandom( $game, $count=1)
 			error( get_string( 'must_select_questioncategory', 'game'));
 		}
 		$table = "question";
-		$select = "category='$game->questioncategoryid' ".
-			"AND {$CFG->prefix}question.qtype in ('shortanswer', 'truefalse', 'multichoice') ".
+		
+		//inlcude subcategories
+        $select = 'category='.$game->questioncategoryid;        
+        if( $game->subcategories){
+            $cats = question_categorylist( $game->questioncategoryid);
+            if( strpos( $cats, ',') > 0){
+                $select = 'category in ('.$cats.')';
+            }
+        }    		
+		
+		$select .= " AND {$CFG->prefix}question.qtype in ('shortanswer', 'truefalse', 'multichoice') ".
 			"AND {$CFG->prefix}question.hidden=0";
 //todo 'match'
 		$field = "id";
@@ -445,9 +462,17 @@ function game_questions_shortanswer_question( $game)
         error( get_string( 'must_select_questioncategory', 'game'));
     }
     		
-	$select = "qtype='shortanswer' ".
+    //include subcategories    		
+    $select = $CFG->prefix.'question.category='.$game->questioncategoryid;        
+    if( $game->subcategories){
+        $cats = question_categorylist( $game->questioncategoryid);
+        if( strpos( $cats, ',') > 0){
+            $select = $CFG->prefix.'question.category in ('.$cats.')';
+        }
+    }    		
+    		
+	$select .= " AND qtype='shortanswer' ".
 					" AND {$CFG->prefix}question_answers.question={$CFG->prefix}question.id".
-					" AND {$CFG->prefix}question.category = $game->questioncategoryid".
 					" AND {$CFG->prefix}question.hidden=0";
 	$table = "question,{$CFG->prefix}question_answers";
 	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, ".

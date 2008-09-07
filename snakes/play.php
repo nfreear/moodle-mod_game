@@ -266,6 +266,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes)
 
     $actions = question_extract_responses( $questions, $responses, QUESTION_EVENTSUBMIT);
 	$correct = false;
+	$query = '';
     foreach($questions as $question) {
         if( !array_key_exists( $question->id, $actions)){
             //no answered

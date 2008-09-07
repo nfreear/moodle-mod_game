@@ -123,7 +123,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     $query->sourcemodule = 'glossary';
     $query->questionid = 0;
     $query->glossaryentryid = $rec->glossaryentryid;
-	$query->attachment = "$CFG->dataroot/{$game->course}/moddata/glossary/{$game->glossaryid2}/{$query->glossaryentryid}/{$rec->attachment}";
+	$query->attachment = str_replace( "\\", '/', $CFG->dataroot)."/{$game->course}/moddata/glossary/{$game->glossaryid2}/{$query->glossaryentryid}/{$rec->attachment}";
 	$query->questiontext = $rec->questiontext;
 	$query->answertext = $rec->answertext;
     $query->score = 0;
@@ -371,7 +371,7 @@ function game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, $u
     global $CFG;
     
 	$filename = $query->attachment;
-    $filenamenumbers = "$CFG->dirroot/mod/game/hiddenpicture/numbers.png";
+    $filenamenumbers = str_replace( "\\", '/', $CFG->dirroot)."/mod/game/hiddenpicture/numbers.png";
     if( $usemap){
         $cols = $game->param1;
         $rows = $game->param2;

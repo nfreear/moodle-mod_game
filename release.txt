@@ -1,3 +1,7 @@
+7/9/08
+   * New: Include subcategories of questions 
+   * Fix: Hiddenpicture: Problem when exist \ in dirroot, dataroot
+
 20/8/08
     * New: translation to Dutch
 

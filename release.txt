@@ -1,3 +1,5 @@
+8/8/08: 
+    * Fix: Millionaire: When a question has background or foregroundcolor doesn't set the background/foreground color
 7/9/08
    * New: Include subcategories of questions 
    * Fix: Hiddenpicture: Problem when exist \ in dirroot, dataroot

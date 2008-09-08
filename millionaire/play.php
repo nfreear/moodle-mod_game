@@ -136,6 +136,11 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 	echo "\r\n";
     echo "</td>\r\n";
 
+    $styletext = "";
+    if( strpos( $question, 'color:') == false and strpos( $question, 'background:') == false){
+        $styletext = "style='background:black;color:white'";
+    }
+
     $aVal = array( 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 1000, 20000, 40000, 80000, 150000);
     for( $i=15; $i >= 1; $i--)
     {
@@ -153,7 +158,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
         break;
       case 12:
         echo "<tr>";
-        echo "<td rowspan=12 colspan=2 valign=top style='background:black;color:white'>$question</td>\r\n";
+        echo "<td rowspan=12 colspan=2 valign=top $styletext>$question</td>\r\n";
         $bTR = true;
         break;
       case 11:
@@ -193,6 +198,8 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
     }
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
 
+
+
     $bFirst = true;
     $letters = get_string( 'millionaire_letters_answers', 'game');
     for( $i=0; $i < count( $aAnswer); $i++)
@@ -203,15 +210,20 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 		$disabled = ( $state == 15 ? "disabled=1" : "");
         
 		$style = 'style="background:Black;color:white"';
+        if( (strpos( $aAnswer[ $i], 'color:') != false) or (strpos( $aAnswer[ $i], 'background:') != false)){
+            $style = '';
+        }
 		if( $state == 15 and $i+1 == $query->correct){
 			$style = 'style="background:DarkOrange;color:white"';
 		}
+            		
 		$button = '<input '.$style.' '.$disabled.'type="submit" name="'.$name.'1" value="'.$s.'" id="'.$name.'1" onmouseover="Highlite(this);Highlite('.$name.');" onmouseout="Restore(this);Restore('.$name.');">';
   	 	$answer = '<span id='.$name.' '.$style.' onmouseover="Highlite(this);Highlite('.$name.'1);\r\n" onmouseout="Restore(this);Restore('.$name.'1);">'.$aAnswer[ $i].'</span>';
 		if( $aAnswer[ $i] != ""){
 			echo "<tr>\n";
-			echo "<td style=\"background:Black;color:white\">$button</td>\n";
-			echo '<td style="background:Black;color:white" width=100%> &nbsp; '.$answer.'</td>';
+			
+            echo "<td style='background:black;color:white' $button</td>\n";
+			echo "<td $style width=100%> &nbsp; $answer</td>";
 			if( $bFirst){
 				$bFirst = false;
 				echo "<td $background rowspan=".count( $aAnswer)." colspan=3>$info</td>";

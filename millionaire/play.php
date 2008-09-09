@@ -1,4 +1,11 @@
-<?php
+<?php  // $Id: play.php,v 1.8 2008/09/09 13:33:08 bdaloukas Exp $
+/**
+ * This page prints a particular attempt of game
+ * 
+ * @author  bdaloukas
+ * @version $Id: play.php,v 1.8 2008/09/09 13:33:08 bdaloukas Exp $
+ * @package game
+ **/
 
 function game_millionaire_continue( $id, $game, $attempt, $millionaire)
 {
@@ -76,7 +83,7 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire)
 
 function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 {	
-	$question = $query->questiontext;
+	$question = str_replace( '\"', '"', $query->questiontext);
 	
 	$textlib = textlib_get_instance();
 	

@@ -270,5 +270,6 @@ $string['hiddenpicture_win'] = "Συγχαρητήρια";
 //1.6.6
 $string[ 'hiddenpicture_width'] = 'Ορισμός πλάτους εικόνας';
 $string[ 'hiddenpicture_height'] = 'Ορισμός ύψους εικόνας';
+$string[ 'sourcemodule_include_subcategories'] = 'Να συμπεριλαμβάνονται οι υποκατηγορίες';
 
 ?>

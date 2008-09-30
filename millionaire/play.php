@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.8 2008/09/09 13:33:08 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.9 2008/09/30 17:30:18 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.8 2008/09/09 13:33:08 bdaloukas Exp $
+ * @version $Id: play.php,v 1.9 2008/09/30 17:30:18 bdaloukas Exp $
  * @package game
  **/
 
@@ -229,7 +229,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 		if( $aAnswer[ $i] != ""){
 			echo "<tr>\n";
 			
-            echo "<td style='background:black;color:white' $button</td>\n";
+            echo "<td style='background:black;color:white'> $button</td>\n";
 			echo "<td $style width=100%> &nbsp; $answer</td>";
 			if( $bFirst){
 				$bFirst = false;

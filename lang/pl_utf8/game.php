@@ -1,4 +1,5 @@
-<?PHP // $Id: game.php,v 1.1 2008/10/05 09:13:58 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.2 2008/10/05 09:15:00 bdaloukas Exp $ 
+//Translated by Paweł Strzałkowski
 //students
 $string[ 'cross_across'] = 'Poziomo';
 $string[ 'cross_checkbutton'] = 'Sprawdź krzyżówkę';

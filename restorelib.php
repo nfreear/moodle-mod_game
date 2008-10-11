@@ -1,4 +1,4 @@
-<?php //$Id: restorelib.php,v 1.2 2008/07/13 07:01:36 bdaloukas Exp $
+<?php //$Id: restorelib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
     //This php script contains all the stuff to restore game mods
 
 // Todo:
@@ -418,7 +418,7 @@
         //Now, build the game_hiddenpicture record structure
         $game_hiddenpicture = new stdClass;
         $game_hiddenpicture->id = $newattemptid;
-        $fields = array( 'attachment');
+        $fields = array( 'correct', 'wrong', 'found');
         game_restore_record( $info, $game_hiddenpicture, $fields);
 
         //The structure is equal to the db, so insert the game_hiddenpicture
@@ -500,7 +500,7 @@
         //Now, build the game_millionaire record structure
         $game_millionaire = new stdClass;
         $game_millionaire->id = $newattemptid;
-        $fields = array( 'queryid', 'correct', 'answers', 'state', 'level');
+        $fields = array( 'queryid', 'state', 'level');
         game_restore_record( $info, $game_millionaire, $fields);
 
         //We have to recode the some 

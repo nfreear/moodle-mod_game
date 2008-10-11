@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.5 2008/09/07 06:57:45 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.6 2008/10/11 19:12:36 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1150,6 +1150,66 @@ function xmldb_game_upgrade($oldversion=0) {
         $result = $result && add_field($table, $field);
 	}
     
+
+	//game.state
+    if ($result && $oldversion < 2008101103) {
+        $table = new XMLDBTable('game_millionaire');
+        $field = new XMLDBField('state');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch change_field_precision
+        $result = $result && change_field_precision($table, $field);
+	}
+	
+	//game_millionaire.level
+    if ($result && $oldversion < 2008101104) {
+        $table = new XMLDBTable('game_millionaire');
+        $field = new XMLDBField('level');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch change_field_precision
+        $result = $result && change_field_precision($table, $field);
+	}
+
+	//game_sudoku.level
+    if ($result && $oldversion < 2008101106) {
+        $table = new XMLDBTable('game_sudoku');
+        $field = new XMLDBField('level');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch change_field_precision
+        $result = $result && change_field_precision($table, $field);
+	}
+	
+	//game_hiddenpicture.correct
+    if ($result && $oldversion < 2008101107) {
+        $table = new XMLDBTable('game_hiddenpicture');
+        $field = new XMLDBField('correct');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch change_field_precision
+        $result = $result && change_field_precision($table, $field);
+	}		
+	
+	//game_hiddenpicture.wrong
+    if ($result && $oldversion < 2008101108) {
+        $table = new XMLDBTable('game_hiddenpicture');
+        $field = new XMLDBField('wrong');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch change_field_precision
+        $result = $result && change_field_precision($table, $field);
+	}	
+	
+	//game_hiddenpicture.found
+    if ($result && $oldversion < 2008101109) {
+        $table = new XMLDBTable('game_hiddenpicture');
+        $field = new XMLDBField('found');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch change_field_precision
+        $result = $result && change_field_precision($table, $field);
+	}	
 	
     
     return $result;

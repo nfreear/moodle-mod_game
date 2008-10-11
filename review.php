@@ -1,8 +1,8 @@
-<?php  // $Id: review.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+<?php  // $Id: review.php,v 1.2 2008/10/11 19:12:35 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+* @version $Id: review.php,v 1.2 2008/10/11 19:12:35 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
@@ -37,11 +37,11 @@
     require_login( $course->id, false, $cm);
     $context = get_context_instance( CONTEXT_MODULE, $cm->id);
     $coursecontext = get_context_instance( CONTEXT_COURSE, $cm->course);
-    $isteacher = has_capability('mod/game:preview', get_context_instance(CONTEXT_MODULE, $cm->id));
+    $isteacher = isteacher( $game->course, $USER->id);
     $options = game_get_reviewoptions( $game, $attempt, $context);
     $popup = $isteacher ? 0 : $game->popup; // Controls whether this is shown in a javascript-protected window.
 
-    if (!has_capability('mod/game:viewreports', $context)) {
+    /*if (!has_capability('mod/game:viewreports', $context)) {
         if (!$attempt->timefinish) {
             redirect('attempt.php?q='.$game->id);
         }
@@ -69,7 +69,7 @@
         if ($attempt->userid != $USER->id) {
             error("This is not your attempt!", 'view.php?q='.$game->id);
         }
-    }
+    }*/
 
     add_to_log($course->id, "game", "review", "review.php?id=$cm->id&amp;attempt=$attempt->id", "$game->id", "$cm->id");
 
@@ -93,15 +93,36 @@
         $strupdatemodule = has_capability('moodle/course:manageactivities', $coursecontext)
                     ? update_module_button($cm->id, $course->id, get_string('modulename', 'game'))
                     : "";
-        print_header_simple(format_string($game->name), "",
-                 "<a href=\"index.php?id=$course->id\">$strgames</a>
-                  -> <a href=\"view.php?id=$cm->id\">".format_string($game->name,true)."</a> -> $strreview",
-                 "", "", true, $strupdatemodule);
+       // print_header_simple(format_string($game->name), "",
+       //          "<a href=\"index.php?id=$course->id\">$strgames</a>
+       //           -> <a href=\"view.php?id=$cm->id\">".format_string($game->name,true)."</a> -> $strreview",
+       //          "", "", true, $strupdatemodule);
+                 
+    $strgames = get_string("modulenameplural", "game");
+    $strgame  = get_string("modulename", "game");
+                     
+    if( function_exists( 'build_navigation')){
+        $navigation = build_navigation('', $cm);
+        print_header("$course->shortname: $game->name", "$course->shortname: $game->name", $navigation, 
+                  "", "", true, update_module_button($cm->id, $course->id, $strgame), 
+                  navmenu($course, $cm));
+    }else{
+        if ($course->category) {
+            $navigation = "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\">$course->shortname</a> ->";
+        } else {
+            $navigation = '';
+        }    
+        print_header("$course->shortname: $game->name", "$course->fullname",
+                 "$navigation <a href=index.php?id=$course->id>$strgames</a> -> $game->name", 
+                  "", "", true, update_module_button($cm->id, $course->id, $strgame), 
+                  navmenu($course, $cm));        
+    }                 
+                 
+                 
     }
     echo '<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>'; // for overlib
-
 /// Print heading and tabs if this is part of a preview
-    if (has_capability('mod/game:preview', $context)) {
+    //if (has_capability('mod/game:preview', $context)) {
         if ($attempt->userid == $USER->id) { // this is the report on a preview
             $currenttab = 'preview';
         } else {
@@ -109,9 +130,9 @@
             $mode = '';
         }
         include('tabs.php');
-    } else {
-        print_heading(format_string($game->name));
-    }
+    //} else {
+    //    print_heading(format_string($game->name));
+    //}
 
 /// Load all the questions and states needed by this script
 
@@ -147,8 +168,7 @@
         error('Could not load question options');
     }
 
-	$states = game_compute_states( $questions);
-
+	$states = game_compute_states( $game, $questions);
 /// Print infobox
 
     //$timelimit = (int)$game->timelimit * 60;
@@ -175,16 +195,18 @@
        $picture = print_user_picture($student->id, $course->id, $student->picture, false, true);
        $table->data[] = array($picture, '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$student->id.'&amp;course='.$course->id.'">'.fullname($student, true).'</a>');
     }
-    if (has_capability('mod/game:grade', $context) and count($attempts = get_records_select('game_attempts', "gameid = '$game->id' AND userid = '$attempt->userid'", 'attempt ASC')) > 1) {
-        // print list of attempts
-        $attemptlist = '';
-        foreach ($attempts as $at) {
-            $attemptlist .= ($at->id == $attempt->id)
-                ? '<strong>'.$at->attempt.'</strong>, '
-                : '<a href="review.php?attempt='.$at->id.($showall?'&amp;showall=true':'').'">'.$at->attempt.'</a>, ';
+    //if (has_capability('mod/game:grade', $context)){
+        if( count($attempts = get_records_select('game_attempts', "gameid = '$game->id' AND userid = '$attempt->userid'", 'attempt ASC')) > 1) {
+            // print list of attempts
+            $attemptlist = '';
+            foreach ($attempts as $at) {
+                $attemptlist .= ($at->id == $attempt->id)
+                    ? '<strong>'.$at->attempt.'</strong>, '
+                    : '<a href="review.php?attempt='.$at->id.($showall?'&amp;showall=true':'').'">'.$at->attempt.'</a>, ';
+            }
+            $table->data[] = array(get_string('attempts', 'game').':', trim($attemptlist, ' ,'));
         }
-        $table->data[] = array(get_string('attempts', 'game').':', trim($attemptlist, ' ,'));
-    }
+    //}
 
     $table->data[] = array(get_string('startedon', 'game').':', userdate($attempt->timestart));
     if ($attempt->timefinish) {
@@ -243,7 +265,6 @@
 /// Print all the questions
 	game_print_questions( $pagelist, $attempt, $questions, $options, $states, $game);
 
-
     // Print the navigation panel if required
     if ($numpages > 1 and !$showall) {
         print_paging_bar($numpages, $page, 1, 'review.php?attempt='.$attempt->id.'&amp;');
@@ -258,7 +279,7 @@
         print_footer($course);
     }
 	
-	function game_compute_states( $questions)
+	function game_compute_states( $game, $questions)
 	{
 		global $QTYPES;
 		
@@ -269,19 +290,27 @@
 		foreach ($questions as $question) {
 			$state = new StdClass;
 			
-			$cmoptions = 0;
+            $cmoptions->course = $game->course;
+            $cmoptions->optionflags->optionflags = 0;
+		    $cmoptions->id = 0;
+		    $cmoptions->shuffleanswers = 1;
+
+		    $state->last_graded = new StdClass;
+		    $state->last_graded->event = QUESTION_EVENTOPEN;
+		    
+		    $state->raw_grade = 0;
+
 			$attempt = 0;
 			if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
 				error( 'game_compute_states: problem');
 			}
 		
-			$state->last_graded = 0;
 			$state->event = QUESTION_EVENTOPEN;
 			//$question->maxgrade = 100;
 			$state->manualcomment = '';
 	
 			$state->responses = array( '' => $question->studentanswer);
-			$state->attempt = $question->iid;
+			$state->attempt = $question->iid;					
 
 			$states[ $question->id] = $state; 
 		}
@@ -312,8 +341,25 @@
 				echo "<br />\n";
 			}
 			$questions[$i]->maxgrade = 0;
-			$game->optionflags = 0;
-			print_question( $questions[$i], $states[$i], $number, $game, $options);
+			
+		    $options->correct_responses = 0;
+		    $options->feedback = 0;
+		    $options->readonly = 0;	
+			
+            global $QTYPES;
+            
+		    unset( $cmoptions);
+            $cmoptions->course = $game->course;
+            $cmoptions->optionflags->optionflags = 0;
+		    $cmoptions->id = 0;
+		    $cmoptions->shuffleanswers = 1;
+		    $attempt = 0;
+		    $question = $questions[ $i];
+		    if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
+			    error( 'game_sudoku_showquestions_quiz: problem');
+		    }						
+			$cmoptions->optionflags = 0;
+			print_question( $question, $states[$i], $number, $cmoptions, $options);
 			$number += $questions[$i]->length;
 		}
 	}

@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.2 2008/07/22 06:24:19 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
  * @package game
  **/
 
@@ -81,6 +81,11 @@ function game_update_instance($game) {
     if( !isset( $game->glossarycategoryid2)){
         $game->glossarycategoryid2 = 0;
     }
+        
+    if( $game->grade == ''){
+        $game->grade = 0;
+    }
+    
     	
     # May have to add extra stuff in here #
 

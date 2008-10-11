@@ -1,4 +1,4 @@
-<?php //$Id: backuplib.php,v 1.2 2008/07/13 07:01:36 bdaloukas Exp $
+<?php //$Id: backuplib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
     //This php script contains all the stuff to backup games
 
 //This version uses only the table game
@@ -69,7 +69,7 @@
         // Insert categories used by games
         $status = execute_sql("INSERT INTO {$CFG->prefix}backup_ids
                                    (backup_code, table_name, old_id, info)
-                               SELECT DISTINCT '$backup_unique_code', 'glossary', g.glossaryid, ''
+                               SELECT DISTINCT $backup_unique_code, 'glossary', g.glossaryid, ''
                                FROM {$CFG->prefix}game g
                                WHERE g.course=$course", false);
 
@@ -98,11 +98,11 @@
 
         $recs = get_records_select( 'game_snakes_database');
 		game_backup_table( $bf, $recs, 'GAME_SNAKES_DATABASE',5, 'GAME_SNAKES_DATABASE_RECORD', 6);
-				
-        $recs = get_records( 'game_bookquiz_questions', "gameid=$game->id");
+
+        $recs = get_records_select( 'game_bookquiz_questions', "gameid=$game->id");
 		game_backup_table( $bf, $recs, 'GAME_BOOKQUIZ_QUESTIONS',5, 'GAME_BOOKQUIZ_QUESTION', 6);
 
-        $recs = get_records( 'game_grades', "gameid=$game->id");
+        $recs = get_records_select( 'game_grades', "gameid=$game->id");
 		game_backup_table( $bf, $recs, 'GAME_GRADES',5, 'GAME_GRADE', 6);
 		
 		$sql = "SELECT DISTINCT g.questioncategoryid as id,qc.stamp FROM ".

@@ -158,8 +158,8 @@ function getrandomsudoku( $level1=0, $level2=0)
 
 	$i = mt_rand( 0, $count - 1);
 
-	$sql = "SELECT * FROM {$CFG->prefix}game_sudoku_database $where LIMIT $i,1";
-	if( ($recs = get_records_sql( $sql)) != false)
+	$sql = "SELECT * FROM {$CFG->prefix}game_sudoku_database $where";
+	if( ($recs = get_records_sql( $sql, $i, 1)) != false)
 	{
 		foreach( $recs as $rec){
 			return $rec;

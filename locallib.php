@@ -202,8 +202,8 @@ function game_question_selectrandom( $table, $select, $id_fields="id")
         return false;
     $sel = mt_rand(0, $rec->c-1);
 	        
-	$sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select LIMIT $sel,1";
-	if( ($recs=get_records_sql( $sql)) == false)
+	$sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select";
+	if( ($recs=get_records_sql( $sql, $sel, 1)) == false)
         return false;
     	
     foreach( $recs as $rec){

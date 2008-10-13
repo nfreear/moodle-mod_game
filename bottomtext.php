@@ -1,9 +1,9 @@
-<?php  // $Id: bottomtext.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php  // $Id: bottomtext.php,v 1.2 2008/10/13 20:59:40 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: bottomtext.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+ * @version $Id: bottomtext.php,v 1.2 2008/10/13 20:59:40 bdaloukas Exp $
  * @package game
  **/
  
@@ -31,7 +31,7 @@
     
     echo '<form name="form" method="post" action="bottomtext.php">';
     
-    $game = get_record_select( 'game', "id=$gameid", 'id,bottomtext');
+    $game = get_record_select( 'game', "id=$gameid", 'id,bottomtext,course');
     print_textarea($usehtmleditor, 20, 60, 630, 300, 'bottomtext', $game->bottomtext, $game->course);
     use_html_editor();
 

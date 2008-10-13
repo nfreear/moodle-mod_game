@@ -153,10 +153,9 @@ function game_question_shortanswer_quiz( $game)
         return false;	
 
 	$select = "{$CFG->prefix}question.id=$id AND {$CFG->prefix}question_answers.question=$id".
-					" AND {$CFG->prefix}question.hidden=0";
+					" AND {$CFG->prefix}question.hidden=0 ";
 	$table = "question,{$CFG->prefix}question_answers";
 	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, {$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, 0 as glossaryentryid, '' as attachment";
-    
 	return get_record_select( $table, $select, $fields);
 }
 
@@ -175,21 +174,30 @@ function game_question_shortanswer_question( $game)
         if( strpos( $cats, ',') > 0){
             $select = $CFG->prefix.'question.category in ('.$cats.')';
         }
-    }        
+    }
 	$select .= " AND qtype='shortanswer'";
 	
 	$table = "question";
 	$fields = "{$CFG->prefix}question.id";
-		
+
     if( ($id = game_question_selectrandom( $table, $select, $fields)) == false)
         return false;	
 
 	$select = "{$CFG->prefix}question.id=$id AND {$CFG->prefix}question_answers.question=$id".
-					" AND {$CFG->prefix}question.hidden=0";
+					" AND {$CFG->prefix}question.hidden=0 AND qtype='shortanswer'";
 	$table = "question,{$CFG->prefix}question_answers";
-	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, {$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, 0 as glossaryentryid, '' as attachment";
+	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, ".
+	          "{$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, ".
+	          "0 as glossaryentryid, '' as attachment";
     
-	return get_record_select( $table, $select, $fields);
+    //Maybe there are more answers to one question. I use as correct the one with bigger fraction
+	$recs = get_records_select( $table, $select, 'fraction DESC', $fields);
+	if( $recs == false){
+	    return false;
+	}
+	foreach( $recs as $rec){
+	    return $rec;
+	}
 }
 
 //used by millionaire, game_question_shortanswer_quiz, hidden picture
@@ -205,7 +213,7 @@ function game_question_selectrandom( $table, $select, $id_fields="id")
 	$sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select";
 	if( ($recs=get_records_sql( $sql, $sel, 1)) == false)
         return false;
-    	
+
     foreach( $recs as $rec){
         return $rec->id;
     }

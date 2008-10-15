@@ -152,11 +152,21 @@ function game_question_shortanswer_quiz( $game)
     if( ($id = game_question_selectrandom( $table, $select, $fields)) == false)
         return false;	
 
-	$select = "{$CFG->prefix}question.id=$id AND {$CFG->prefix}question_answers.question=$id".
-					" AND {$CFG->prefix}question.hidden=0 ";
-	$table = "question,{$CFG->prefix}question_answers";
-	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, {$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, 0 as glossaryentryid, '' as attachment";
-	return get_record_select( $table, $select, $fields);
+	$select = "q.id=$id AND qa.question=$id".
+					" AND q.hidden=0 AND qtype='shortanswer'";
+	$table = "question q,{$CFG->prefix}question_answers qa";
+	$fields = "qa.id as id2, q.id, q.questiontext as questiontext, ".
+	          "qa.answer as answertext, q.id as questionid, ".
+	          "0 as glossaryentryid, '' as attachment";
+    
+    //Maybe there are more answers to one question. I use as correct the one with bigger fraction
+	$recs = get_records_select( $table, $select, 'fraction DESC', $fields);
+	if( $recs == false){
+	    return false;
+	}
+	foreach( $recs as $rec){
+	    return $rec;
+	}
 }
 
 //used by hangman
@@ -183,11 +193,11 @@ function game_question_shortanswer_question( $game)
     if( ($id = game_question_selectrandom( $table, $select, $fields)) == false)
         return false;	
 
-	$select = "{$CFG->prefix}question.id=$id AND {$CFG->prefix}question_answers.question=$id".
-					" AND {$CFG->prefix}question.hidden=0 AND qtype='shortanswer'";
-	$table = "question,{$CFG->prefix}question_answers";
-	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, ".
-	          "{$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid, ".
+	$select = "q.id=$id AND qa.question=$id".
+					" AND q.hidden=0 AND qtype='shortanswer'";
+	$table = "question q,{$CFG->prefix}question_answers qa";
+	$fields = "qa.id as id2, q.id, q.questiontext as questiontext, ".
+	          "qa.answer as answertext, q.id as questionid, ".
 	          "0 as glossaryentryid, '' as attachment";
     
     //Maybe there are more answers to one question. I use as correct the one with bigger fraction
@@ -448,17 +458,15 @@ function game_questions_shortanswer_quiz( $game)
     }	
     		
 	$select = "qtype='shortanswer' AND quiz='$game->quizid' ".
-					" AND {$CFG->prefix}quiz_question_instances.question={$CFG->prefix}question.id".
-					" AND {$CFG->prefix}question_answers.question={$CFG->prefix}question.id".
-					" AND {$CFG->prefix}question.hidden=0";
-	$table = "question,{$CFG->prefix}quiz_question_instances,{$CFG->prefix}question_answers";
-	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, ".
-				   "{$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid,".
+					" AND qqi.question=q.id".
+					" AND qa.question=q.id".
+					" AND q.hidden=0";
+	$table = "question q,{$CFG->prefix}quiz_question_instances qqi,{$CFG->prefix}question_answers qa";
+	$fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
+				   "qa.answer as answertext, q.id as questionid,".
 				   " 0 as glossaryentryid,'' as attachment";
-	
-	$sql = "SELECT $fields FROM {$CFG->prefix}$table WHERE $select";
-    
-	return get_records_sql( $sql);
+
+	return game_questions_shortanswer_question_fraction( $table, $fields, $select);
 }
 
 //used by cross
@@ -471,25 +479,51 @@ function game_questions_shortanswer_question( $game)
     }
     		
     //include subcategories    		
-    $select = $CFG->prefix.'question.category='.$game->questioncategoryid;        
+    $select = 'q.category='.$game->questioncategoryid;        
     if( $game->subcategories){
         $cats = question_categorylist( $game->questioncategoryid);
         if( strpos( $cats, ',') > 0){
-            $select = $CFG->prefix.'question.category in ('.$cats.')';
+            $select = 'q.category in ('.$cats.')';
         }
     }    		
     		
 	$select .= " AND qtype='shortanswer' ".
-					" AND {$CFG->prefix}question_answers.question={$CFG->prefix}question.id".
-					" AND {$CFG->prefix}question.hidden=0";
-	$table = "question,{$CFG->prefix}question_answers";
-	$fields = "{$CFG->prefix}question.id, {$CFG->prefix}question.questiontext as questiontext, ".
-				   "{$CFG->prefix}question_answers.answer as answertext, {$CFG->prefix}question.id as questionid,".
-				   " 0 as glossaryentryid, '' as attachment";
+					" AND qa.question=q.id".
+					" AND q.hidden=0";
+	$table = "question q,{$CFG->prefix}question_answers qa";
+	$fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
+				   "qa.answer as answertext, q.id as questionid";
 	
-	$sql = "SELECT $fields FROM {$CFG->prefix}$table WHERE $select";
+	return game_questions_shortanswer_question_fraction( $table, $fields, $select);
+}
+	
+function game_questions_shortanswer_question_fraction( $table, $fields, $select)
+{
+    global $CFG;
     
-	return get_records_sql( $sql);
+	$sql = "SELECT $fields FROM {$CFG->prefix}$table WHERE $select ORDER BY fraction DESC";
+    
+	$recs = get_records_sql( $sql);
+	
+	$recs2 = array();
+	$map = array();
+	foreach( $recs as $rec){
+	    unset( $rec2);
+	    if( array_key_exists( $rec->questionid, $map)){
+	        continue;
+	    }
+	    $rec2->id = $rec->id;
+	    $rec2->questiontext = $rec->questiontext;
+	    $rec2->answertext = $rec->answertext;
+	    $rec2->questionid = $rec->questionid;
+	    $rec2->glossaryentryid = 0;
+	    $rec2->attachment = '';
+	    $recs2[] = $rec2;
+	    
+	    $map[ $rec->questionid] = $rec->questionid;
+	}
+
+	return $recs2;
 }
 
 	function game_setchar( &$s, $pos, $char)

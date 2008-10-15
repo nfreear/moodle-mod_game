@@ -37,7 +37,7 @@ class Cross
 	
 	
 	function setwords( $answers, $maxcols)
-	{	
+	{
 		$textlib = textlib_get_instance();
 
 		$this->m_input_answers = array();

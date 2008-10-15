@@ -865,7 +865,13 @@ function showanswers_question_select( $form, $table, $select, $fields='*', $orde
         
         switch( $question->qtype){
         case 'shortanswer':
-	        $rec = get_record_select( 'question_answers', "question=$question->id", "id,answer,feedback");
+	        $recs = get_records_select( 'question_answers', "question=$question->id", 'fraction DESC', 'id,answer,feedback');
+	        if( $recs == false){
+	            $rec = false;
+	        }else{
+	            foreach( $recs as $rec)
+	                break;
+	        }
 	        echo "<td>$rec->answer</td>";
 	        if( $rec->feedback == '')
 	            $rec->feedback = '&nbsp;';

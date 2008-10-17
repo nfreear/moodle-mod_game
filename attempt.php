@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.2 2008/06/28 08:55:15 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.3 2008/10/17 05:02:04 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.2 2008/06/28 08:55:15 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.3 2008/10/17 05:02:04 bdaloukas Exp $
  * @package game
  **/
  
@@ -172,7 +172,6 @@
 function game_cross_unpackpuzzle( $g)
 {
 	$ret = "";
-
 	$textlib = textlib_get_instance();
 	
 	$len = $textlib->strlen( $g);
@@ -182,6 +181,15 @@ function game_cross_unpackpuzzle( $g)
 		{
 			$c = $textlib->substr( $g, $i, 1);
 			if( $c >= '0' and $c <= '9'){
+			    if( $i > 0){
+			        //found escape character
+			        if(  $textlib->substr( $g, $i-1, 1) == '/'){
+			            $g = $textlib->substr( $g, 0, $i-1).$textlib->substr( $g, $i);
+			            $i--;
+			            $len--;
+			            continue;
+			        }
+			    }
 				break;
 			}
 		}
@@ -207,7 +215,6 @@ function game_cross_unpackpuzzle( $g)
 			break;
 		}
 	}
-	
 	return $ret;
 }
 

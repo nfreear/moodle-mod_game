@@ -56,7 +56,6 @@ class Cross
 			}
 		}
 		
-		
 		$N20 = $maxlen;
 
 		$this->m_N20min = round( $N20 - $N20/4);
@@ -68,8 +67,6 @@ class Cross
 			$this->m_N20min = $this->m_N20max;
 		}
 		
-//echo " words=".count($this->m_input_answers)." N20=$N20 min=$this->m_N20min  max=$this->m_N20max<br>";
-
 		$this->m_words = array();
 		foreach( $this->m_input_answers as $word => $answer)
 		{

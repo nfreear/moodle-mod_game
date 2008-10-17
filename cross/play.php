@@ -258,7 +258,7 @@ margin-top:	1em;
 // Do not remove this copyright notice.  You can, however, change the rest of the page.
 // www.eclipsecrossword.com
 
-var BadChars = "`~!@^*()_={[}]\|:;\"',<.>/?0123456789";
+var BadChars = "`~!@^*()_={[}]\|:;\"',<.>/?";
 
 var CrosswordWidth, CrosswordHeight;
 var TableAcrossWord, TableDownWord;
@@ -280,7 +280,6 @@ if (document.getElementById("waitmessage") != null)
 <?PHP
  	echo $html;
 ?>
-
 
 	OnlyCheckOnce = false;
 
@@ -622,8 +621,18 @@ function PackPuzzle( sData)
   var n;
   var j;
   
-  s = sData;
-  
+  s = "";
+  len = sData.length;
+  for(i=0; i < len; i++)
+  {
+    c = sData.charAt( i);
+    if( (c > "0") && (c < "9"))
+    {
+        s = s.concat( '/');
+    }
+    s = s.concat( c);
+  }
+
   for(;;)
   {
     i = s.indexOf( "--");
@@ -641,7 +650,7 @@ function PackPuzzle( sData)
     s2 = s2.concat( n);
     s = s2.concat( s.substr( j));
   }
-  
+
   return s;
 }
 

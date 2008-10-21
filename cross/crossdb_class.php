@@ -1,4 +1,11 @@
-<?PHP
+<?php  // $Id: crossdb_class.php,v 1.3 2008/10/21 02:50:20 bdaloukas Exp $
+/**
+ * This class is a cross that can load and save to a table
+ * 
+ * @author  bdaloukas
+ * @version $Id: crossdb_class.php,v 1.3 2008/10/21 02:50:20 bdaloukas Exp $
+ * @package game
+ **/
 
 class CrossDB extends Cross
 {

@@ -686,6 +686,8 @@ function CheckServerClick( endofgame)
 				TableCell = CellAt(WordX[i], WordY[i] + j);
 			if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;")
 				UserEntry += TableCell.innerHTML.toUpperCase();
+			else if( TableCell.innerHTML.toLowerCase() == "&nbsp;")
+			    UserEntry += " ";
 			else
 				UserEntry += "_";
 		}

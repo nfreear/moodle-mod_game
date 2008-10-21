@@ -189,9 +189,9 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 			$letterword= $textlib->substr( $word, $i, 1);
 			if( $letterword != $letterguess)
 			{
-				if( $letterguess != '-' and $letterguess != ' '){
+				if( $letterguess != '_' and $letterguess != ' '){
 					$wrongletters++;
-					game_setchar( $guess, $i, '-');
+					game_setchar( $guess, $i, '_');
 				}else
 				{
 					$spaces++;

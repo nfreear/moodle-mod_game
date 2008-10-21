@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.4 2008/10/21 02:14:35 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.4 2008/10/21 02:14:35 bdaloukas Exp $
  * @package game
  **/
 
@@ -84,6 +84,14 @@ function game_update_instance($game) {
         
     if( $game->grade == ''){
         $game->grade = 0;
+    }
+
+    if( $game->param1 == ''){
+        $game->param1 = 0;
+    }
+
+    if( $game->param2 == ''){
+        $game->param2 = 0;
     }
     
     	

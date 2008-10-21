@@ -258,7 +258,7 @@ margin-top:	1em;
 // Do not remove this copyright notice.  You can, however, change the rest of the page.
 // www.eclipsecrossword.com
 
-var BadChars = "`~!@^*()_={[}]\|:;\"',<.>/?";
+var BadChars = "`~!@^*()_={[}]\|:;\"',<>?";
 
 var CrosswordWidth, CrosswordHeight;
 var TableAcrossWord, TableDownWord;
@@ -298,7 +298,7 @@ if (document.getElementById("waitmessage") != null)
 		GuessLeter[x] = new Array(CrosswordHeight);
 		for (var y = 0; y < CrosswordHeight; y++) 
 		{
-			GuessLeter[ x][ y] = "-";
+			GuessLeter[ x][ y] = "_";
 		}
 	}
 
@@ -384,7 +384,7 @@ if (document.getElementById("waitmessage") != null)
 
 				if( solu[x][y] != '')
 					document.write( solu[x][y]);
-				else if( GuessLeter[x][y]== "-")
+				else if( GuessLeter[x][y]== "_")
 					document.write( "&nbsp;");
 				else
 					document.write( GuessLeter[x][y]);
@@ -635,14 +635,14 @@ function PackPuzzle( sData)
 
   for(;;)
   {
-    i = s.indexOf( "--");
+    i = s.indexOf( "__");
     if( i == -1)
       break;
     len = s.length;
 
     for( j=i ; j < len; j++)
     {
-      if( s.charAt( j) != "-")
+      if( s.charAt( j) != "_")
         break;
     }
     n = j - i;
@@ -687,7 +687,7 @@ function CheckServerClick( endofgame)
 			if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;")
 				UserEntry += TableCell.innerHTML.toUpperCase();
 			else
-				UserEntry += "-";
+				UserEntry += "_";
 		}
 		sData += UserEntry;
 	}

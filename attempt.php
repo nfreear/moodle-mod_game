@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.3 2008/10/17 05:02:04 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.4 2008/10/21 02:14:35 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.3 2008/10/17 05:02:04 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.4 2008/10/21 02:14:35 bdaloukas Exp $
  * @package game
  **/
  
@@ -204,7 +204,7 @@ function game_cross_unpackpuzzle( $g)
 				}
 			}
 			$count = $textlib->substr( $g, $i, $j-$i);
-			$ret .= $textlib->substr( $g, 0, $i) . str_repeat( '-', $count);
+			$ret .= $textlib->substr( $g, 0, $i) . str_repeat( '_', $count);
 			
 			$g = $textlib->substr( $g, $j);
 			$len = $textlib->strlen( $g);

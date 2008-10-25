@@ -215,7 +215,7 @@ function game_question_selectrandom( $table, $select, $id_fields="id")
 {
     global $CFG;
 		
-	$sql = "SELECT COUNT(*) AS c FROM {$CFG->prefix}$table WHERE $select";
+	$sql = "SELECT COUNT(*) AS c FROM {$CFG->prefix}$table WHERE $select";echo "sql=$sql<br>";
     if( ($rec = get_record_sql( $sql)) == false)
         return false;
     $sel = mt_rand(0, $rec->c-1);

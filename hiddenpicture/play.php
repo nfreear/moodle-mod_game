@@ -92,22 +92,27 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     	$select .= " AND concept NOT LIKE '% %'";
     }
     
-    $select .= " AND (attachment LIKE '%.jpg' OR attachment LIKE '%.gif' OR attachment LIKE '%.png')";
-    if( ($id = game_question_selectrandom( $table, $select, "ge.id")) == false){
-        $a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
-	    /* print_r( $game);
-	    
-	    echo "<br>select=$select<br>";
-	    $recs = get_records_select( 'glossary_entries', "glossaryid={$game->glossaryid2}", '', "id,attachment,concept");
-	    echo "<hr>glossary_entries<br>";
-	    foreach( $recs as $rec)
-	    {
-	        echo $rec->id."#".$rec->concept.'#'.$rec->attachment." @&nbsp;&nbsp;&nbsp;&nbsp;";
-	    }*/
-	    
+    $select .= " AND attachment LIKE '%.%'";
+	if( ($recs=get_records_select( $table, $select, '', 'id,attachment')) == false){	    
+	    $a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
         error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;
     }
+    $ids = array();
+    foreach( $recs as $rec){
+        $s = strtoupper( $rec->attachment);
+        $s = substr( $s, -4);
+        if( $s == '.GIF' or $s == '.JPG' or $s == '.PNG'){
+            $ids[] = $rec->id;
+        } 
+    }
+	if( count( $ids) == 0){
+    	$a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
+        error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
+        return false;
+    }
+    $sel = mt_rand(0, count( $ids)-1);
+    $id = $ids[ $sel];
                   
     $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment'.
            " FROM {$CFG->prefix}glossary_entries WHERE id = $id";

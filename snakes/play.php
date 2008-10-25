@@ -212,11 +212,28 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 		$options->feedback = 0;
 		$options->readonly = 0;
 		
-		print_question($question, $state, '', $cmoptions, $options);
+		print_question($question, $state, '', $cmoptions, $options);	
+		
+?>
+    <script language="javascript" event="onload" for="window">
+    <!--    
+    var retVal = new Array();
+    var elements = document.getElementsByTagName("*");
+    for(var i = 0;i < elements.length;i++){
+        var classes = elements[i].className.split(" ");
+        if( elements[ i].type == 'text'){
+            elements[ i].focus();
+            break;
+        }
+    }
+    -->
+    </script>
+<?php	
+				
 		break;
     }
 
-    echo "</form>\n";
+    echo "</form>\n";    
 }
 
 function game_snakes_showquestion_glossary( $id, $snakes, $query)

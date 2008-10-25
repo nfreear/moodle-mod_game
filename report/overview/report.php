@@ -2,7 +2,7 @@
 /**
  * This script lists student attempts
  *
- * @version $Id: report.php,v 1.2 2008/04/21 17:56:02 bdaloukas Exp $
+ * @version $Id: report.php,v 1.3 2008/10/25 18:34:23 bdaloukas Exp $
  * @author bdaloukas.
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
@@ -38,7 +38,7 @@ class game_report extends game_default_report {
                 foreach($attemptids as $attemptid) {
                     if ($attemptid && $todelete = get_record('game_attempts', 'id', $attemptid)) {
                         delete_records('game_attempts', 'id', $attemptid);
-                        delete_records('game_questions', 'attemptid', $attemptid);
+                        delete_records('game_queries', 'attemptid', $attemptid);
 
                         // Search game_attempts for other instances by this user.
                         // If none, then delete record for this game, this user from game_grades

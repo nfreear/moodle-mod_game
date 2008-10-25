@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.3 2008/07/25 11:26:15 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.4 2008/10/25 17:32:14 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -285,7 +285,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 		if ( $textlib->strpos($letters, $char) === false)
 		{
 			//User didn't select this character
-			$params = 'id='.$_GET['id'].'&amp;newletter='.$char;
+			$params = 'id='.$_GET['id'].'&amp;newletter='.urlencode( $char);
 			if( $onlyshow or $showsolution){
 				$links .= $char;
 			}else

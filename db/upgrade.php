@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.6 2008/10/11 19:12:36 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.7 2008/10/26 22:27:04 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1210,6 +1210,16 @@ function xmldb_game_upgrade($oldversion=0) {
     /// Launch change_field_precision
         $result = $result && change_field_precision($table, $field);
 	}	
+	
+	//game_queries.answerid
+    if ($result && $oldversion < 2008102701) {
+        $table = new XMLDBTable('game_queries');
+        $field = new XMLDBField('answerid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+	}
 	
     
     return $result;

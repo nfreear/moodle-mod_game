@@ -127,7 +127,7 @@ function game_question_shortanswer_glossary( $game, $allowspaces)
     if( ($id = game_question_selectrandom( $table, $select, "{$CFG->prefix}glossary_entries.id")) == false)
         return false;
               
-    $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment'.
+    $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment, 0 as answerid'.
            " FROM {$CFG->prefix}glossary_entries WHERE id = $id";
     if( ($rec = get_record_sql( $sql)) == false)
         return false;
@@ -155,7 +155,7 @@ function game_question_shortanswer_quiz( $game)
 	$select = "q.id=$id AND qa.question=$id".
 					" AND q.hidden=0 AND qtype='shortanswer'";
 	$table = "question q,{$CFG->prefix}question_answers qa";
-	$fields = "qa.id as id2, q.id, q.questiontext as questiontext, ".
+	$fields = "qa.id as answerid, q.id, q.questiontext as questiontext, ".
 	          "qa.answer as answertext, q.id as questionid, ".
 	          "0 as glossaryentryid, '' as attachment";
     
@@ -196,7 +196,7 @@ function game_question_shortanswer_question( $game)
 	$select = "q.id=$id AND qa.question=$id".
 					" AND q.hidden=0 AND qtype='shortanswer'";
 	$table = "question q,{$CFG->prefix}question_answers qa";
-	$fields = "qa.id as id2, q.id, q.questiontext as questiontext, ".
+	$fields = "qa.id as answerid, q.id, q.questiontext as questiontext, ".
 	          "qa.answer as answertext, q.id as questionid, ".
 	          "0 as glossaryentryid, '' as attachment";
     
@@ -215,7 +215,7 @@ function game_question_selectrandom( $table, $select, $id_fields="id")
 {
     global $CFG;
 		
-	$sql = "SELECT COUNT(*) AS c FROM {$CFG->prefix}$table WHERE $select";echo "sql=$sql<br>";
+	$sql = "SELECT COUNT(*) AS c FROM {$CFG->prefix}$table WHERE $select";
     if( ($rec = get_record_sql( $sql)) == false)
         return false;
     $sel = mt_rand(0, $rec->c-1);

@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.4 2008/10/25 17:32:14 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.5 2008/10/26 22:27:04 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -84,6 +84,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 		$query->score = 0;
 		$query->timelastattempt = time();
 		$query->answertext = $answer;
+		$query->answerid = $rec->answerid;
 		if( !($query->id = insert_record( 'game_queries', $query))){
 			print_object( $query);
 			error( "game_hangman_continue: Can't insert to table game_queries");
@@ -362,8 +363,8 @@ function hangman_oncorrect( $id, $word_line, $game, $attempt, $hangman, $query)
 	echo "<BR/><BR/><font size=\"5\">\n$word_line</font>\r\n";
 	
 	echo '<p><BR/><font size="5" color="green">'.get_string( 'hangman_win', 'game').'</font><BR/><BR/></p>';
-	if( $query->questionid){
-		$feedback = get_field( 'question_answers', 'feedback', 'question', $query->questionid);
+	if( $query->answerid){
+		$feedback = get_field( 'question_answers', 'feedback', 'id', $query->answerid);
 		if( $feedback != ''){
 			echo "$feedback<br>";
 		}

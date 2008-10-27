@@ -93,7 +93,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     }
     
     $select .= " AND attachment LIKE '%.%'";
-	if( ($recs=get_records_select( $table, $select, '', 'id,attachment')) == false){	    
+	if( ($recs=get_records_select( $table, $select, '', 'ge.id,attachment')) == false){	    
 	    $a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
         error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;

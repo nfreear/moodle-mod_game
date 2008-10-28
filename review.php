@@ -1,8 +1,8 @@
-<?php  // $Id: review.php,v 1.2 2008/10/11 19:12:35 bdaloukas Exp $
+<?php  // $Id: review.php,v 1.3 2008/10/28 22:34:07 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.2 2008/10/11 19:12:35 bdaloukas Exp $
+* @version $Id: review.php,v 1.3 2008/10/28 22:34:07 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
@@ -142,7 +142,9 @@
 	$pagelist = '';
 	foreach( $a as $item){
 		if( substr( $item, 0, 1)){
-			$pagelist .= ','.$item;
+		    if( substr( $item, -1) != 'G'){
+    			$pagelist .= ','.$item;
+    		}
 		}
 	}
 	$pagelist = substr( $pagelist, 1);
@@ -263,7 +265,9 @@
     }
 
 /// Print all the questions
-	game_print_questions( $pagelist, $attempt, $questions, $options, $states, $game);
+    if( $pagelist){
+    	game_print_questions( $pagelist, $attempt, $questions, $options, $states, $game);
+    }
 
     // Print the navigation panel if required
     if ($numpages > 1 and !$showall) {

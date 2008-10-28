@@ -592,6 +592,10 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 	    	if( !update_record( 'game_attempts', $updrec)){
 	    		error( "game_updateattempts: Can't update game_attempts id=$updrec->id");
 	    	}
+	    	
+            // update grade item and send all grades to gradebook
+            game_grade_item_update( $game);
+            game_update_grades( $game);    
 	    }
 		
 		//Update table game_grades
@@ -1244,5 +1248,38 @@ function game_repairquestion( $s){
     }
     
     return $s;
+}
+
+/**
+ * Delete a game attempt.
+ */
+function game_delete_attempt($attempt, $quiz) {
+    if (is_numeric($attempt)) {
+        if (!$attempt = get_record('game_attempts', 'id', $attempt)) {
+            return;
+        }
+    }
+
+    if ($attempt->gameid != $game->id) {
+        debugging("Trying to delete attempt $attempt->id which belongs to game $attempt->gameid " .
+                "but was passed gameid $game->id.");
+        return;
+    }
+
+    delete_records('game_attempts', 'id', $attempt->id);
+    delete_attempt( $attempt->id);
+
+    // Search game_attempts for other instances by this user.
+    // If none, then delete record for this game, this user from game_grades
+    // else recalculate best grade
+
+    $userid = $attempt->userid;
+    if (!record_exists('game_attempts', 'userid', $userid, 'gameid', $game->id)) {
+        delete_records('game_grades', 'userid', $userid,'gameid', $game->id);
+    } else {
+        game_save_best_score( $game, $userid);
+    }
+
+    game_update_grades( $game, $userid);
 }
 

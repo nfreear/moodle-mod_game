@@ -238,7 +238,7 @@ $string['attempts'] = 'Attempts';
 $string['completedon'] = 'Completed on';
 $string['outof'] = '$a->grade out of a maximum of $a->maxgrade';
 $string['review'] = 'Review';
-$string['noattempts'] = 'No attempts have been made on this quiz';
+$string['noattempts'] = 'No attempts have been made on this game';
 $string[ 'cross_endofgamebutton'] = 'End of crossword game';
 $string['reviewofattempt'] = 'Review of Attempt $a';
 $string[ 'score'] = 'Score';
@@ -271,4 +271,6 @@ $string[ 'javame_name'] = 'Name:';
 $string[ 'javame_description'] = 'Description:';
 $string[ 'javame_version'] = 'Version:';
 $string[ 'sourcemodule_include_subcategories'] = 'Include subcategories';
+
+$string['percent'] = 'Percent';
 ?>

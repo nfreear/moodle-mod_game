@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.5 2008/10/28 22:34:07 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.6 2008/10/30 14:11:47 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.5 2008/10/28 22:34:07 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.6 2008/10/30 14:11:47 bdaloukas Exp $
  * @package game
  **/
 
@@ -90,8 +90,16 @@ function game_update_instance($game) {
         $game->grade = 0;
     }
 
+    if( !isset( $game->param1)){
+        $game->param1 = 0;
+    }
+
     if( $game->param1 == ''){
         $game->param1 = 0;
+    }
+
+    if( !isset( $game->param2)){
+        $game->param2 = 0;
     }
 
     if( $game->param2 == ''){
@@ -501,8 +509,8 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $groupselect = "";
         $groupjoin   = "";
     }
-
-    if (!$attempts = get_records_sql("SELECT qa.*, q.sumgrades AS maxgrade,
+    
+    if (!$attempts = get_records_sql("SELECT qa.*, q.grade,
                                              u.firstname, u.lastname, u.email, u.picture 
                                         FROM {$CFG->prefix}game_attempts qa
                                              JOIN {$CFG->prefix}game q ON q.id = qa.gameid
@@ -519,7 +527,8 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
     $grader          = has_capability('moodle/grade:viewall', $cm_context);
     $accessallgroups = has_capability('moodle/site:accessallgroups', $cm_context);
     $viewfullnames   = has_capability('moodle/site:viewfullnames', $cm_context);
-    $grader          = has_capability('mod/game:grade', $cm_context);
+    //$grader          = has_capability('mod/game:grade', $cm_context);
+    $grader          = isteacher( $courseid, $userid);
     $groupmode       = groups_get_activity_groupmode($cm, $course);
 
     if (is_null($modinfo->groups)) {
@@ -556,8 +565,8 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $tmpactivity->timestamp = $attempt->timefinish;
         
         $tmpactivity->content->attemptid = $attempt->id;
-        $tmpactivity->content->sumgrades = $attempt->score * $game->grade;
-        $tmpactivity->content->maxgrade  = $game->grade;
+        $tmpactivity->content->sumgrades = $attempt->score * $attempt->grade;
+        $tmpactivity->content->maxgrade  = $attempt->grade;
         $tmpactivity->content->attempt   = $attempt->attempt;
         
         $tmpactivity->user->userid   = $attempt->userid;

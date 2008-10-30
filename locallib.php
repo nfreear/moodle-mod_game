@@ -259,16 +259,16 @@ function game_questions_selectrandom( $game, $count=1)
 		if( $game->glossaryid == 0){
 			error( get_string( 'must_select_glossary', 'game'));
 		}	
-		$table = 'glossary_entries';
+		$table = 'glossary_entries ge';
 		$select = "glossaryid='$game->glossaryid' ";
 		if( $game->glossarycategoryid){
-		    $table .= ",{$CFG->prefix}glossary_entries_categories";
-		    $select .= " AND {$CFG->prefix}glossary_entries_categories.entryid = {$CFG->prefix}glossary_entries.id ".
-					    " AND {$CFG->prefix}glossary_entries_categories.categoryid = {$game->glossarycategoryid}";
+		    $table .= ",{$CFG->prefix}glossary_entries_categories gec";
+		    $select .= " AND gec.entryid = ge.id ".
+					    " AND gec.categoryid = {$game->glossarycategoryid}";
 		}
-		$field = 'id';
-		$table2 = 'glossary_entries';
-		$fields2 = 'id as glossaryentryid, 0 as questionid';
+		$field = 'ge.id';
+		$table2 = 'glossary_entries ge';
+		$fields2 = 'ge.id as glossaryentryid, 0 as questionid';
 		break;
 	case 'question':
 		if( $game->questioncategoryid == 0){

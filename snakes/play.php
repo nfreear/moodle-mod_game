@@ -57,7 +57,21 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 		game_snakes_showquestion( $id, $game, $snakes, $query);
 	}
 	
-	?>
+
+?>
+    <script language="javascript" event="onload" for="window">
+    <!--    
+    var retVal = new Array();
+    var elements = document.getElementsByTagName("*");
+    for(var i = 0;i < elements.length;i++){
+        if( elements[ i].type == 'text'){
+            elements[ i].focus();
+            break;
+        }
+    }
+    -->
+    </script>
+
 	<table>
 	<tr>
 		<td>
@@ -213,22 +227,6 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 		$options->readonly = 0;
 		
 		print_question($question, $state, '', $cmoptions, $options);	
-		
-?>
-    <script language="javascript" event="onload" for="window">
-    <!--    
-    var retVal = new Array();
-    var elements = document.getElementsByTagName("*");
-    for(var i = 0;i < elements.length;i++){
-        var classes = elements[i].className.split(" ");
-        if( elements[ i].type == 'text'){
-            elements[ i].focus();
-            break;
-        }
-    }
-    -->
-    </script>
-<?php	
 				
 		break;
     }

@@ -589,7 +589,7 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$s = $ret . $char . $textlib->substr( $s, $pos+1);
 	}
 	
-	function showhtml_base( $crossm, $crossd, $showsolution=false)
+	function showhtml_base( $crossm, $crossd, $showsolution, $showhtmlsolutions)
 	{
 		$textlib = textlib_get_instance();
 		
@@ -603,6 +603,7 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$sWordLength = "";
 		$sguess = "";
 		$ssolutions = '';
+		$shtmlsolutions = '';
 		$sWordX = "";
 		$sWordY = "";
 		$sClue = "";
@@ -628,6 +629,10 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 				$ssolutions .= ',""';
 			}
       
+     		if( $showhtmlsolutions){
+				$shtmlsolutions .= ',"'.utf8_encode( $rec->answertext).'"';
+			}
+			
 			$s = '';
 			$attachment = '';
 		    //if( game_issoundfile( $rec->attachment)){
@@ -656,6 +661,9 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$sguess = str_replace( ' ', '_', $sguess);
 		$sRet .= "Guess = new Array( ".$textlib->substr( $sguess, 1).");\n";
 		$sRet .= "Solutions = new Array( ".$textlib->substr( $ssolutions, 1).");\n";
+		if( $showhtmlsolutions){
+		    $sRet .= "HtmlSolutions = new Array( ".$textlib->substr( $shtmlsolutions, 1).");\n";
+		}
 		$sRet .= "WordX = new Array( ".$textlib->substr( $sWordX, 1).");\n";
 		$sRet .= "WordY = new Array( ".$textlib->substr( $sWordY, 1).");\n";
 		$sRet .= "LastHorizontalWord = $LastHorizontalWord;\n";

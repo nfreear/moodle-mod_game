@@ -271,5 +271,8 @@ $string['hiddenpicture_win'] = "Συγχαρητήρια";
 $string[ 'hiddenpicture_width'] = 'Ορισμός πλάτους εικόνας';
 $string[ 'hiddenpicture_height'] = 'Ορισμός ύψους εικόνας';
 $string[ 'sourcemodule_include_subcategories'] = 'Να συμπεριλαμβάνονται οι υποκατηγορίες';
-
+$string[ 'print'] = 'Εκτύπωση';
+$string[ 'html_title'] = 'Τίτλος της ιστοσελίδας:';
+$string[ 'html_hascheckbutton'] = 'Να έχει κουμπί ελέγχου:';
+$string[ 'html_hasprintbutton'] = 'Να έχει κουμπί εκτύπωσης:';
 ?>

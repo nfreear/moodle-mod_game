@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="2008102701" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="2008110701" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -261,7 +261,7 @@
       </INDEXES>
     </TABLE>     
 
-    <TABLE NAME="game_export_javame" PREVIOUS="game_bookquiz_questions" NEXT="game_snakes" COMMENT="game_export_javame">
+    <TABLE NAME="game_export_javame" PREVIOUS="game_bookquiz_questions" NEXT="game_export_html" COMMENT="game_export_javame">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="gameid"/>
         <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="filename"  />
@@ -281,7 +281,24 @@
       </INDEXES>
     </TABLE> 
 
-    <TABLE NAME="game_snakes" PREVIOUS="game_export_javame" NEXT="game_snakes_database" COMMENT="game_snakes">
+    <TABLE NAME="game_export_html" PREVIOUS="game_export_javame" NEXT="game_snakes" COMMENT="game_export_html">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="gameid"/>
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="filename"  />
+        <FIELD NAME="filename" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="filename" NEXT="checkbutton"/>
+        <FIELD NAME="checkbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="title" NEXT="printbutton" />
+        <FIELD NAME="printbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="checkbutton" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="gameid" UNIQUE="true" FIELDS="gameid"/>
+      </INDEXES>
+    </TABLE> 
+
+    <TABLE NAME="game_snakes" PREVIOUS="game_export_html" NEXT="game_snakes_database" COMMENT="game_snakes">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" NEXT="snakesdatabaseid"/>
         <FIELD NAME="snakesdatabaseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="position" />

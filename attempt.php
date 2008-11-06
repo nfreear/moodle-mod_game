@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.5 2008/10/21 02:24:51 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.6 2008/11/06 23:16:45 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.5 2008/10/21 02:24:51 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.6 2008/11/06 23:16:45 bdaloukas Exp $
  * @package game
  **/
  
@@ -31,6 +31,10 @@
 		$g = game_cross_unpackpuzzle( $_GET[ 'g']);
 		$finishattempt = array_key_exists( 'finishattempt', $_GET);
 		game_cross_continue( $id, $game, $attempt, $detail, $g, $finishattempt);
+		break;
+	case 'crossprint':
+		$attempt = game_getattempt( $game, $detail);
+		game_cross_play( $id, $game, $attempt, $detail, '', true, false, false, true);
 		break;
     case 'sudokucheck':		//the student tries to answer a question
 		$attempt = game_getattempt( $game, $detail);

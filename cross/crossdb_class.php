@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.3 2008/10/21 02:50:20 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.4 2008/11/06 23:16:45 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.3 2008/10/21 02:50:20 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.4 2008/11/06 23:16:45 bdaloukas Exp $
  * @package game
  **/
 
@@ -50,7 +50,7 @@ class CrossDB extends Cross
 		
 	
 
-  function load( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution, &$finishattempt)
+  function load( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution, &$finishattempt, $showhtmlsolutions)
   {
 	$info = '';  
     $correctLetters = 0;
@@ -86,7 +86,7 @@ class CrossDB extends Cross
 			
 			$a[ $key] = $rec;			
 		}
-	  
+
 		ksort( $a);
 		$b = array();
 		$correctletters = $spaces = $wrongletters = 0;
@@ -94,13 +94,13 @@ class CrossDB extends Cross
 		foreach( $a as $rec){
 			$this->updatecrossquestions( $rec, $g, $pos, $correctletters, $wrongletters, $spaces, $game, $attempt, $crossrec);
 			$b[] = $rec;
-			
+
 			if( ($rec->col != 0) and ($rec->row != 0)){
 				$load = true;
 			}
 		}
 		$info = $this->game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt);
-		$html = $this->showhtml_base( $crossrec, $b, $showsolution);
+		$html = $this->showhtml_base( $crossrec, $b, $showsolution, $showhtmlsolutions);
     }
 	
 	if( $load == false)
@@ -178,7 +178,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 		global $USER;
 		
 		$word = $rec->answertext;
-		$len = $textlib->strlen( $word);;
+		$len = $textlib->strlen( $word);
 		$guess = $textlib->substr( $g, $pos, $len);
 		$len_guess = $textlib->strlen( $guess);;
 		$pos += $len;

@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.6 2008/10/30 14:11:47 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.7 2008/11/06 23:16:45 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.6 2008/10/30 14:11:47 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.7 2008/11/06 23:16:45 bdaloukas Exp $
  * @package game
  **/
 
@@ -351,7 +351,11 @@ function game_scale_used ($gameid,$scaleid) {
 function game_update_grades($game=null, $userid=0, $nullifnone=true) {
     global $CFG;
     if (!function_exists('grade_update')) { //workaround for buggy PHP versions
-        require_once($CFG->libdir.'/gradelib.php');
+        if( file_exists( $CFG->libdir.'/gradelib.php')){
+            require_once($CFG->libdir.'/gradelib.php');
+        }else{
+            return;
+        }
     }
 
     if ($game != null) {
@@ -395,7 +399,11 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
 function game_grade_item_update($game, $grades=NULL) {
     global $CFG;
     if (!function_exists('grade_update')) { //workaround for buggy PHP versions
-        require_once($CFG->libdir.'/gradelib.php');
+        if( file_exists( $CFG->libdir.'/gradelib.php')){
+            require_once($CFG->libdir.'/gradelib.php');
+        }else{
+            return;
+        }
     }
 
     if (array_key_exists('cmidnumber', $game)) { //it may not be always present
@@ -475,7 +483,12 @@ function game_grade_item_update($game, $grades=NULL) {
  */
 function game_grade_item_delete( $game) {
     global $CFG;
-    require_once($CFG->libdir.'/gradelib.php');
+    
+    if( file_exists( $CFG->libdir.'/gradelib.php')){
+        require_once($CFG->libdir.'/gradelib.php');
+    }else{
+        return;
+    }    
 
     return grade_update('mod/game', $game->course, 'mod', 'game', $game->id, 0, NULL, array('deleted'=>1));
 }

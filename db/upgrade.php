@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.7 2008/10/26 22:27:04 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.8 2008/11/06 23:16:46 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1220,6 +1220,29 @@ function xmldb_game_upgrade($oldversion=0) {
     /// Launch add field format
         $result = $result && add_field($table, $field);
 	}
+	
+	//new table game_export_html
+    if ($result && $oldversion < 2008110701) {
+        /// Define table game_export_html to be created
+        $table = new XMLDBTable( 'game_export_html');
+
+        /// Adding fields to table scorm_scoes_data
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('filename', XMLDB_TYPE_CHAR, '30');
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, '200');
+        $table->addFieldInfo('checkbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('printbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+
+		/// Adding keys to table scorm_scoes_data
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        
+        $table->addIndexInfo('gameid', XMLDB_INDEX_UNIQUE, array('gameid'));        
+
+        /// Launch create table
+        $result = $result && create_table($table);
+	} 
+	
 	
     
     return $result;

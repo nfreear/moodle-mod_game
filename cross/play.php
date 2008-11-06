@@ -13,7 +13,7 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame=''
 	}
 
 	if( $attempt != false and $cross != false){
-		return game_cross_play( $id, $game, $attempt, $cross, $g, false, false, $endofgame);
+		return game_cross_play( $id, $game, $attempt, $cross, $g, false, false, $endofgame, false, false, false, false);
 	}
 	
 	if( $attempt == false){
@@ -63,7 +63,7 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame=''
 		
 		game_updateattempts( $game, $attempt, 0, 0);
 		
-		return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false);
+		return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false, false, false, false, false);
 	}
 	
 	if( count( $crossd) == 0){
@@ -81,12 +81,12 @@ function showlegend( $legend, $title)
     echo game_filtertext( "$key: $line<br>", 0);
 }
 
-function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution, $endofgame)
+function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution, $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton)
 {
 	global $CFG;
 	$cross = new CrossDB();
 
-	$info = $cross->load( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow, $showsolution, $endofgame);
+	$info = $cross->load( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow, $showsolution, $endofgame, $showhtmlsolutions);
 
 	if( $done or $endofgame){
 		if (! $cm = get_record("course_modules", "id", $id)) {
@@ -228,7 +228,15 @@ margin-top:	1em;
 
 --></style>
 
-</head><body>
+</head>
+
+<?php
+if( $print){
+    echo '<body onload="window.print()">';
+}else{
+    echo '<body>';
+}
+?>
 
 <h1></h1>
 
@@ -613,6 +621,9 @@ function OKClick()
 	DeselectCurrentWord();
 }
 
+<?php 
+if( $showhtmlsolutions == false){
+?>
 function PackPuzzle( sData)
 {
   var i;
@@ -708,7 +719,119 @@ function CheckServerClick( endofgame)
 ?>
 }
 
+<?php
+}
+?>
 
+function OnPrint()
+{
+<?php
+    global $CFG; 
+    $params = "id=$id&gameid=$game->id";
+    echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";
+?>
+}
+
+<?php
+if( $showhtmlprintbutton){
+?>
+    function PrintHtmlClick()
+    {
+    	document.getElementById("printhtmlbutton").style.display = "none";
+    	
+    	<?php
+    	    if( $showhtmlsolutions){
+        	    ?> document.getElementById("checkhtmlbutton").style.display = "none"; <?php
+        	}
+        ?>
+        window.print();     
+        <?php
+    	    if( $showhtmlsolutions){
+        	    ?> document.getElementById("checkhtmlbutton").style.display = "block"; <?php
+        	}
+        ?>
+    	document.getElementById("printhtmlbutton").style.display = "block";	
+    }
+<?php
+}
+
+?>
+
+
+<?php
+if( $showhtmlprintbutton){
+?>
+// Called when the "checkhtml" link is clicked.
+function CheckHtmlClick()
+{
+	var i, TableCell, UserEntry, sData, solution;
+		
+	sData = "";
+	for (i = 0; i < Words; i++)
+	{
+	    solution = decodeutf8( HtmlSolutions[ i]);
+		// Get the user's entry for this word.
+		UserEntry = "";
+		for (j = 0; j < WordLength[i]; j++)
+		{
+			if (i <= LastHorizontalWord)
+				TableCell = CellAt(WordX[i] + j, WordY[i]);
+			else
+				TableCell = CellAt(WordX[i], WordY[i] + j);
+			if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;")
+				UserEntry += TableCell.innerHTML.toUpperCase();
+			else if( TableCell.innerHTML.toLowerCase() == "&nbsp;")
+			    UserEntry += " ";
+			else
+				UserEntry += "_";
+				
+			if( UserEntry[ j] != solution[ j])
+			{
+			    TableCell.innerHTML = "&nbsp;";
+			}
+		}
+
+	}
+}
+<?php
+}
+
+
+if( $showhtmlsolutions)
+{
+?>
+    function decodeutf8(utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i < utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+
+        }
+
+        return string;
+    }
+<?php
+}
+?>
 
 //-->
 </script>
@@ -736,8 +859,28 @@ function CheckServerClick( endofgame)
 		
 		echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" type="button" onclick="CheckServerClick( 1);" style="display: none;">'.get_string( 'cross_endofgamebutton', 'game');
 		echo '</button>';
+
+		echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
+		echo '</button>';
 		
 		echo "</div>\r\n";
+	}	
+	
+	if( $showhtmlsolutions or $showhtmlprintbutton){
+	    echo '<br>';
+	} 
+	
+	if( $showhtmlsolutions){
+		echo '<button id="checkhtmlbutton" type="button" onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
+		echo '</button>';	    
+	}
+
+	if( $showhtmlprintbutton){
+	    if( $showhtmlsolutions){
+	        echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+	    }
+		echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick( 0);" visible=true>'.get_string( 'print', 'game');
+		echo '</button>';	    
 	}
 
     if( $game->param3 == 2){
@@ -752,20 +895,33 @@ function CheckServerClick( endofgame)
 	}
 
 
-if( $attempt->timefinish == 0 and $endofgame == 0)
-{
-	?>
+if( $attempt != false){
+    if( $attempt->timefinish == 0 and $endofgame == 0)
+    {
+	    ?>
 
-	<script language="JavaScript" type="text/javascript"><!--
-	if (Initialized)
-	{
-		document.getElementById("welcomemessage").style.display = "";
-		document.getElementById("checkbutton").style.display = "";
-		document.getElementById("finishattemptbutton").style.display = "";
-	}
-	//-->
-	</script>
-	<?php
+    	<script language="JavaScript" type="text/javascript"><!--
+	    if (Initialized)
+	    {
+	    <?php
+    	    if( $print == false){
+    	        echo "document.getElementById(\"welcomemessage\").style.display = \"\";";
+    	    }
+    	
+            if( $showsolution == false)
+            {
+                ?>
+    	    	    document.getElementById("checkbutton").style.display = "";
+	        	    document.getElementById("finishattemptbutton").style.display = "";
+	        	    document.getElementById("printbutton").style.display = "";
+	        	<?php
+	        }
+	    ?>
+	    }
+	    //-->
+	    </script>
+	    <?php
+    }
 }
 
 ?>

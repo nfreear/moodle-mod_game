@@ -1,9 +1,9 @@
-<?php  // $Id: preview.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php  // $Id: preview.php,v 1.2 2008/11/06 23:16:45 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: preview.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+ * @version $Id: preview.php,v 1.2 2008/11/06 23:16:45 bdaloukas Exp $
  * @package game
  **/
  
@@ -43,7 +43,7 @@
 	switch( $gamekind)
 	{
 	case 'cross':
-		game_cross_play( $update, $game, $attempt, $detail, '', true, $solution, false);
+		game_cross_play( $update, $game, $attempt, $detail, '', true, $solution, false, false, false, false, true);
 		break;
 	case 'sudoku':
 		game_sudoku_play( $update, $game, $attempt, $detail, true, $solution);

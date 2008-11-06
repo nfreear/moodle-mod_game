@@ -273,4 +273,8 @@ $string[ 'javame_version'] = 'Version:';
 $string[ 'sourcemodule_include_subcategories'] = 'Include subcategories';
 
 $string['percent'] = 'Percent';
+$string[ 'print'] = 'Print';
+$string[ 'html_title'] = 'Title of html:';
+$string[ 'html_hascheckbutton'] = 'Has check button:';
+$string[ 'html_hasprintbutton'] = 'Has print button:';
 ?>

@@ -27,7 +27,6 @@
         }
     }
 
-    //require_login( 0, true);
     require_login($course->id);
 
     add_to_log($course->id, "game", "view", "view.php?id=$cm->id", $game->name);

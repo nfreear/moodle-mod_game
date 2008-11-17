@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.8 2008/11/06 23:16:46 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.9 2008/11/17 11:21:24 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1242,7 +1242,17 @@ function xmldb_game_upgrade($oldversion=0) {
         /// Launch create table
         $result = $result && create_table($table);
 	} 
-	
+
+	//rename field game_snakes_database.file to fileboard
+    if ($result && $oldversion < 2008111701) {
+        $table = new XMLDBTable( 'game_snakes_database');
+		$field = new XMLDBField( 'file');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, null, null, null, null, '');
+		
+        $result = $result && rename_field( $table, $field, 'fileboard');
+    }
+
+
 	
     
     return $result;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="2008110701" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="2008111701" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -318,9 +318,9 @@
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="cols"/>
         <FIELD NAME="cols" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="rows" />
         <FIELD NAME="rows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="cols" NEXT="data" />
-        <FIELD NAME="data" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="rows" NEXT="file"/>
-        <FIELD NAME="file" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="data" NEXT="direction"/>
-        <FIELD NAME="direction" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="file" NEXT="headerx" />
+        <FIELD NAME="data" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="rows" NEXT="fileboard"/>
+        <FIELD NAME="fileboard" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="data" NEXT="direction"/>
+        <FIELD NAME="direction" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="fileboard" NEXT="headerx" />
         <FIELD NAME="headerx" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="direction" NEXT="headery" />
         <FIELD NAME="headery" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="headerx" NEXT="footerx" />
         <FIELD NAME="footerx" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="headery" NEXT="footery" />

@@ -1,4 +1,4 @@
-<?php
+<?php  // $Id: importsnakes.php,v 1.2 2008/11/17 11:21:24 bdaloukas Exp $
 
 game_importsnakes();
 
@@ -12,7 +12,7 @@ function game_importsnakes()
     $newrec->name = '8x8 - 4 Snakes - 4 Ladders';
     $newrec->cols = 8;
     $newrec->rows = 8;
-    $newrec->file = 'fidaki.jpg';
+    $newrec->fileboard = 'fidaki.jpg';
     $newrec->direction = 1;
     $newrec->headerx = 4;
     $newrec->headery = 4;
@@ -27,7 +27,7 @@ function game_importsnakes()
     $newrec->name = '6x6 - 3 Snakes - 3 Ladders';
     $newrec->cols = 6;
     $newrec->rows = 6;
-    $newrec->file = 'fidaki2.jpg';
+    $newrec->fileboard = 'fidaki2.jpg';
     $newrec->direction = 1;
     $newrec->headerx = 8;
     $newrec->headery = 8;

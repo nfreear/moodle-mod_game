@@ -77,7 +77,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 		<td>
 		
 <DIV ID="board" STYLE="position:relative; left:0px;top:0px; width:<?php p($board->width); ?>px; height:<?php p($board->height); ?>px;"><br>
-<b><center><img src="snakes/boards/<?php p($board->file);?>"></img></center>
+<b><center><img src="snakes/boards/<?php p($board->fileboard);?>"></img></center>
 </DIV>
 
 <?php

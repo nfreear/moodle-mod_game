@@ -270,6 +270,8 @@ $string[ 'javame_vendor'] = 'Vendor:';
 $string[ 'javame_name'] = 'Name:';
 $string[ 'javame_description'] = 'Description:';
 $string[ 'javame_version'] = 'Version:';
+$string[ 'javame_type'] = 'Type:';
+$string[ 'javame_maxpicturewidth'] = 'Max picture width:';
 $string[ 'sourcemodule_include_subcategories'] = 'Include subcategories';
 
 $string['percent'] = 'Percent';

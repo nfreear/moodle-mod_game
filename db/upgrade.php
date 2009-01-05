@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.9 2008/11/17 11:21:24 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.10 2009/01/05 01:08:02 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1251,6 +1251,18 @@ function xmldb_game_upgrade($oldversion=0) {
 		
         $result = $result && rename_field( $table, $field, 'fileboard');
     }
+
+	//game_export_javame.maxpicturewidth
+    if ($result && $oldversion < 2009010502) {
+        $table = new XMLDBTable('game_export_javame');
+        $field = new XMLDBField('maxpicturewidth');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '7');
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+	}
+
+
 
 
 	

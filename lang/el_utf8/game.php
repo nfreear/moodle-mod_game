@@ -275,4 +275,13 @@ $string[ 'print'] = 'Εκτύπωση';
 $string[ 'html_title'] = 'Τίτλος της ιστοσελίδας:';
 $string[ 'html_hascheckbutton'] = 'Να έχει κουμπί ελέγχου:';
 $string[ 'html_hasprintbutton'] = 'Να έχει κουμπί εκτύπωσης:';
+
+$string[ 'javame_filename'] = 'Όνομα αρχείου:';
+$string[ 'javame_icon'] = 'Εικονίδιο:';
+$string[ 'javame_createdby'] = 'Δημιουργήθηκε από:';
+$string[ 'javame_vendor'] = 'Vendor:';
+$string[ 'javame_name'] = 'Όνομα:';
+$string[ 'javame_description'] = 'Περιγραφή:';
+$string[ 'javame_version'] = 'Έκδοση:';
+$string[ 'javame_type'] = 'Τύπος:';
 ?>

@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.3 2008/11/06 23:16:45 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.4 2009/01/05 01:08:02 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.3 2008/11/06 23:16:45 bdaloukas Exp $
+ * @version $Id: export.php,v 1.4 2009/01/05 01:08:02 bdaloukas Exp $
  * @package game
  **/
  
@@ -74,6 +74,16 @@ function game_export_javame( $game, $update)
 </tr>
 
 <tr>
+<td><?php echo get_string( 'javame_type', 'game'); ?></td>
+<td>
+<select id="menuvisible" name="type" >
+   <option value="0" selected="selected">Hangman with phrases</option>
+   <option value="hangmanp" >Hangman with pictures</option>
+</select>
+</td>
+</tr>
+
+<tr>
 <td><?php echo get_string( 'javame_filename', 'game'); ?></td>
 <td><input type="input" size="20" name="filename" value="<?php echo $javame->filename; ?>"/></td>
 </tr>
@@ -109,7 +119,10 @@ function game_export_javame( $game, $update)
 <td><input type="input" size="20" name="version" value="<?php echo $javame->version; ?>"/></td>
 </tr>
 
-
+<tr>
+<td><?php echo get_string( 'javame_maxpicturewidth', 'game'); ?></td>
+<td><input type="input" size="20" name="maxpicturewidth" value="<?php echo $javame->maxpicturewidth; ?>"/></td>
+</tr>
 
 
 
@@ -140,11 +153,13 @@ function game_export_javame( $game, $update)
             $javame->name = $_POST[ 'name'];
             $javame->description = $_POST[ 'description'];
             $javame->version = $_POST[ 'version'];
+            $javame->type = $_POST[ 'type'];
+            $javame->maxpicturewidth = $_POST[ 'maxpicturewidth'];
         
 	    	if (!(update_record( "game_export_javame", $javame))){
 	    		error("game_export_javame: not updated id=$javame->id");
 	        }
-	            
+	        
             game_OnExportJavaME( $gameid, $javame);
         }else if( $kind == 'html'){
             $html->id = $_POST[ 'id'];

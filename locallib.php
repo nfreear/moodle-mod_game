@@ -131,6 +131,10 @@ function game_question_shortanswer_glossary( $game, $allowspaces)
            " FROM {$CFG->prefix}glossary_entries WHERE id = $id";
     if( ($rec = get_record_sql( $sql)) == false)
         return false;
+        
+    if( $rec->attachment != ''){
+        $rec->attachment = "glossary/{$game->glossaryid}/$rec->id/$rec->attachment";
+    }
     
     return $rec;
 }

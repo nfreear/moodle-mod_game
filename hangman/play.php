@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.5 2008/10/26 22:27:04 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.6 2009/01/05 12:23:11 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -210,7 +210,7 @@ function hangman_existall( $str, $strfind)
 }
 function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_line2, &$links, $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution)
 {
-	global	$USER;
+	global	$USER, $CFG;
 	
 	$word = $query->answertext;
 	
@@ -240,11 +240,14 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
     $wrong = 0;
 		
     if( $game->param5){
-		echo "<br/><b>".game_filtertext( $query->questiontext, $game->course).'</b>';
-		//if( $query->attachment != ''){
-        //    $glossaryid = get_field( 'glossary_entries', 'glossaryid', 'id', $query->glossaryentryid);
-        //    echo game_showattachment( $query->attachment, $game->course, $glossaryid , $query->glossaryentryid);
-		//}
+        $s = trim( game_filtertext( $query->questiontext, $game->course));
+        if( $s != '.' and $s <> ''){
+    		echo "<br/><b>".$s.'</b>';
+        }
+		if( $query->attachment != ''){
+            $file = "{$CFG->wwwroot}/file.php/$game->course/moddata/$query->attachment";
+		    echo "<img src=\"$file\" />";
+		}
 		echo "<br/><br/>";
 	}
 

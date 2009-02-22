@@ -284,4 +284,6 @@ $string[ 'javame_name'] = 'Όνομα:';
 $string[ 'javame_description'] = 'Περιγραφή:';
 $string[ 'javame_version'] = 'Έκδοση:';
 $string[ 'javame_type'] = 'Τύπος:';
+$string[ 'export'] = 'Εξαγωγή';
+$string[ 'export_kind'] = 'Είδος εξαγωγής';
 ?>

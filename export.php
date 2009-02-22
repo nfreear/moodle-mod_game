@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.4 2009/01/05 01:08:02 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.5 2009/02/22 17:06:56 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.4 2009/01/05 01:08:02 bdaloukas Exp $
+ * @version $Id: export.php,v 1.5 2009/02/22 17:06:56 bdaloukas Exp $
  * @package game
  **/
  
@@ -64,7 +64,7 @@ function game_export_javame( $game, $update)
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
 
 <tr>
-<td>Kind:</td>
+<td><?php echo get_string( 'export_kind', 'game'); ?>:</td>
 <td>
 <select id="menuvisible" name="visible" >
    <option value="0" selected="selected">JavaME</option>
@@ -214,7 +214,7 @@ function game_export_html( $game, $update)
 <table>
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
 <tr>
-<td>Kind:</td>
+<td><?php echo get_string( 'export_kind', 'game'); ?>:</td>
 <td>HTML</td>
 </tr>
 
@@ -233,8 +233,8 @@ function game_export_html( $game, $update)
 <td><?php echo get_string( 'html_hascheckbutton', 'game'); ?></td>
 <td>
 <select id="checkbutton" name="checkbutton" >
-   <option value="1" selected="selected">Yes</option>
-   <option value="1">No</option>
+   <option value="1" selected="selected"><?php echo get_string( 'yes'); ?></option>
+   <option value="0"><?php echo get_string( 'no'); ?></option>
 </select>
 </td>
 </tr>
@@ -243,8 +243,8 @@ function game_export_html( $game, $update)
 <td><?php echo get_string( 'html_hasprintbutton', 'game'); ?></td>
 <td>
 <select id="printbutton" name="printbutton" >
-   <option value="1" selected="selected">Yes</option>
-   <option value="1">No</option>
+   <option value="1" selected="selected"><?php echo get_string( 'yes'); ?></option>
+   <option value="0"><?php echo get_string( 'no'); ?></option>
 </select>
 </td>
 </tr>

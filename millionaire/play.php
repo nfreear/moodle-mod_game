@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.10 2009/03/11 21:32:14 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.11 2009/03/11 22:09:32 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.10 2009/03/11 21:32:14 bdaloukas Exp $
+ * @version $Id: play.php,v 1.11 2009/03/11 22:09:32 bdaloukas Exp $
  * @package game
  **/
 
@@ -212,7 +212,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
     for( $i=0; $i < count( $aAnswer); $i++)
     {
 		$name = "btAnswer".substr( 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', $i, 1);
-		$s = substr( $letters, $i, 1);
+		$s = $textlib->substr( $letters, $i, 1);
       
 		$disabled = ( $state == 15 ? "disabled=1" : "");
         

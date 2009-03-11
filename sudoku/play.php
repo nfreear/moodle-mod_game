@@ -262,7 +262,7 @@ function game_sudoku_showsudoku( $data, $guess, $bShowLegend, $bShowSolution, $o
 	<script language="javascript">
 			function OnCheck( pos)
 			{
-				s = window.prompt( "<?php echo get_string ( 'sudoku_guessnumber', 'game') ?>");
+				s = window.prompt( "<?php echo get_string ( 'sudoku_guessnumber', 'game') ?>", "");
 				
 				if( s < "1")
 					return;

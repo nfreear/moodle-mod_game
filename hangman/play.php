@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.6 2009/01/05 12:23:11 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.7 2009/03/11 21:32:14 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -25,9 +25,11 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
     srand ((double)microtime()*1000000);
     
     //I try 10 times to find a new question
+    $found_words = 0;   //try to find CONST_GAME_TRIES_REPETITION words
+    $min_num = 0;
     for($i=1; $i <= 10; $i++)
     {
-		$rec = game_question_shortanswer( $game, $game->param7);
+		$rec = game_question_shortanswer( $game, $game->param7, false);
 		
 		if( $rec === false){
 			continue;
@@ -49,7 +51,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
         }
         $allletters = game_getallletters( $answer2, $game->language);
 		
-        if( $allletters === false){
+        if( $allletters == ''){
             continue;
         }
         
@@ -66,68 +68,104 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 	    		continue;
 	    	}
 	   }
+	   
+	    $copy = false;
+        $select2 = "gameid=$game->id AND userid='$USER->id' AND questionid='$rec->questionid' AND glossaryentryid='$rec->glossaryentryid'";
+        if( ($rec2 = get_record_select( 'game_repetitions', $select2, 'id,repetitions r')) != false){
+            if( ($rec2->r < $min_num) or ($min_num == 0)){
+                $min_num = $rec2->r;
+                $copy = true;
+            }
+        }else
+        {
+            $min_num = 0;
+            $copy = true;
+        }	   
+       
+        if( $copy){
+            $min_id = $rec->id;
+            
+            $min->questionid = $rec->questionid;
+            $min->glossaryentryid = $rec->glossaryentryid;
+            $min->attachment = $rec->attachment;
+            $min->questiontext = $rec->questiontext;
+            $min->answerid = $rec->answerid;
+            
+            if( $min_num == 0){
+                break;
+            }
+        }
+	   
+	    //found a correct word
+	    if( $found_words >= CONST_GAME_TRIES_REPETITION)
+	        break;
+	}
 		
-	    if( $attempt == false){
-		    $attempt = game_addattempt( $game);
-    	}
-		        
-		$_GET[ 'newletter'] = '';
-		
-		$query->attemptid = $attempt->id;
-		$query->gameid = $game->id;
-		$query->userid = $USER->id;
-		$query->sourcemodule = $game->sourcemodule;
-		$query->questionid = $rec->questionid;
-		$query->glossaryentryid = $rec->glossaryentryid;
-		$query->attachment = $rec->attachment;
-		$query->questiontext = addslashes( $rec->questiontext);
-		$query->score = 0;
-		$query->timelastattempt = time();
-		$query->answertext = $answer;
-		$query->answerid = $rec->answerid;
-		if( !($query->id = insert_record( 'game_queries', $query))){
-			print_object( $query);
-			error( "game_hangman_continue: Can't insert to table game_queries");
-		}
-		
-		$newrec->id = $attempt->id;
-		$newrec->queryid = $query->id;
-		if( $updatehangman == false){
-			$newrec->maxtries = $game->param4;
-			if( $newrec->maxtries == 0){
-				$newrec->maxtries = 1;
-			}
-			$newrec->finishedword = 0;
-			$newrec->corrects = 0;
-		}
-		
-		$newrec->allletters = $allletters;
-		
-		$letters = '';
-		if( $game->param1){
-			$letters .= $textlib->substr( $answer, 0, 1);
-		}
-		if( $game->param2){
-			$letters .= $textlib->substr( $answer, -1, 1);
-		}
-		$newrec->letters = $letters;
-
-		if( $updatehangman == false){
-			if( !game_insert_record(  'game_hangman', $newrec)){
-				error( 'game_hangman_continue: error inserting in game_hangman');
-			}	
-		}else
-		{
-			if( !update_record(  'game_hangman', $newrec)){
-				error( 'game_hangman_continue: error updating in game_hangman');
-			}
-			$newrec = get_record_select( 'game_hangman', "id=$newrec->id");
-		}
-        game_hangman_play( $id, $game, $attempt, $newrec);
-        return;
+	if( $min_id == 0){
+	    error( get_string( 'hangman_nowords', 'game'));
+	}
+	
+	//Found one word for hangman
+    if( $attempt == false){
+        $attempt = game_addattempt( $game);
     }
-    
-	error( get_string( 'hangman_nowords', 'game'));
+		        
+    $_GET[ 'newletter'] = '';
+		
+    $query->attemptid = $attempt->id;
+	$query->gameid = $game->id;
+	$query->userid = $USER->id;
+	$query->sourcemodule = $game->sourcemodule;
+	$query->questionid = $min->questionid;
+	$query->glossaryentryid = $min->glossaryentryid;
+	$query->attachment = $min->attachment;
+	$query->questiontext = addslashes( $min->questiontext);
+	$query->score = 0;
+	$query->timelastattempt = time();
+	$query->answertext = $answer;
+	$query->answerid = $min->answerid;
+	if( !($query->id = insert_record( 'game_queries', $query))){
+		print_object( $query);
+		error( "game_hangman_continue: Can't insert to table game_queries");
+	}
+		
+	$newrec->id = $attempt->id;
+	$newrec->queryid = $query->id;
+	if( $updatehangman == false){
+		$newrec->maxtries = $game->param4;
+		if( $newrec->maxtries == 0){
+			$newrec->maxtries = 1;
+		}
+		$newrec->finishedword = 0;
+		$newrec->corrects = 0;
+	}
+		
+	$newrec->allletters = $allletters;
+		
+	$letters = '';
+	if( $game->param1){
+		$letters .= $textlib->substr( $answer, 0, 1);
+	}
+	if( $game->param2){
+		$letters .= $textlib->substr( $answer, -1, 1);
+	}
+	$newrec->letters = $letters;
+
+	if( $updatehangman == false){
+		if( !game_insert_record(  'game_hangman', $newrec)){
+			error( 'game_hangman_continue: error inserting in game_hangman');
+		}	
+	}else
+	{
+		if( !update_record(  'game_hangman', $newrec)){
+			error( 'game_hangman_continue: error updating in game_hangman');
+		}
+		$newrec = get_record_select( 'game_hangman', "id=$newrec->id");
+	}
+		
+	game_update_repetitions( $game->id, $USER->id, $query->questionid, $query->glossaryentryid);
+		
+    game_hangman_play( $id, $game, $attempt, $newrec);
 }
 
 function game_hangman_onfinishgame( $game, $attempt, $hangman)

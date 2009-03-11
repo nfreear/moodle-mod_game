@@ -16,6 +16,9 @@ $GAME_GRADE_METHOD = array ( GAME_GRADEMETHOD_HIGHEST => get_string("gradehighes
                              GAME_GRADEMETHOD_AVERAGE => get_string("gradeaverage", "game"),
                              GAME_GRADEMETHOD_FIRST => get_string("attemptfirst", "game"),
                              GAME_GRADEMETHOD_LAST  => get_string("attemptlast", "game"));                                  
+
+define( "CONST_GAME_TRIES_REPETITION", "3");
+
 /**#@-*/
 
 
@@ -89,23 +92,23 @@ function game_showcheckbox( $name, $value)
 }
 
 //used by hangman
-function game_question_shortanswer( $game, $allowspaces=false)
+function game_question_shortanswer( $game, $allowspaces=false, $use_repetitions=true)
 {
 	switch( $game->sourcemodule)
 	{
 	case 'glossary':
-		return game_question_shortanswer_glossary( $game, $allowspaces);
+		return game_question_shortanswer_glossary( $game, $allowspaces, $use_repetitions);
 	case 'quiz':
-		return game_question_shortanswer_quiz( $game, $allowspaces);
+		return game_question_shortanswer_quiz( $game, $allowspaces, $use_repetitions);
 	case 'question':
-		return game_question_shortanswer_question( $game, $allowspaces);
+		return game_question_shortanswer_question( $game, $allowspaces, $use_repetitions);
 	}
 
 	return false;
 }
 
 //used by hangman
-function game_question_shortanswer_glossary( $game, $allowspaces)
+function game_question_shortanswer_glossary( $game, $allowspaces, $use_repetitions)
 {
     global $CFG;
 
@@ -124,7 +127,7 @@ function game_question_shortanswer_glossary( $game, $allowspaces)
     	$select .= " AND concept NOT LIKE '% %'  ";
     }
 	
-    if( ($id = game_question_selectrandom( $table, $select, "{$CFG->prefix}glossary_entries.id")) == false)
+    if( ($id = game_question_selectrandom( $game, $table, $select, "{$CFG->prefix}glossary_entries.id", $use_repetitions)) == false)
         return false;
               
     $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment, 0 as answerid'.
@@ -140,7 +143,7 @@ function game_question_shortanswer_glossary( $game, $allowspaces)
 }
 
 //used by hangman
-function game_question_shortanswer_quiz( $game)
+function game_question_shortanswer_quiz( $game, $allowspaces, $use_repetitions)
 {
     global $CFG;
 
@@ -153,7 +156,7 @@ function game_question_shortanswer_quiz( $game)
 	$table = "question,{$CFG->prefix}quiz_question_instances";
 	$fields = "{$CFG->prefix}question.id";
 	
-    if( ($id = game_question_selectrandom( $table, $select, $fields)) == false)
+    if( ($id = game_question_selectrandom( $game, $table, $select, $fields, $use_repetitions)) == false)
         return false;	
 
 	$select = "q.id=$id AND qa.question=$id".
@@ -174,7 +177,7 @@ function game_question_shortanswer_quiz( $game)
 }
 
 //used by hangman
-function game_question_shortanswer_question( $game)
+function game_question_shortanswer_question( $game, $allowspaces, $use_repetitions)
 {
     global $CFG;
 	
@@ -194,7 +197,7 @@ function game_question_shortanswer_question( $game)
 	$table = "question";
 	$fields = "{$CFG->prefix}question.id";
 
-    if( ($id = game_question_selectrandom( $table, $select, $fields)) == false)
+    if( ($id = game_question_selectrandom( $game, $table, $select, $fields, $use_repetitions)) == false)
         return false;	
 
 	$select = "q.id=$id AND qa.question=$id".
@@ -215,24 +218,89 @@ function game_question_shortanswer_question( $game)
 }
 
 //used by millionaire, game_question_shortanswer_quiz, hidden picture
-function game_question_selectrandom( $table, $select, $id_fields="id")
+function game_question_selectrandom( $game, $table, $select, $id_fields="id", $use_repetitions=true)
 {
-    global $CFG;
+    global $CFG, $USER; 
 		
 	$sql = "SELECT COUNT(*) AS c FROM {$CFG->prefix}$table WHERE $select";
     if( ($rec = get_record_sql( $sql)) == false)
         return false;
-    $sel = mt_rand(0, $rec->c-1);
+        
+    $count = $rec->c;
+    $min_num = 0;
+    $min_id = 0;
+    for($i=1; $i <= CONST_GAME_TRIES_REPETITION; $i++){
+        $sel = mt_rand(0, $count-1);
 	        
-	$sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select";
-	if( ($recs=get_records_sql( $sql, $sel, 1)) == false)
-        return false;
+	    $sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select ORDER BY id";
+    	if( ($recs=get_records_sql( $sql, $sel, 1)) == false){
+            return false;
+        }
 
-    foreach( $recs as $rec){
-        return $rec->id;
+        $id = 0;
+        foreach( $recs as $rec){
+            $id = $rec->id;
+        }
+        if( $min_id == 0){
+            $min_id = $id;
+        }
+        
+        if( $use_repetitions == false){
+            return $id;
+        }
+        
+        if( $count == 1){
+            break;
+        }
+                
+        $questionid = $glossaryentryid = 0;
+        if( $game->sourcemodule == 'glossary')
+            $glossaryentryid = $id;
+        else
+            $questionid = $id;
+        
+        $select2 = "gameid=$game->id AND userid='$USER->id' AND questionid='$questionid' AND glossaryentryid='$glossaryentryid'";
+        if( ($rec = get_record_select( 'game_repetitions', $select2, 'id,repetitions r')) != false){
+            if( ($rec->r < $min_num) or ($min_num == 0)){
+                $min_num = $rec->r;
+                $min_id = $id;
+            }
+        }else
+        {
+            $min_id = $questionid;
+            break;
+        }
+  
     }
+
+    if( $game->sourcemodule == 'glossary')
+        game_update_repetitions( $game->id, $USER->id, 0, $min_id);
+    else
+        game_update_repetitions( $game->id, $USER->id, $min_id, 0);
     
-    return false;
+    return $min_id;
+}
+
+function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryid){
+    $select = "gameid=$gameid AND userid='$userid' AND questionid='$questionid' AND glossaryentryid='$glossaryentryid'";
+    if( ($rec = get_record_select( 'game_repetitions', $select, 'id,repetitions r')) != false){
+        $updrec->id = $rec->id;
+        $updrec->repetitions = $rec->r + 1;
+        if( !update_record( 'game_repetitions', $updrec)){
+            error("Insert page: new page game_repetitions not inserted");
+        }
+    }else
+    {
+        $newrec->gameid = $gameid;
+        $newrec->userid = $userid;
+        $newrec->questionid = $questionid;
+        $newrec->glossaryentryid = $glossaryentryid;
+        $newrec->repetitions = 1;
+    
+        if (!insert_record( 'game_repetitions', $newrec)){
+            error("Update page: can't update game_repetitions");
+        }
+    }
 }
 
 //used by sudoku
@@ -411,7 +479,7 @@ function game_getallletters( $word, $lang='')
 		}
     }
     
-    return false;
+    return '';
 }
 
 //used by cross

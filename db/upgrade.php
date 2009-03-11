@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.10 2009/01/05 01:08:02 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.11 2009/03/11 21:32:14 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1260,6 +1260,28 @@ function xmldb_game_upgrade($oldversion=0) {
 
     /// Launch add field format
         $result = $result && add_field($table, $field);
+	}
+	
+	//new table game_export_html
+    if ($result && $oldversion < 2009031111) {
+        /// Define table game_repetitions to be created
+        $table = new XMLDBTable( 'game_repetitions');
+
+        /// Adding fields to table scorm_scoes_data
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('questionid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('glossaryentryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('repetitions', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+
+		/// Adding keys to table scorm_scoes_data
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        
+        $table->addIndexInfo('main', XMLDB_INDEX_UNIQUE, array('gameid,userid,questionid,glossaryentryid'));        
+
+        /// Launch create table
+        $result = $result && create_table($table);
 	}
 
 

@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.9 2008/09/30 17:30:18 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.10 2009/03/11 21:32:14 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.9 2008/09/30 17:30:18 bdaloukas Exp $
+ * @version $Id: play.php,v 1.10 2009/03/11 21:32:14 bdaloukas Exp $
  * @package game
  **/
 
@@ -298,7 +298,7 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 		$table = "question";
 	}
 	$select .= " AND {$CFG->prefix}question.hidden=0";
-	$questionid = game_question_selectrandom( $table, $select,"{$CFG->prefix}question.id as id");
+	$questionid = game_question_selectrandom( $game, $table, $select,"{$CFG->prefix}question.id as id");
 	
 	if( $questionid == 0){
 		error( get_string( 'millionaire_nowords', 'game'));

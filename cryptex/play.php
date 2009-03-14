@@ -1,4 +1,11 @@
-<?PHP
+<?php  // $Id: play.php,v 1.2 2009/03/14 13:47:07 bdaloukas Exp $
+/**
+ * This page plays the cryptex game
+ * 
+ * @author  bdaloukas
+ * @version $Id: play.php,v 1.2 2009/03/14 13:47:07 bdaloukas Exp $
+ * @package game
+ **/
 
 require_once( "cryptexdb_class.php");
 
@@ -196,7 +203,7 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 		<script>
 			function OnCheck( id)
 			{
-				s = window.prompt( "<?php echo get_string( 'cryptex_giveanswer', 'game'); ?>");
+				s = window.prompt( "<?php echo get_string( 'cryptex_giveanswer', 'game'); ?>", '');
 				
 				window.location.href = "<?php echo $CFG->wwwroot.'/mod/game/attempt.php?action=cryptexcheck&id='.$id ?>&q=" + id + "&answer=" + s;
 			}

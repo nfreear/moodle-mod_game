@@ -378,10 +378,10 @@
     <TABLE NAME="game_repetitions" PREVIOUS="game_hiddenpicture" COMMENT="game_repetitions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" NEXT="gameid"/>
-        <FIELD NAME="gameid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="userid" />
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="questionid" />
-        <FIELD NAME="questionid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="glossaryentryid" />
-        <FIELD NAME="glossaryentryid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="questionid" NEXT="repetitions" />
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="userid" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="questionid" />
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="glossaryentryid" />
+        <FIELD NAME="glossaryentryid" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="questionid" NEXT="repetitions" />
         <FIELD NAME="repetitions" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossaryentryid" />
       </FIELDS>
       <KEYS>

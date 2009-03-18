@@ -287,7 +287,7 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
         $updrec->id = $rec->id;
         $updrec->repetitions = $rec->r + 1;
         if( !update_record( 'game_repetitions', $updrec)){
-            error("Insert page: new page game_repetitions not inserted");
+            error("Update page: can't update game_repetitions id={$updrec->id}");
         }
     }else
     {
@@ -296,9 +296,17 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
         $newrec->questionid = $questionid;
         $newrec->glossaryentryid = $glossaryentryid;
         $newrec->repetitions = 1;
-    
+        
+        if( $newrec->questionid == ''){
+            $newrec->questionid = 0;
+        }
+        if( $newrec->glossaryentryid == ''){
+            $newrec->glossaryentryid = 0;
+        }
+            
         if (!insert_record( 'game_repetitions', $newrec)){
-            error("Update page: can't update game_repetitions");
+            print_r( $newrec);
+            error("Insert page: new page game_repetitions not inserted");
         }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="2009031112" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="2009031801" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -388,7 +388,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="main" UNIQUE="false" FIELDS="gameid,userid,questionid,glossaryentryid"/>
+        <INDEX NAME="main" UNIQUE="true" FIELDS="gameid,userid,questionid,glossaryentryid"/>
       </INDEXES>
     </TABLE> 
 

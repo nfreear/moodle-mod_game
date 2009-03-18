@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.11 2009/03/11 21:32:14 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.12 2009/03/18 19:59:44 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1263,7 +1263,7 @@ function xmldb_game_upgrade($oldversion=0) {
 	}
 	
 	//new table game_export_html
-    if ($result && $oldversion < 2009031111) {
+    if ($result && $oldversion < 2009031801) {
         /// Define table game_repetitions to be created
         $table = new XMLDBTable( 'game_repetitions');
 

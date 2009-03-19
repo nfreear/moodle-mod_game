@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.12 2009/03/18 19:59:44 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.13 2009/03/19 22:03:11 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1262,12 +1262,12 @@ function xmldb_game_upgrade($oldversion=0) {
         $result = $result && add_field($table, $field);
 	}
 	
-	//new table game_export_html
+	//new table game_repetitions
     if ($result && $oldversion < 2009031801) {
         /// Define table game_repetitions to be created
         $table = new XMLDBTable( 'game_repetitions');
 
-        /// Adding fields to table scorm_scoes_data
+        /// Adding fields to table game_repetitions
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
         $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
         $table->addFieldInfo('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
@@ -1283,7 +1283,6 @@ function xmldb_game_upgrade($oldversion=0) {
         /// Launch create table
         $result = $result && create_table($table);
 	}
-
 
 
 

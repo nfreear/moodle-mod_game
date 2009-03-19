@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.7 2009/03/11 21:32:14 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.8 2009/03/19 22:03:11 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -26,7 +26,8 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
     
     //I try 10 times to find a new question
     $found_words = 0;   //try to find CONST_GAME_TRIES_REPETITION words
-    $min_num = 0;
+    $min_num = 0;   //number of repetitions
+    $min_id = 0;    //id with min_num repetitions
     for($i=1; $i <= 10; $i++)
     {
 		$rec = game_question_shortanswer( $game, $game->param7, false);

@@ -80,10 +80,10 @@ $string[ 'millionaire_info_people'] = 'Man sagt';
 $string[ 'millionaire_info_telephone'] = 'Ich glaube die richtige Antwort ist';
 $string[ 'millionaire_info_wrong_answer'] = 'Ihre Antwort ist falsch!<br>Die richtige Antwort ist:';
 $string[ 'millionaire_letters_answers'] = 'ABCD';
-$string[ 'millionaire_must_select_questioncategory'] = 'Sie müssen eine Kategorie wählen';
+$string[ 'millionaire_must_select_questioncategory'] = 'Sie müssen eine Kathegorie wählen';
 $string[ 'millionaire_must_select_quiz'] = 'Sie müssen ein Quiz wählen';
 $string[ 'millionaire_no_questions'] = 'Keine Fragen gefunden!';
-$string[ 'millionaire_sourcemodule_must_quiz_question'] = 'Für den Millionär, die Quelle der Fragen müsste $a oder Fragen sein, und nicht';
+$string[ 'millionaire_sourcemodule_must_quiz_question'] = 'Für Wer wird Millionär: die Quelle der Fragen müsste $a oder Fragen sein, und nicht';
 $string[ 'millionaire_win'] = 'Glückwünsch!!!!';
 
 $string[ 'modulename'] = 'Spiel';
@@ -102,7 +102,7 @@ $string[ 'sourcemodule_question'] = 'Fragen';
 $string[ 'sourcemodule_quiz'] = 'Quiz wählen';
 $string[ 'sourcemodule'] = 'Fragen Quelle';
 
-$string[ 'sudoku_emptydatabase'] = 'Die Sudoku Databank ist leer!. Ausführen $a';
+$string[ 'sudoku_emptydatabase'] = 'Die Sudoku Datenbank ist leer!. Ausführen $a';
 $string[ 'sudoku_guessnumber'] = 'Die richtige Nummer erraten';
 $string[ 'sudoku_noentriesfound'] = 'Keine Wörter im Wörterbuch gefunden!';
 $string[ 'sudoku_no_questions'] = 'Keine Fragen gefunden!';
@@ -120,33 +120,33 @@ $string[ 'finish'] = 'Spiel beendet';
 $string[ 'bookquiz_not_select_book'] = 'Sie haben kein Buch gewählt!';
 $string[ 'bookquiz_subchapter'] = 'Unterkapitel erstellen';
 
-$string[ 'sudoku_maxquestions'] = 'Maximum number of questions';
+$string[ 'sudoku_maxquestions'] = 'Maximale Anzahl von Fragen erreicht';
 
-$string[ 'bookquiz_empty'] = 'The book is empty';
+$string[ 'bookquiz_empty'] = 'Das Buch ist leer.';
 
-$string[ 'game_snakes'] = 'Snakes and Ladders';
-$string[ 'snakes_background'] = 'Background';
-$string[ 'snakes_win'] = 'Congratulations';
-$string[ 'snakes_new'] = 'New game';
-$string[ 'useupdategame'] = 'Use the button \"game bearbeiten\" to set the details of the game';
+$string[ 'game_snakes'] = 'Schlangen und Leitern';
+$string[ 'snakes_background'] = 'Hintergrund';
+$string[ 'snakes_win'] = 'Gratulation';
+$string[ 'snakes_new'] = 'Neues Spiel';
+$string[ 'useupdategame'] = 'Druecken Sie den Button \"game bearbeiten\" um die Details f�r das Spiel festzulegen';
 $string[ 'cryptex_nowords'] = 'kein Wort gefunden';
 $string[ 'millionaire_nowords'] = 'kein Wort gefunden';
 
-$string[ 'bookquiz_chapters'] = 'Chapters';
-$string[ 'bookquiz_categories'] = 'Categories';
-$string[ 'bookquiz_numquestions'] = 'Questions';
+$string[ 'bookquiz_chapters'] = 'Kapitel';
+$string[ 'bookquiz_categories'] = 'Kategorien';
+$string[ 'bookquiz_numquestions'] = 'Fragen';
 $string[ 'formatdatetime'] = '%%d %%b %%Y, %%I:%%M %%p';
-$string[ 'showanswers'] = 'Show answers';
-$string[ 'sudoku_create'] = 'Create database of new sudokus';
-$string[ 'sudoku_creating'] = 'Creating <b>$a</b> sudoku';
-$string[ 'sudoku_create_count'] = 'Number of sudokus that will be created';
-$string[ 'sudoku_create_start'] = 'Start creating sudokus';
-$string[ 'hideanswers'] = 'Hide answers';
-$string[ 'must_select_glossary'] = 'You must select a glossary';
-$string[ 'tries'] = 'Tries';
-$string[ 'bottomtext'] = 'Text at the bottom';
-$string[ 'messagewin'] = 'Message when the student wins';
-$string[ 'messageloose'] = 'Message when the student looses';
-$string[ 'feedbacks'] = 'Messages correct answer';
+$string[ 'showanswers'] = 'Antworten zeigen';
+$string[ 'sudoku_create'] = 'Datenbank fuer neues Sudoku erstellen';
+$string[ 'sudoku_creating'] = 'Erstelle <b>$a</b> Sudoku';
+$string[ 'sudoku_create_count'] = 'Anzahl der Sudokus, die erstellt werden';
+$string[ 'sudoku_create_start'] = 'Beginne mit dem Erstellen';
+$string[ 'hideanswers'] = 'Antworten verbergen';
+$string[ 'must_select_glossary'] = 'Waehle ein Glossar';
+$string[ 'tries'] = 'Versuche';
+$string[ 'bottomtext'] = 'Text am Ende der Seite';
+$string[ 'messagewin'] = 'Meldung bei Gewinn';
+$string[ 'messageloose'] = 'Meldung bei Niederlage';
+$string[ 'feedbacks'] = 'Meldungen bei korrekter Antwort';
 
 ?>

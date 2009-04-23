@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.5 2009/01/05 01:08:02 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.6 2009/04/23 21:37:05 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.5 2009/01/05 01:08:02 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.6 2009/04/23 21:37:05 bdaloukas Exp $
  * @package game
  **/
     
@@ -75,7 +75,7 @@
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 </HEAD><BODY>
 <?php
-    echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/$file\">{$javame->name}</a>";
+    echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$file\">{$javame->name}</a>";
 ?>
 </BODY>
 </HTML>
@@ -296,6 +296,10 @@
             mkdir( $dir);
         }
 
+        if (!file_exists( $dir.'./export')){
+            mkdir( $dir.'./export');
+        }
+
         if (file_exists( $filejar)){
             unlink( $filejar);
         }
@@ -314,6 +318,9 @@
 
         if (file_exists( $filezip)){
             unlink( $filezip);
+        }
+        if (!file_exists( $dir.'./export')){
+            mkdir( $dir.'./export');
         }
         
         $srcfiles = get_directory_list( $srcdir, '', true, true, true);

@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.8 2009/03/19 22:03:11 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.9 2009/05/23 23:12:05 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -372,10 +372,9 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 		
 	}
 
-	$query->percent = (50 - $wrong * 50 / 6 + $correct * 50) /  $textlib->strlen( $word);
-	$query->percent /= 100;
-	if( $query->percent > 1){
-		$query->percent = 1;
+	$query->percent = ($correct -$wrong/6) /  $textlib->strlen( $word);
+	if( $query->percent < 0){
+		$query->percent = 0;
 	}
 
 	if( $onlyshow or $showsolution){

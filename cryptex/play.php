@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.2 2009/03/14 13:47:07 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.3 2009/06/28 07:36:00 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.2 2009/03/14 13:47:07 bdaloukas Exp $
+ * @version $Id: play.php,v 1.3 2009/06/28 07:36:00 bdaloukas Exp $
  * @package game
  **/
 
@@ -170,8 +170,53 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 			game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec);
 		}
 	}
-	echo $cryptex->display( $crossm->cols, $crossm->rows, $cryptexrec->letters, $mask, $showsolution);
 
+?>
+<style type="text/css"><!--
+
+.answerboxstyle  {
+background-color:	#FFFAF0;
+border-color:	#808080;
+border-style:	solid;
+border-width:	1px;
+display:	block;
+padding:	.75em;
+width:	240pt;
+}
+--></style>
+<?php
+
+	echo '<table border=0>';
+	echo '<tr><td>';
+	$cryptex->display( $crossm->cols, $crossm->rows, $cryptexrec->letters, $mask, $showsolution);
+?>
+</td>
+
+<td width=10%>&nbsp;</td>
+<td>
+
+<form  method="get" action="<?php echo $CFG->wwwroot?>/mod/game/attempt.php">
+<div id="answerbox" class="answerboxstyle" style="display:none;">
+<div id="wordclue" name="wordclue" class="cluebox"> </div>
+<input id="action" name="action" type="hidden" value="cryptexcheck">
+<input id="q" name="q" type="hidden" >
+<input id="id" name="id" value="<?php echo $id; ?>" type="hidden">
+
+<div style="margin-top:1em;"><input id="answer" name="answer" type="text" size="24"
+ style="font-weight: bold; text-transform:uppercase;" autocomplete="off"></div>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
+<td align="right">
+<button id="okbutton" type="submit" class="button" style="font-weight: bold;">OK</button> &nbsp;
+<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();">Cancel</button>
+</td></tr></table>
+</form>
+</td>
+</tr>
+</table>
+
+
+<?php
 	$grade = round( 100 * $gradeattempt);
 	echo '<br>'.get_string( 'grade', 'game').' '.$grade.' %';
 
@@ -186,11 +231,12 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 			}	
 		}
 		
-		echo "$i. ".game_filtertext( $q->questiontext, 0);
+		$question = game_filtertext( $q->questiontext, 0);
+		echo "$i. ".$question;
 		if( $showsolution){
 			echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
 		}else if( $onlyshow == false){
-			echo '<input type="submit" value="'.get_string( 'answer').'" onclick="OnCheck( '.$q->id.');" />';
+			echo '<input type="submit" value="'.get_string( 'answer').'" onclick="OnCheck( '.$q->id.',\''.$question.'\');" />';
 		}
 		echo "<br>\r\n";
 	}
@@ -201,11 +247,21 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 	
 	?>
 		<script>
-			function OnCheck( id)
+			function OnCheck( id, question)
 			{
-				s = window.prompt( "<?php echo get_string( 'cryptex_giveanswer', 'game'); ?>", '');
-				
-				window.location.href = "<?php echo $CFG->wwwroot.'/mod/game/attempt.php?action=cryptexcheck&id='.$id ?>&q=" + id + "&answer=" + s;
+				document.getElementById("q").value = id;
+				document.getElementById("wordclue").innerHTML = question;
+
+				// Finally, show the answer box.
+				document.getElementById("answerbox").style.display = "block";
+				try
+				{
+					document.getElementById("answer").focus();
+					document.getElementById("answer").select();
+				}
+				catch (e)
+				{
+				}
 			}
 		</script>
 	<?php

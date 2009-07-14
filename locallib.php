@@ -232,7 +232,7 @@ function game_question_selectrandom( $game, $table, $select, $id_fields="id", $u
     for($i=1; $i <= CONST_GAME_TRIES_REPETITION; $i++){
         $sel = mt_rand(0, $count-1);
 	        
-	    $sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select ORDER BY id";
+	    $sql  = "SELECT $id_fields,$id_fields FROM {$CFG->prefix}$table WHERE $select";
     	if( ($recs=get_records_sql( $sql, $sel, 1)) == false){
             return false;
         }

@@ -269,6 +269,22 @@ if( $form->sourcemodule == 'question' and $form->gamekind != 'bookquiz' ){
 <?php
 }
 
+if( $form->gamekind == 'millionaire' && $form->sourcemodule == 'quiz' ){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('millionaire_shufle', 'game'); ?>:</b></td>
+    <td align="left">
+    <?php
+        $a = array();
+        $a[ 1] = get_string('yes');
+        $a[ 0] = get_string('no');
+        echo game_showselectcontrol( 'shuffle', $a, $form->shuffle);
+    ?>
+    </tr>
+
+<?php
+}
+
 ?>
 <tr valign="top">
 		<td align="right"><b><?php  print_string('grade', 'game') ?> :</b></td>
@@ -466,7 +482,21 @@ if( $form->gamekind == 'bookquiz' and $existsbook){
 <?php
 }
 
+if( $form->gamekind == 'millionaire'){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('millionaire_shufle', 'game'); ?>:</b></td>
+    <td align="left">
+    <?php
+        $a = array();
+        $a[ 1] = get_string('yes');
+        $a[ 0] = get_string('no');
+        echo game_showselectcontrol( 'shuffle', $a, $form->shuffle);
+    ?>
+    </tr>
 
+<?php
+}
 
 if( $form->gamekind == 'snakes'){
 ?>

@@ -279,4 +279,5 @@ $string[ 'print'] = 'Print';
 $string[ 'html_title'] = 'Title of html:';
 $string[ 'html_hascheckbutton'] = 'Has check button:';
 $string[ 'html_hasprintbutton'] = 'Has print button:';
+$string[ 'millionaire_shufle'] = 'Randomize questions';
 ?>

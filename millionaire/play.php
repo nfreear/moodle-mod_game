@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.11 2009/03/11 22:09:32 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2009/07/14 19:13:08 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.11 2009/03/11 22:09:32 bdaloukas Exp $
+ * @version $Id: play.php,v 1.12 2009/07/14 19:13:08 bdaloukas Exp $
  * @package game
  **/
 
@@ -298,7 +298,10 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 		$table = "question";
 	}
 	$select .= " AND {$CFG->prefix}question.hidden=0";
-	$questionid = game_question_selectrandom( $game, $table, $select,"{$CFG->prefix}question.id as id");
+	if( $game->shuffle or $game->quizid == 0)
+		$questionid = game_question_selectrandom( $game, $table, $select, "{$CFG->prefix}question.id as id");
+	else
+		$questionid = game_millionaire_select_serial_question( $game, $table, $select, "{$CFG->prefix}question.id as id", $millionaire->level);
 	
 	if( $questionid == 0){
 		error( get_string( 'millionaire_nowords', 'game'));
@@ -358,6 +361,25 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	$score = $millionaire->level / 15;
 	game_updateattempts( $game, $attempt, $score, 0);
 	game_update_queries( $game, $attempt, $query, $score, '');
+}
+
+function game_millionaire_select_serial_question( $game, $table, $select, $id_fields="id", $level)
+{
+    global $CFG, $USER; 
+    
+    $rec = get_record_select( 'quiz', "id=$game->quizid");
+    if( $rec === false)
+        return false;
+    $questions = $rec->questions;
+    $questions = explode( ',', $rec->questions);
+    array_pop( $questions);
+    $count = count( $questions);
+    
+    $from = $level * $count / 15;
+    $to = ($level+1) * $count / 15;
+    $pos = mt_rand($from, $to);
+    
+    return $questions[ $pos];		
 }
 
 function game_millionaire_loadquestions( $millionaire, &$query, &$aAnswer)

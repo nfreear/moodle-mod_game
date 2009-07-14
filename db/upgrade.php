@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.13 2009/03/19 22:03:11 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.14 2009/07/14 19:13:08 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1282,6 +1282,16 @@ function xmldb_game_upgrade($oldversion=0) {
 
         /// Launch create table
         $result = $result && create_table($table);
+	}
+
+	//game.shuffle
+    if ($result && $oldversion < 2009071403) {
+        $table = new XMLDBTable('game');
+        $field = new XMLDBField('shuffle');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '1', 'param8');
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
 	}
 
 

@@ -63,9 +63,11 @@ if( $form->gamekind != $gamekind){
     case 'hiddenpicture':
         $form->param1 = 0;  //cols accross
         $form->param2 = 0;  //cols down
-	$form->param4 = 0;  //width
-	$form->param5 = 0;  //height
-	$form->param7 = 0;  //allow spaces
+	    $form->param4 = 0;  //width
+	    $form->param5 = 0;  //height
+	    $form->param7 = 0;  //allow spaces
+	case 'millionaire':
+	    $form->shuffle = 1; //randomize questions
     }
 }
 
@@ -272,7 +274,7 @@ if( $form->sourcemodule == 'question' and $form->gamekind != 'bookquiz' ){
 if( $form->gamekind == 'millionaire' && $form->sourcemodule == 'quiz' ){
 ?>
     <tr>
-    <td align="right"><b><?php  echo get_string('millionaire_shufle', 'game'); ?>:</b></td>
+    <td align="right"><b><?php  echo get_string('millionaire_shuffle', 'game'); ?>:</b></td>
     <td align="left">
     <?php
         $a = array();
@@ -485,7 +487,7 @@ if( $form->gamekind == 'bookquiz' and $existsbook){
 if( $form->gamekind == 'millionaire'){
 ?>
     <tr>
-    <td align="right"><b><?php  echo get_string('millionaire_shufle', 'game'); ?>:</b></td>
+    <td align="right"><b><?php  echo get_string('millionaire_shuffle', 'game'); ?>:</b></td>
     <td align="left">
     <?php
         $a = array();

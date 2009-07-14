@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.7 2008/11/06 23:16:45 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.8 2009/07/14 20:42:48 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.7 2008/11/06 23:16:45 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.8 2009/07/14 20:42:48 bdaloukas Exp $
  * @package game
  **/
 
@@ -74,7 +74,6 @@ function game_add_instance($game) {
  * @return boolean Success/Fail
  **/
 function game_update_instance($game) {
-
     $game->timemodified = time();
     $game->id = $game->instance;
 

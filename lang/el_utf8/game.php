@@ -78,7 +78,7 @@ $string[ 'letter'] = 'γράμμα';
 $string[ 'millionaire_info_people'] = 'Το κοινό λέει';
 $string[ 'millionaire_info_telephone'] = 'Νομίζω ότι σωστή απάντηση είναι η';
 $string[ 'millionaire_info_wrong_answer'] = 'Η απάντησή σας είναι λάθος<br>Η σωστή απάντηση είναι η :';
-$string[ 'millionaire_letters_answers'] = 'ΑΒΓΔ';
+$string[ 'millionaire_letters_answers'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
 $string[ 'millionaire_must_select_questioncategory'] = 'Πρέπει οπωσδήποτε να διαλέξετε μία κατηγορία ερωτήσεων';
 $string[ 'millionaire_must_select_quiz'] = 'Πρέπει οπωσδήποτε να διαλέξετε ένα Κουίζ';
 $string[ 'millionaire_no_questions'] = 'Δεν βρέθηκαν ερωτήσεις';
@@ -286,4 +286,5 @@ $string[ 'javame_version'] = 'Έκδοση:';
 $string[ 'javame_type'] = 'Τύπος:';
 $string[ 'export'] = 'Εξαγωγή';
 $string[ 'export_kind'] = 'Είδος εξαγωγής';
+$string[ 'millionaire_shuffle'] = 'Ανακάτεμα ερωτήσεων';
 ?>

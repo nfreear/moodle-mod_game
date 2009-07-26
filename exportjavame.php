@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.6 2009/04/23 21:37:05 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.7 2009/07/26 18:01:49 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.6 2009/04/23 21:37:05 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.7 2009/07/26 18:01:49 bdaloukas Exp $
  * @package game
  **/
     
@@ -55,7 +55,7 @@
 		
 		$filejar = game_create_jar( $destdir, $course, $javame);
 		if( $filejar == ''){
-    		$filezip = game_create_zip( $destdir, $course, $javame);
+    		$filezip = game_create_zip( $destdir, $course->id, $javame->filename.'.zip');
         }else{
             $filezip = '';
         }
@@ -296,8 +296,8 @@
             mkdir( $dir);
         }
 
-        if (!file_exists( $dir.'./export')){
-            mkdir( $dir.'./export');
+        if (!file_exists( $dir.'/export')){
+            mkdir( $dir.'/export');
         }
 
         if (file_exists( $filejar)){
@@ -310,17 +310,17 @@
         return (file_exists( $filejar) ? "{$javame->filename}.jar" : '');
     }
 
-    function game_create_zip( $srcdir, $course, $javame){
+    function game_create_zip( $srcdir, $courseid, $filename){
         global $CFG;
         
-        $dir = $CFG->dataroot . '/' . $course->id;
-        $filezip = $dir . "/export/{$javame->filename}.zip";
+        $dir = $CFG->dataroot . '/' . $courseid;
+        $filezip = $dir . "/export/{$filename}";
 
         if (file_exists( $filezip)){
             unlink( $filezip);
         }
-        if (!file_exists( $dir.'./export')){
-            mkdir( $dir.'./export');
+        if (!file_exists( $dir.'/export')){echo "dir=$dir<br>";
+            mkdir( $dir.'/export');
         }
         
         $srcfiles = get_directory_list( $srcdir, '', true, true, true);
@@ -331,7 +331,7 @@
                 
         zip_files( $fullsrcfiles, $filezip);
             
-        return (file_exists( $filezip) ? "{$javame->filename}.zip" : '');
+        return (file_exists( $filezip) ? $filename : '');
     }
     
     

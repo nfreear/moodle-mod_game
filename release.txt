@@ -1,3 +1,6 @@
+26/8/2008:
+    * Hangman: Export to html    
+    
 8/8/08: 
     * Fix: Millionaire: When a question has background or foregroundcolor doesn't set the background/foreground color
 7/9/08

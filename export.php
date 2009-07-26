@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.5 2009/02/22 17:06:56 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.6 2009/07/26 18:01:49 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.5 2009/02/22 17:06:56 bdaloukas Exp $
+ * @version $Id: export.php,v 1.6 2009/07/26 18:01:49 bdaloukas Exp $
  * @package game
  **/
  
@@ -11,6 +11,7 @@
     require_once("lib.php");
     require_once("locallib.php");
     require_once("exportjavame.php");
+    require_once("exporthtml.php");
 
 	if( !isteacherinanycourse( $USER->id)){
 		error( get_string( 'only_teachers', 'game'));
@@ -33,12 +34,15 @@
     
     $game = get_record_select( 'game', "id=$gameid", 'id,name,gamekind');
 
-    if( $game->gamekind == 'hangman'){
-        game_export_javame( $game, $update);
-    }else if( $game->gamekind == 'cross'){
+    switch( $_GET[ 'target'])
+    {
+    case 'html';
         game_export_html( $game, $update);
+        break;
+    case 'javame':
+        game_export_javame( $game, $update);
+        break;
     }
-
 
 function game_export_javame( $game, $update)
 {
@@ -62,16 +66,6 @@ function game_export_javame( $game, $update)
 
 <table>
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
-
-<tr>
-<td><?php echo get_string( 'export_kind', 'game'); ?>:</td>
-<td>
-<select id="menuvisible" name="visible" >
-   <option value="0" selected="selected">JavaME</option>
-   <option value="1"></option>
-</select>
-</td>
-</tr>
 
 <tr>
 <td><?php echo get_string( 'javame_type', 'game'); ?></td>
@@ -165,8 +159,10 @@ function game_export_javame( $game, $update)
             $html->id = $_POST[ 'id'];
             $html->filename = $_POST[ 'filename'];
             $html->title = $_POST[ 'title'];
-            $html->checkbutton = ($_POST[ 'checkbutton'] ? 1: 0);
-            $html->printbutton = ($_POST[ 'printbutton'] ? 1: 0);
+            if( array_key_exists( 'checkbutton', $_POST))
+                $html->checkbutton = ($_POST[ 'checkbutton'] ? 1: 0);
+            if( array_key_exists( 'printbutton', $_POST))
+                $html->printbutton = ($_POST[ 'printbutton'] ? 1: 0);
         
 	    	if (!(update_record( "game_export_html", $html))){
 	    		error("game_export_html: not updated id=$html->id");
@@ -213,10 +209,6 @@ function game_export_html( $game, $update)
 
 <table>
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
-<tr>
-<td><?php echo get_string( 'export_kind', 'game'); ?>:</td>
-<td>HTML</td>
-</tr>
 
 <tr>
 <td><?php echo get_string( 'javame_filename', 'game'); ?></td>
@@ -228,6 +220,11 @@ function game_export_html( $game, $update)
 <td><?php echo get_string( 'html_title', 'game'); ?></td>
 <td><input type="input" size="100" name="title" value="<?php echo $html->title; ?>"/></td>
 </tr>
+
+<?php
+if( $game->gamekind == 'cross')
+{
+?>
 
 <tr>
 <td><?php echo get_string( 'html_hascheckbutton', 'game'); ?></td>
@@ -248,7 +245,9 @@ function game_export_html( $game, $update)
 </select>
 </td>
 </tr>
-
+<?php
+}
+?>
 
 </table>
 

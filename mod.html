@@ -56,18 +56,27 @@ if( $form->gamekind != $gamekind){
         break;
     case 'sudoku':
         $form->param2 = 0;  //max questions
-	break;
+	    break;
     case 'snakes':
         $form->param3 = 0;  //background
-	break;
+	    break;
     case 'hiddenpicture':
         $form->param1 = 0;  //cols accross
         $form->param2 = 0;  //cols down
+<<<<<<< mod.html
+	    $form->param4 = 0;  //width
+	    $form->param5 = 0;  //height
+	    $form->param7 = 0;  //allow spaces
+	    break;
+	case 'millionaire':
+	    $form->shuffle = 1; //randomize questions
+=======
 	    $form->param4 = 0;  //width
 	    $form->param5 = 0;  //height
 	    $form->param7 = 0;  //allow spaces
 	case 'millionaire':
 	    $form->shuffle = 1; //randomize questions
+>>>>>>> 1.9
     }
 }
 
@@ -277,10 +286,7 @@ if( $form->gamekind == 'millionaire' && $form->sourcemodule == 'quiz' ){
     <td align="right"><b><?php  echo get_string('millionaire_shuffle', 'game'); ?>:</b></td>
     <td align="left">
     <?php
-        $a = array();
-        $a[ 1] = get_string('yes');
-        $a[ 0] = get_string('no');
-        echo game_showselectcontrol( 'shuffle', $a, $form->shuffle);
+        echo game_showcheckbox( 'shuffle', $form->shuffle);
     ?>
     </tr>
 
@@ -484,6 +490,8 @@ if( $form->gamekind == 'bookquiz' and $existsbook){
 <?php
 }
 
+<<<<<<< mod.html
+=======
 if( $form->gamekind == 'millionaire'){
 ?>
     <tr>
@@ -500,6 +508,7 @@ if( $form->gamekind == 'millionaire'){
 <?php
 }
 
+>>>>>>> 1.9
 if( $form->gamekind == 'snakes'){
 ?>
     <tr>
@@ -658,8 +667,12 @@ if( $form->coursemodule){
     echo get_string( $answers ? 'hideanswers' : 'showanswers', 'game')."</A>";
 
     if( $form->gamekind == 'hangman' or $form->gamekind == 'cross'){
-        echo " &nbsp;&nbsp;<a href=\"$CFG->wwwroot/mod/game/export.php?courseid=$form->course&update=".$_GET[ 'update']."\" target=\"_blank\">";
-        echo get_string( 'export', 'game')."</a>\n";
+        echo " &nbsp;&nbsp;<a href=\"$CFG->wwwroot/mod/game/export.php?courseid=$form->course&target=html&update=".$_GET[ 'update']."\" target=\"_blank\">";
+        echo get_string( 'export_to_html', 'game')."</a>\n";
+    }
+    if( $form->gamekind == 'hangman'){
+        echo " &nbsp;&nbsp;<a href=\"$CFG->wwwroot/mod/game/export.php?courseid=$form->course&target=javame&update=".$_GET[ 'update']."\" target=\"_blank\">";
+        echo get_string( 'export_to_javame', 'game')."</a>\n";
     }
     echo '<br/>';
 }

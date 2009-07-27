@@ -584,6 +584,9 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 	$sql = "SELECT $fields FROM {$CFG->prefix}$table WHERE $select ORDER BY fraction DESC";
     
 	$recs = get_records_sql( $sql);
+	if( $recs == false){
+	    error( get_string( 'millionaire_no_questions', 'game'));
+	}
 	
 	$recs2 = array();
 	$map = array();

@@ -63,20 +63,17 @@ if( $form->gamekind != $gamekind){
     case 'hiddenpicture':
         $form->param1 = 0;  //cols accross
         $form->param2 = 0;  //cols down
-<<<<<<< mod.html
 	    $form->param4 = 0;  //width
 	    $form->param5 = 0;  //height
 	    $form->param7 = 0;  //allow spaces
 	    break;
 	case 'millionaire':
-	    $form->shuffle = 1; //randomize questions
-=======
+	    $form->shuffle = 1; //randomize 
 	    $form->param4 = 0;  //width
 	    $form->param5 = 0;  //height
 	    $form->param7 = 0;  //allow spaces
-	case 'millionaire':
 	    $form->shuffle = 1; //randomize questions
->>>>>>> 1.9
+        break;
     }
 }
 
@@ -490,8 +487,6 @@ if( $form->gamekind == 'bookquiz' and $existsbook){
 <?php
 }
 
-<<<<<<< mod.html
-=======
 if( $form->gamekind == 'millionaire'){
 ?>
     <tr>
@@ -508,7 +503,6 @@ if( $form->gamekind == 'millionaire'){
 <?php
 }
 
->>>>>>> 1.9
 if( $form->gamekind == 'snakes'){
 ?>
     <tr>

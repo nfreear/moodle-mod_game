@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.7 2009/07/26 18:01:49 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.8 2009/07/28 16:50:08 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.7 2009/07/26 18:01:49 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.8 2009/07/28 16:50:08 bdaloukas Exp $
  * @package game
  **/
     
@@ -319,7 +319,12 @@
         if (file_exists( $filezip)){
             unlink( $filezip);
         }
-        if (!file_exists( $dir.'/export')){echo "dir=$dir<br>";
+        
+        if (!file_exists( $dir)){
+            mkdir( $dir);
+        }
+        
+        if (!file_exists( $dir.'/export')){
             mkdir( $dir.'/export');
         }
         

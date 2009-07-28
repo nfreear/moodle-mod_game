@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.9 2009/05/23 23:12:05 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.10 2009/07/28 16:50:09 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -179,22 +179,6 @@ function game_hangman_onfinishgame( $game, $attempt, $hangman)
 		error( "game_hangman_onfinishgame: Can't update game_hangman");
 	}
 }
-
-function hangman_existall( $str, $strfind)
-{
-	$textlib = textlib_get_instance();
-	
-    $n = $textlib->strlen( $str);
-    for( $i=0; $i < $n; $i++)
-    {
-		$pos = $textlib->strpos( $strfind, $textlib->substr( $str, $i, 1));
-        if( $pos === false)
-            return false;
-    }
-  
-    return true;
-}
-
 function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow=false, $showsolution=false)
 {
 	global $CFG;

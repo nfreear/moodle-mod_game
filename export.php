@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.6 2009/07/26 18:01:49 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.7 2009/07/28 16:50:08 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.6 2009/07/26 18:01:49 bdaloukas Exp $
+ * @version $Id: export.php,v 1.7 2009/07/28 16:50:08 bdaloukas Exp $
  * @package game
  **/
  
@@ -159,6 +159,7 @@ function game_export_javame( $game, $update)
             $html->id = $_POST[ 'id'];
             $html->filename = $_POST[ 'filename'];
             $html->title = $_POST[ 'title'];
+            $html->inputsize = $_POST[ 'inputsize'];
             if( array_key_exists( 'checkbutton', $_POST))
                 $html->checkbutton = ($_POST[ 'checkbutton'] ? 1: 0);
             if( array_key_exists( 'printbutton', $_POST))
@@ -197,11 +198,27 @@ function game_export_html( $game, $update)
 {
     $html = game_gethtml_rec( $game->id);
     
-    if( $html->title == ''){
-        $html->title = 'Crossword';            
-    }
-    if( $html->filename == ''){
-        $html->filename = 'crossword';
+    switch( $game->gamekind)
+    {
+    case 'cross':
+        if( $html->title == ''){
+            $html->title = get_string( 'game_cross', 'game');
+        }
+        if( $html->filename == ''){
+            $html->filename = 'crossword';
+        }
+        break;
+    case 'hangman':
+        if( $html->title == ''){
+            $html->title = get_string( 'game_hangman', 'game');
+        }
+        if( $html->filename == ''){
+            $html->filename = 'hangman';
+        }
+        if( $html->inputsize < 5){
+            $html->inputsize = 15;
+        }
+        break;
     }
     
 ?>    
@@ -224,6 +241,7 @@ function game_export_html( $game, $update)
 <?php
 if( $game->gamekind == 'cross')
 {
+//fields for cross
 ?>
 
 <tr>
@@ -244,6 +262,17 @@ if( $game->gamekind == 'cross')
    <option value="0"><?php echo get_string( 'no'); ?></option>
 </select>
 </td>
+</tr>
+<?php
+}
+
+//fields for hangman
+if( $game->gamekind == 'hangman')
+{
+?>
+<tr>
+<td><?php echo get_string( 'html_hangman_inputsize', 'game'); ?></td>
+<td><input type="input" size="10" name="inputsize" value="<?php echo $html->inputsize; ?>"/></td>
 </tr>
 <?php
 }

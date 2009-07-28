@@ -283,6 +283,6 @@ $string[ 'millionaire_shuffle'] = 'Randomize questions';
 
 $string[ 'export_to_html'] = 'Export to HTML';
 $string[ 'export_to_javame'] = 'Export to Javame';
-
-
+$string[ 'hangman_html_new'] = 'New';
+$string[ 'html_hangman_inputsize'] = 'Size of input field:';
 ?>

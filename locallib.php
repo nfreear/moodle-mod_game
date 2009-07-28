@@ -490,6 +490,36 @@ function game_getallletters( $word, $lang='')
     return '';
 }
 
+function game_get_string_lang( $identifier, $module, $lang)
+{
+    global $CFG;
+    
+    $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
+
+    if ($result = get_string_from_file( $identifier, $langfile, "\$ret")) {
+        eval($result);
+        if( $ret != '')
+            return $ret;
+    }
+
+    return get_string( $identifier, $module);
+}
+
+function hangman_existall( $str, $strfind)
+{
+	$textlib = textlib_get_instance();
+	
+    $n = $textlib->strlen( $str);
+    for( $i=0; $i < $n; $i++)
+    {
+		$pos = $textlib->strpos( $strfind, $textlib->substr( $str, $i, 1));
+        if( $pos === false)
+            return false;
+    }
+  
+    return true;
+}
+
 //used by cross
 function game_questions_shortanswer( $game)
 {

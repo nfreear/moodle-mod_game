@@ -69,7 +69,6 @@ $string[ 'hangman_showlast'] = 'Να εμφανίζει το τελευταίο 
 $string[ 'hangman_showquestion'] = 'Να εμφανίζει τις ερωτήσεις ;';
 $string[ 'hangman_win'] = 'Συγχαρητήρια !!!';
 $string[ 'hangman_wrongnum'] = 'Λανθασμένα: %%d out of %%d';
-
 $string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 $string[ 'lettersall2'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
 $string[ 'letters'] = 'γράμματα';
@@ -287,4 +286,6 @@ $string[ 'javame_type'] = 'Τύπος:';
 $string[ 'export'] = 'Εξαγωγή';
 $string[ 'export_kind'] = 'Είδος εξαγωγής';
 $string[ 'millionaire_shuffle'] = 'Ανακάτεμα ερωτήσεων';
+$string[ 'html_hangman_new'] = 'Νέα';
+$string[ 'html_hangman_inputsize'] = 'Μέγεθος πεδίου εισόδου';
 ?>

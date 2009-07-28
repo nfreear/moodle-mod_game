@@ -290,7 +290,8 @@
         <FIELD NAME="filename" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="title"/>
         <FIELD NAME="title" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="filename" NEXT="checkbutton"/>
         <FIELD NAME="checkbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="title" NEXT="printbutton" />
-        <FIELD NAME="printbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="checkbutton" />
+        <FIELD NAME="printbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="checkbutton" NEXT="inputsize"/>
+        <FIELD NAME="inputsize" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="printbutton" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

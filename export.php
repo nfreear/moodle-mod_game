@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.7 2009/07/28 16:50:08 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.8 2009/07/29 16:05:59 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.7 2009/07/28 16:50:08 bdaloukas Exp $
+ * @version $Id: export.php,v 1.8 2009/07/29 16:05:59 bdaloukas Exp $
  * @package game
  **/
  
@@ -70,7 +70,7 @@ function game_export_javame( $game, $update)
 <tr>
 <td><?php echo get_string( 'javame_type', 'game'); ?></td>
 <td>
-<select id="menuvisible" name="type" >
+<select name="type" >
    <option value="0" selected="selected">Hangman with phrases</option>
    <option value="hangmanp" >Hangman with pictures</option>
 </select>
@@ -157,9 +157,10 @@ function game_export_javame( $game, $update)
             game_OnExportJavaME( $gameid, $javame);
         }else if( $kind == 'html'){
             $html->id = $_POST[ 'id'];
+            $html->type = $_POST[ 'type'];
             $html->filename = $_POST[ 'filename'];
             $html->title = $_POST[ 'title'];
-            $html->inputsize = $_POST[ 'inputsize'];
+            $html->maxpicturewidth = $_POST[ 'maxpicturewidth'];
             if( array_key_exists( 'checkbutton', $_POST))
                 $html->checkbutton = ($_POST[ 'checkbutton'] ? 1: 0);
             if( array_key_exists( 'printbutton', $_POST))
@@ -215,9 +216,6 @@ function game_export_html( $game, $update)
         if( $html->filename == ''){
             $html->filename = 'hangman';
         }
-        if( $html->inputsize < 5){
-            $html->inputsize = 15;
-        }
         break;
     }
     
@@ -226,6 +224,16 @@ function game_export_html( $game, $update)
 
 <table>
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
+
+<tr>
+<td><?php echo get_string( 'javame_type', 'game'); ?></td>
+<td>
+<select name="type" >
+   <option value="0" selected="selected">Hangman with phrases</option>
+   <option value="hangmanp" >Hangman with pictures</option>
+</select>
+</td>
+</tr>
 
 <tr>
 <td><?php echo get_string( 'javame_filename', 'game'); ?></td>
@@ -271,9 +279,10 @@ if( $game->gamekind == 'hangman')
 {
 ?>
 <tr>
-<td><?php echo get_string( 'html_hangman_inputsize', 'game'); ?></td>
-<td><input type="input" size="10" name="inputsize" value="<?php echo $html->inputsize; ?>"/></td>
+<td><?php echo get_string( 'javame_maxpicturewidth', 'game'); ?></td>
+<td><input type="input" size="20" name="maxpicturewidth" value="<?php echo $html->maxpicturewidth; ?>"/></td>
 </tr>
+
 <?php
 }
 ?>

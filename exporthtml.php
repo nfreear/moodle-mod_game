@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml.php,v 1.3 2009/07/28 16:50:08 bdaloukas Exp $
+<?php  // $Id: exporthtml.php,v 1.4 2009/07/29 16:06:00 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.3 2009/07/28 16:50:08 bdaloukas Exp $
+ * @version $Id: exporthtml.php,v 1.4 2009/07/29 16:06:00 bdaloukas Exp $
  * @package game
  **/
  
@@ -99,7 +99,6 @@
             $html->filename = 'hangman';
         }
         
-        $inputsize = ( $html->inputsize < 5 ? 15 : $html->inputsize);
         $filename = $html->filename . '.htm';
         
         $ret = game_export_printheader( $html->title, false);
@@ -117,7 +116,10 @@
 
 var can_play = true;
 <?php
-        $map = game_exmportjavame_getanswers( $game, false);
+        $destdir = game_export_createtempdir();
+
+        $export_attachment = ( $html->type == 'hangmanp');
+        $map = game_exmportjavame_getanswers( $game, $export_attachment);
         if( $map == false){
             error( 'No Questions');
         }
@@ -126,6 +128,7 @@ var can_play = true;
         $words = '';
         $lang = '';
         $allletters = '';
+        $images = '';
         foreach( $map as $line)
         {
             $answer = game_upper( $line->answer);
@@ -140,23 +143,58 @@ var can_play = true;
         
             if( game_getallletters( $answer, $lang) != $allletters)
                 continue;
-                
+            
+            if( $html->type == 'hangmanp'){
+                $file = $line->attachment;
+                $pos = strrpos( $file, '.');
+                if( $pos == false)
+                    continue;
+            }
+            
+            if( $html->type == 'hangmanp'){
+                $src = $CFG->dataroot.'/'.$game->course.'/moddata/'.$line->attachment;
+                $pos = strrpos( $file, '.');
+                if( $pos == false)
+                    continue;
+            }
+            
             if( $questions != '')
                 $questions .= ', ';
             if( $words != '')
                 $words .= ', ';
             $questions .= '"'.$line->question.'"';
-            $words .= '"'.base64_encode( $answer).'"';
+            $words .= '"'.base64_encode( $answer).'"';            
+            
+            if( $html->type == 'hangmanp'){
+                $file = $line->id.substr( $file, $pos);
+                game_export_javame_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth);
+                
+                if( $images != '')
+                    $images .= ', ';
+                $images .= '"'.$file.'"';
+            }
         }
         echo "var questions = new Array($questions);\r";
         echo "var words = new Array($words);\r";
+        if( $html->type == 'hangmanp')
+            echo "var images = new Array($images);\r";
 ?>
 
 var to_guess = "";
 var display_word = "";
 var used_letters = "";
 var wrong_guesses = 0;
-
+var used_letters_all = "";
+var all_letters = new Array(<?php 
+$textlib = textlib_get_instance();
+$len = $textlib->strlen( $allletters);
+for( $i=0; $i < $len; $i++)
+{
+    if( $i > 0)
+        echo ',';
+    echo '"'.$textlib->substr( $allletters, $i, 1).'"';
+}
+?>);
 
 function selectLetter(l)
 {
@@ -169,8 +207,13 @@ function selectLetter(l)
         return;
     }
 	
-    used_letters += l;
-    document.game.usedLetters.value = used_letters;
+	used_letters_all += l;
+	
+	if( to_guess.indexOf(l) == -1)
+	{
+        used_letters += l;
+        document.getElementById('usedLetters').innerHTML = used_letters;
+    }
 	
     if (to_guess.indexOf(l) != -1)
     {
@@ -190,7 +233,7 @@ function selectLetter(l)
         }
 
         display_word = temp_mask;
-        document.game.displayWord.value = display_word;
+        document.getElementById('displayWord').innerHTML=display_word;
 		
         if (display_word.indexOf("#") == -1)
         {
@@ -199,13 +242,17 @@ function selectLetter(l)
             can_play = false;
             reset();
         }
-    }
-    else
+    }else
     {
+        wrong_guesses++;
+<?php
+    if( $html->type != 'hangmanp'){
+?>eval("document.hm.src=\"hangman_" + wrong_guesses + ".jpg\"");
         // incortect letter guess
-        wrong_guesses += 1;
         eval("document.hm.src=\"hangman_" + wrong_guesses + ".jpg\"");
-		
+<?php        
+    }
+?>
         if (wrong_guesses == 7)
         {
             // lost
@@ -214,6 +261,8 @@ function selectLetter(l)
             reset();
         }
     }
+    
+    showallletters();
 }
 
 function stripHTML(oldString) {
@@ -226,10 +275,41 @@ function reset()
 {
     selectWord();
 
-    document.game.usedLetters.value = "";
-    used_letters = "";
+    document.getElementById('usedLetters').innerHTML = "&nbsp;";    used_letters = "";
+    used_letters_all = "";
     wrong_guesses = 0;
-    document.hm.src="hangman_0.jpg";
+    showallletters();
+<?php
+    if( $html->type != 'hangmanp'){
+        echo '    document.hm.src="hangman_0.jpg"'."\r";
+    }
+?> 
+}
+
+function showallletters()
+{
+    var letters = "";
+    var next =  all_letters.length / 4;
+    var letter = "";
+    
+    for( i=0; i < all_letters.length; i++)
+    {
+        if( i > next)
+        {
+            next += all_letters.length / 4;
+            letters += " ";
+        }
+        
+        letter = all_letters[ i];
+        if( used_letters_all.length > 0)
+        {
+            if( used_letters_all.indexOf( letter) > -1)
+                continue;
+        }
+
+        letters = letters + "<a href=\"javascript:selectLetter('" + letter + "');\">" + letter + "</a>"
+    }
+    document.getElementById( "letters").innerHTML = letters;
 }
 
 function selectWord()
@@ -239,10 +319,16 @@ function selectWord()
     to_guess =  Base64.decode( words[random_number]);    to_question = questions[random_number];	
     // display masked word
     masked_word = createMask(to_guess);
-    document.game.displayWord.value = masked_word;
+    document.getElementById('displayWord').innerHTML=masked_word;
+    
     display_word = masked_word;
     
-    document.getElementById('question').innerHTML=to_question;
+<?php
+    if( $html->type == 'hangmanp')
+        echo "    document.hm.src = images[ random_number];\r"; 
+    else
+        echo "    document.getElementById('question').innerHTML=to_question;\r";
+?>
 }
 
 function createMask(m)
@@ -343,28 +429,12 @@ var Base64 = {
 </head>
 
 <div id="question"></div>
-<img src="hangman_0.jpg" name="hm"> <a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?> </a>
+<img src="hangman_0.jpg" name="hm"> <a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?></a>
 <form name="game">
-<input type="text" name="displayWord" size="<?php echo $inputsize;?>"><READONLY><br>
-<input type="text" name="usedLetters" size="<?php echo $inputsize;?>"><READONLY>
-</form><br>
-
-<?php
-        $textlib = textlib_get_instance();
-
-        $len = $textlib->strlen( $allletters);
-        $next = $len / 4;
-        for( $i=0; $i < $len; $i++)
-        {
-            if( $i > $next)
-            {
-                echo ' ';
-                $next += $len/4;
-            }
-            $letter = $textlib->substr( $allletters, $i, 1);
-            echo "<a href=\"javascript:selectLetter('$letter');\">$letter</a>";
-        }
-?>
+<div id="displayWord"> </div>
+<div id="usedLetters"> </div>
+</form>
+<div id="letters"></div>
 
 </body>
 <?php
@@ -374,9 +444,7 @@ var Base64 = {
                         
         $courseid = $game->course;
         $course = get_record_select( 'course', "id=$courseid");
-        
-        $destdir = game_export_createtempdir();
-        
+                
         $filename = $html->filename . '.htm';
         
         file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $output_string);
@@ -404,6 +472,5 @@ var Base64 = {
                         
         echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filezip\">{$filezip}</a>";
     }
-
 
 ?>

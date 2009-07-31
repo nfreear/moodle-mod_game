@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="2009032002" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="2009073102" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -273,7 +273,8 @@
         <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="vendor" NEXT="description"/>
         <FIELD NAME="description" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="version"/>
         <FIELD NAME="version" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="description" NEXT="maxpicturewidth"/>
-        <FIELD NAME="maxpicturewidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="version"/>
+        <FIELD NAME="maxpicturewidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="version" NEXT="maxpictureheight"/>
+        <FIELD NAME="maxpictureheight" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="maxpicturewidth"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -292,7 +293,8 @@
         <FIELD NAME="checkbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="title" NEXT="printbutton" />
         <FIELD NAME="printbutton" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="checkbutton" NEXT="inputsize"/>
         <FIELD NAME="inputsize" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="printbutton" NEXT="maxpicturewidth" />
-        <FIELD NAME="maxpicturewidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="inputsize"/>
+        <FIELD NAME="maxpicturewidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="inputsize" NEXT="maxpictureheight"/>
+        <FIELD NAME="maxpictureheight" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="maxpicturewidth"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

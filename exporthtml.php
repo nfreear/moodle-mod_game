@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml.php,v 1.4 2009/07/29 16:06:00 bdaloukas Exp $
+<?php  // $Id: exporthtml.php,v 1.5 2009/07/31 17:30:53 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.4 2009/07/29 16:06:00 bdaloukas Exp $
+ * @version $Id: exporthtml.php,v 1.5 2009/07/31 17:30:53 bdaloukas Exp $
  * @package game
  **/
  
@@ -167,7 +167,7 @@ var can_play = true;
             
             if( $html->type == 'hangmanp'){
                 $file = $line->id.substr( $file, $pos);
-                game_export_javame_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth);
+                game_export_javame_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth, $html->maxpictureheight);
                 
                 if( $images != '')
                     $images .= ', ';
@@ -429,7 +429,7 @@ var Base64 = {
 </head>
 
 <div id="question"></div>
-<img src="hangman_0.jpg" name="hm"> <a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?></a>
+<img src="<?php echo ($html->type == 'hangmanp' ? '' : 'hangman_0.jpg');?>" name="hm"> <a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?></a>
 <form name="game">
 <div id="displayWord"> </div>
 <div id="usedLetters"> </div>
@@ -449,20 +449,24 @@ var Base64 = {
         
         file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $output_string);
         
-        $src = $CFG->dirroot.'/mod/game/hangman/1';                
-		$handle = opendir( $src);
-		while (false!==($item = readdir($handle))) {
-			if($item != '.' && $item != '..') {
-				if(!is_dir($src.'/'.$item)) {
-				    $itemdest = $item;
-				    
-				    if( strpos( $item, '.') === false)
-				        continue;
-				
-					copy( $src.'/'.$item, $destdir.'/'.$itemdest);
-				}
-			}
-		}
+        if( $html->type != 'hangmanp')
+        {
+            //Not copy the standard pictures when we use the "Hangman with pictures"
+            $src = $CFG->dirroot.'/mod/game/hangman/1';                
+	    	$handle = opendir( $src);
+	    	while (false!==($item = readdir($handle))) {
+	    		if($item != '.' && $item != '..') {
+	    			if(!is_dir($src.'/'.$item)) {
+	    			    $itemdest = $item;
+
+	    			    if( strpos( $item, '.') === false)
+	    			        continue;
+
+	    				copy( $src.'/'.$item, $destdir.'/'.$itemdest);
+	    			}
+	    		}
+	    	}
+	    }
 		
 		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
 		

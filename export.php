@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.8 2009/07/29 16:05:59 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.8 2009/07/29 16:05:59 bdaloukas Exp $
+ * @version $Id: export.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
  * @package game
  **/
  
@@ -118,6 +118,10 @@ function game_export_javame( $game, $update)
 <td><input type="input" size="20" name="maxpicturewidth" value="<?php echo $javame->maxpicturewidth; ?>"/></td>
 </tr>
 
+<tr>
+<td><?php echo get_string( 'javame_maxpictureheight', 'game'); ?></td>
+<td><input type="input" size="20" name="maxpictureheight" value="<?php echo $javame->maxpictureheight; ?>"/></td>
+</tr>
 
 
 </table>
@@ -149,6 +153,7 @@ function game_export_javame( $game, $update)
             $javame->version = $_POST[ 'version'];
             $javame->type = $_POST[ 'type'];
             $javame->maxpicturewidth = $_POST[ 'maxpicturewidth'];
+            $javame->maxpictureheight = $_POST[ 'maxpictureheight'];
         
 	    	if (!(update_record( "game_export_javame", $javame))){
 	    		error("game_export_javame: not updated id=$javame->id");
@@ -161,6 +166,7 @@ function game_export_javame( $game, $update)
             $html->filename = $_POST[ 'filename'];
             $html->title = $_POST[ 'title'];
             $html->maxpicturewidth = $_POST[ 'maxpicturewidth'];
+            $html->maxpictureheight = $_POST[ 'maxpictureheight'];
             if( array_key_exists( 'checkbutton', $_POST))
                 $html->checkbutton = ($_POST[ 'checkbutton'] ? 1: 0);
             if( array_key_exists( 'printbutton', $_POST))
@@ -281,6 +287,11 @@ if( $game->gamekind == 'hangman')
 <tr>
 <td><?php echo get_string( 'javame_maxpicturewidth', 'game'); ?></td>
 <td><input type="input" size="20" name="maxpicturewidth" value="<?php echo $html->maxpicturewidth; ?>"/></td>
+</tr>
+
+<tr>
+<td><?php echo get_string( 'javame_maxpictureheight', 'game'); ?></td>
+<td><input type="input" size="20" name="maxpictureheight" value="<?php echo $html->maxpictureheight; ?>"/></td>
 </tr>
 
 <?php

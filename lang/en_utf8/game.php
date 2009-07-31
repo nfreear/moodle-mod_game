@@ -272,6 +272,7 @@ $string[ 'javame_description'] = 'Description:';
 $string[ 'javame_version'] = 'Version:';
 $string[ 'javame_type'] = 'Type:';
 $string[ 'javame_maxpicturewidth'] = 'Max picture width:';
+$string[ 'javame_maxpictureheight'] = 'Max picture height:';
 $string[ 'sourcemodule_include_subcategories'] = 'Include subcategories';
 
 $string['percent'] = 'Percent';

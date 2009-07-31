@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.8 2009/07/28 16:50:08 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.8 2009/07/28 16:50:08 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
  * @package game
  **/
     
@@ -49,7 +49,7 @@
 		
 		mkdir( $destdir.'/META-INF');
 		
-		game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $javame->maxpicturewidth);
+		game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $javame->maxpicturewidth, $javame->maxpictureheight);
 		
 		game_create_manifest_mf( $destdir.'/META-INF', $javame, $destmobiledir);
 		
@@ -83,7 +83,7 @@
         
     }
     
-    function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $maxwidth){
+    function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $maxwidth, $maxheight){
         global $CFG;
         
 		mkdir( $destdir.'/'.$destmobiledir);
@@ -112,7 +112,7 @@
         }
         
         if( $destmobiledir == 'hangmanp'){
-            game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth);
+            game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight);
             return;
         }
         
@@ -128,7 +128,7 @@
         fclose( $fp);
     }
     
-    function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth)
+    function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight)
     {
         global $CFG;
         
@@ -147,7 +147,7 @@
                 if( $pos != false){
                     $file = $line->id.substr( $file, $pos);
                     $src = $CFG->dataroot.'/'.$game->course.'/moddata/'.$line->attachment;
-                    game_export_javame_smartcopyimage( $src, $destdirphoto.'/'.$file, $maxwidth);
+                    game_export_javame_smartcopyimage( $src, $destdirphoto.'/'.$file, $maxwidth, $maxheight);
                     
                     $s = $file . '=' . game_upper( $line->answer);
                     fputs( $fp, "$s\r\n");
@@ -382,9 +382,9 @@ function game_showanswers_appendselect( $form)
     return '';
 }
 
-function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth)
+function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth, $maxheight)
 {
-    if( $maxwidth == 0){
+    if( $maxwidth == 0 && $maxheight == 0){
         copy( $filename, $dest);
         return;
     }    
@@ -395,7 +395,14 @@ function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth)
         return;
     }
 
-    $mul = $maxwidth / $size[ 0];
+    $mul1 = $maxwidth / $size[ 0];
+    $mul2 = $maxheight / $size[ 1];
+    if( $mul1 == 0)
+        $mul = $mul2;
+    elseif ( $mul2 == 0)
+        $mul = $mul1;
+    else $mul = min( $mul1, $mul2);
+    
     if( $mul > 1){
         copy( $filename, $dest);
         return;

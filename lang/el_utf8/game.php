@@ -288,4 +288,11 @@ $string[ 'export_kind'] = 'Είδος εξαγωγής';
 $string[ 'millionaire_shuffle'] = 'Ανακάτεμα ερωτήσεων';
 $string[ 'html_hangman_new'] = 'Νέα';
 $string[ 'html_hangman_inputsize'] = 'Μέγεθος πεδίου εισόδου';
+$string['export_to_html'] = 'Εξαγωγή σε HTML';
+$string['export_to_javame'] = 'Εξαγωγή σε JavaMe για κινητά τηλέφωνα';
+$string['hangman_html_new'] = 'Νέα';
+$string['javame_maxpicturewidth'] = 'Μέγιστο πλάτος εικόνας:';
+$string['javame_maxpictureheight'] = 'Μέγιστο ύψος εικόνας:';
+$string['percent'] = 'Ποσοστό';
+$string['useeditgame'] = 'Χρησιμοποιήστε το κουμπί Επεξεργασία για να αλλάξετε τις παραμέτρους του παιχνιδιού';
 ?>

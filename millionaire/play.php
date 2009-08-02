@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.12 2009/07/14 19:13:08 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.13 2009/08/02 20:28:44 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.12 2009/07/14 19:13:08 bdaloukas Exp $
+ * @version $Id: play.php,v 1.13 2009/08/02 20:28:44 bdaloukas Exp $
  * @package game
  **/
 
@@ -187,13 +187,13 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
         $bTR = true;
       }
       
-      if( $i == $level)
+      if( $i == $level+1)
         $back = "background:DarkOrange";
       else
         $back = "background:Black";
       echo "<td style='color:white;$back' align=right>$i</td>";
       
-      if( $i < $level)
+      if( $i < $level+1)
         echo "<td style='color:white;$back'>&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;</td>";
       else if( $i == 15 and $level <= 1)
         echo "<td style='color:white;$back'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
@@ -204,8 +204,6 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
         echo "</tr>\r\n";
     }
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
-
-
 
     $bFirst = true;
     $letters = get_string( 'millionaire_letters_answers', 'game');
@@ -376,8 +374,8 @@ function game_millionaire_select_serial_question( $game, $table, $select, $id_fi
     $count = count( $questions);
     
     $from = $level * $count / 15;
-    $to = ($level+1) * $count / 15;
-    $pos = mt_rand($from, $to);
+    $to = max( $from, ($level+1) * $count / 15 - 1);
+    $pos = mt_rand( round( $from), round( $to));
     
     return $questions[ $pos];		
 }

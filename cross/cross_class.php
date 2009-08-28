@@ -609,6 +609,8 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$sClue = "";
 		$LastHorizontalWord = -1;
 		$i = -1;
+		$LegendV = array();
+		$LegendH = array();
 		foreach ($crossd as $rec)
 		{
 			if( $rec->horizontal == false and $LastHorizontalWord == -1){
@@ -633,26 +635,61 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 				$shtmlsolutions .= ',"'.utf8_encode( $rec->answertext).'"';
 			}
 			
-			$s = '';
 			$attachment = '';
 		    //if( game_issoundfile( $rec->attachment)){
             //    $attachment = game_showattachment( $rec->attachment);
 		    //}
 						
+            $s = $rec->questiontext.$attachment;
 			if( $rec->horizontal){
-				if( array_key_exists( $rec->row, $this->m_LegendH)){
-    				$s = $this->m_LegendH[ $rec->row].' - ';
-    			}
-				$this->m_LegendH[ $rec->row] = $s.$rec->questiontext.$attachment;
+				if( array_key_exists( $rec->row, $LegendH)){
+				    $LegendH[ $rec->row][] = $s;
+				}else
+				{
+					$LegendH[ $rec->row] = array( $s);
+				}
 			}else
 			{
-				if( array_key_exists( $rec->col, $this->m_LegendV)){
-					$s = $this->m_LegendV[ $rec->col].' - ';
+				if( array_key_exists( $rec->col, $LegendV)){
+				    $LegendV[ $rec->col][] = $s;
+				}else
+				{
+					$LegendV[ $rec->col] = array( $s);
 				}
-			
-				$this->m_LegendV[ $rec->col] = $s.$rec->questiontext.$attachment;
 			}
 		}
+		
+		$letters = get_string( 'millionaire_letters_answers', 'game');
+		$textlib = textlib_get_instance();
+		
+		unset( $this->m_LegendH);
+		foreach( $LegendH as $key => $value)
+		{
+		    if( count( $value) == 1)
+		       $this->m_LegendH[ $key] = $value[ 0]; 
+		    else
+		    {
+		        for( $i=0; $i < count( $value); $i++)
+		        {
+		            $this->m_LegendH[ $key.$textlib->substr( $letters, $i, 1)] = $value[ $i];
+                }
+		    }
+		}
+		
+		unset( $this->m_LegendV);
+		foreach( $LegendV as $key => $value)
+		{
+		    if( count( $value) == 1)
+		       $this->m_LegendV[ $key] = $value[ 0]; 
+		    else
+		    {
+		        for( $i=0; $i < count( $value); $i++)
+		        {
+		            $this->m_LegendV[ $key.$textlib->substr( $letters, $i, 1)] = $value[ $i];
+                }
+		    }
+		}
+		
 		ksort( $this->m_LegendH);
 		ksort( $this->m_LegendV);
 

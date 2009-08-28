@@ -1,34 +1,49 @@
-<?php  // $Id: exporthtml.php,v 1.6 2009/08/28 16:31:44 bdaloukas Exp $
+<?php  // $Id: exporthtml.php,v 1.7 2009/08/28 23:36:53 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.6 2009/08/28 16:31:44 bdaloukas Exp $
+ * @version $Id: exporthtml.php,v 1.7 2009/08/28 23:36:53 bdaloukas Exp $
  * @package game
  **/
  
     require_once( "exportjavame.php");
         
     function game_OnExportHTML( $gameid, $html, $update){
+        global $CFG;
+        
         $game = get_record_select( 'game', "id=$gameid");          
         
+        if( $game->gamekind == 'hangman'){
+            $destdir = "{$CFG->dataroot}/{$game->course}/export";
+            if( !file_exists( $destdir)){
+                mkdir( $destdir);
+            }            
+            return;
+        }
+        
+        $destdir = game_export_createtempdir();
+                
         switch( $game->gamekind){
         case 'cross':
-            game_OnExportHTML_cross( $game, $html, $update);
+            game_OnExportHTML_cross( $game, $html, $update, $destdir);
             break;
         case 'hangman':
             game_OnExportHTML_hangman( $game, $html, $update);
             break;
         case 'millionaire':
-            game_OnExportHTML_millionaire( $game, $html, $update);
+            game_OnExportHTML_millionaire( $game, $html, $update, $destdir);
             break;
         }
+        
+        if( $destdir != ''){
+            remove_dir( $destdir);
+        }
+
     }
     
-    function game_OnExportHTML_cross( $game, $html, $update){
-    
-        global $CFG;
-        
+    function game_OnExportHTML_cross( $game, $html, $update, $destdir){
+  
         if( $html->filename == ''){
             $html->filename = 'cross';
         }
@@ -50,13 +65,7 @@
         $output_string = ob_get_contents();
         ob_end_clean();
                 
-        $courseid = $game->course;
-        $course = get_record_select( 'course', "id=$courseid");
-        
-        $destdir = "$CFG->dataroot/$courseid/export";
-        if( !file_exists( $destdir)){
-            mkdir( $destdir);
-        }
+        $course = get_record_select( 'course', "id={$game->course}");
         
         $filename = $html->filename . '.htm';
         
@@ -95,8 +104,8 @@
 
         ob_start();
         
-        //Here is the code of millionaire
-        require( "exporthtml_millionaire.php");        
+        //Here is the code of hangman
+        require( "exporthtml_hangman.php");        
                         
         $output_string = ob_get_contents();
         ob_end_clean();
@@ -127,17 +136,13 @@
 	    	}
 	    }
 		
-		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
-		
-        if( $destdir != ''){
-            remove_dir( $destdir);
-        }		
+		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');		
                         
         echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filezip\">{$filezip}</a>";
     }
 
 
-    function game_OnExportHTML_millionaire( $game, $html, $update){
+    function game_OnExportHTML_millionaire( $game, $html, $update, $destdir){
     
         global $CFG;
         
@@ -150,12 +155,12 @@
         $ret = game_export_printheader( $html->title, false);
         $ret .= "\r<body onload=\"Reset();\">\r";
 
-        //ob_start();
+        ob_start();
                         
-        //Here is the code of hangman
+        //Here is the code of millionaire
         require( "exporthtml_millionaire.php");
-die;
-        //End of hangman code        
+
+        //End of millionaire code        
         $output_string = ob_get_contents();
         ob_end_clean();
                         
@@ -169,7 +174,7 @@ die;
         if( $html->type != 'hangmanp')
         {
             //Not copy the standard pictures when we use the "Hangman with pictures"
-            $src = $CFG->dirroot.'/mod/game/hangman/1';                
+            $src = $CFG->dirroot.'/mod/game/millionaire/1';                
 	    	$handle = opendir( $src);
 	    	while (false!==($item = readdir($handle))) {
 	    		if($item != '.' && $item != '..') {

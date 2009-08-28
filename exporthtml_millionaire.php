@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.1 2009/08/28 16:31:44 bdaloukas Exp $
+<?php  // $Id: exporthtml_millionaire.php,v 1.2 2009/08/28 23:36:53 bdaloukas Exp $
 /**
  * This page export the game hangman to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.1 2009/08/28 16:31:44 bdaloukas Exp $
+ * @version $Id: exporthtml_millionaire.php,v 1.2 2009/08/28 23:36:53 bdaloukas Exp $
  * @package game
  **/
 function game_millionaire_html_getquestions( $game, &$max)
@@ -149,7 +149,7 @@ function game_millionaire_html_getquestions( $game, &$max)
 	    if( flag5050)
 	        return;
 	        
-        document.getElementById( "Help5050").src = "<?php echo $CFG->wwwroot.'/mod/game/millionaire/1/5050x.gif';?>";
+        document.getElementById( "Help5050").src = "5050x.gif";
         flag5050 = 1;
         
         for(pos = posCorrect;pos == posCorrect;pos = 1+Math.floor(Math.random()*countQuestions));
@@ -169,7 +169,7 @@ function game_millionaire_html_getquestions( $game, &$max)
 	    if( flagTelephone)
 	        return;
 	    flagTelephone = 1;
-        document.getElementById( "HelpTelephone").src = "<?php echo $CFG->wwwroot.'/mod/game/millionaire/1/telephonex.gif';?>";
+        document.getElementById( "HelpTelephone").src = "telephonex.gif";
 	    
 		if( countQuestions < 2){
 			wrong = posCorrect;
@@ -198,7 +198,7 @@ function game_millionaire_html_getquestions( $game, &$max)
         if( flagPeople)
 	        return;
 	    flagPeople = 1;
-        document.getElementById( "HelpPeople").src = "<?php echo $CFG->wwwroot.'/mod/game/millionaire/1/peoplex.gif';?>";
+        document.getElementById( "HelpPeople").src = "peoplex.gif";
         
         sum = 0;
         var aPercent = new Array();
@@ -253,9 +253,9 @@ function game_millionaire_html_getquestions( $game, &$max)
         flagTelephone = 0;
         flagPeople = 0;
         
-        document.getElementById( "Help5050").src = "<?php echo $CFG->wwwroot.'/mod/game/millionaire/1/5050.gif';?>";
-        document.getElementById( "HelpPeople").src = "<?php echo $CFG->wwwroot.'/mod/game/millionaire/1/people.gif';?>";
-        document.getElementById( "HelpTelephone").src = "<?php echo $CFG->wwwroot.'/mod/game/millionaire/1/telephone.gif';?>";
+        document.getElementById( "Help5050").src = "5050.gif";
+        document.getElementById( "HelpPeople").src = "people.gif";
+        document.getElementById( "HelpTelephone").src = "telephone.gif";
 
 	    document.getElementById( "info").innerHTML = "";
 	    UpdateLevel( 1);
@@ -399,10 +399,10 @@ var Base64 = {
 
 <tr height=10%>
 <td style='background:#408080' rowspan=3 colspan=2>
-<input type="image"  name="Help5050" id="Help5050" Title="50 50" src="http://192.168.0.150/moodle19/mod/game/millionaire/1/5050.gif" alt="" border="0" onmousedown=OnHelp5050();>&nbsp;
-<input type="image" name="HelpTelephone"  id="HelpTelephone" Title="<?php echo get_string( 'millionaire_telephone', 'game');?>" src="http://192.168.0.150/moodle19/mod/game/millionaire/1/telephone.gif" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;
-<input type="image" name="HelpPeople"  id="HelpPeople" Title="<?php echo get_string( 'millionaire_helppeople', 'game');?>" src="http://192.168.0.150/moodle19/mod/game/millionaire/1/people.gif" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;
-<input type="image" name="Quit" id="Quit" Title="<?php echo get_string( 'millionaire_quit', 'game');?>" src="http://192.168.0.150/moodle19/mod/game/millionaire/1/x.gif" alt="" border="0" onmousedown=OnQuit();>&nbsp;
+<input type="image"  name="Help5050" id="Help5050" Title="50 50" src="5050.gif" alt="" border="0" onmousedown=OnHelp5050();>&nbsp;
+<input type="image" name="HelpTelephone"  id="HelpTelephone" Title="<?php echo get_string( 'millionaire_telephone', 'game');?>" src="telephone.gif" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;
+<input type="image" name="HelpPeople"  id="HelpPeople" Title="<?php echo get_string( 'millionaire_helppeople', 'game');?>" src="people.gif" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;
+<input type="image" name="Quit" id="Quit" Title="<?php echo get_string( 'millionaire_quit', 'game');?>" src="x.gif" alt="" border="0" onmousedown=OnQuit();>&nbsp;
 </td>
 <td rowspan=<?php echo 16+$maxquestions;?> style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td id="levela15" align=right>15</td>

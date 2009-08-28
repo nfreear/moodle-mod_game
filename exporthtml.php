@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml.php,v 1.7 2009/08/28 23:36:53 bdaloukas Exp $
+<?php  // $Id: exporthtml.php,v 1.8 2009/08/28 23:43:25 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.7 2009/08/28 23:36:53 bdaloukas Exp $
+ * @version $Id: exporthtml.php,v 1.8 2009/08/28 23:43:25 bdaloukas Exp $
  * @package game
  **/
  
@@ -14,20 +14,18 @@
         
         $game = get_record_select( 'game', "id=$gameid");          
         
-        if( $game->gamekind == 'hangman'){
+        if( $game->gamekind == 'cross'){
             $destdir = "{$CFG->dataroot}/{$game->course}/export";
             if( !file_exists( $destdir)){
                 mkdir( $destdir);
-            }            
+            }
+            game_OnExportHTML_cross( $game, $html, $update, $destdir);
             return;
         }
         
         $destdir = game_export_createtempdir();
                 
         switch( $game->gamekind){
-        case 'cross':
-            game_OnExportHTML_cross( $game, $html, $update, $destdir);
-            break;
         case 'hangman':
             game_OnExportHTML_hangman( $game, $html, $update);
             break;
@@ -44,6 +42,8 @@
     
     function game_OnExportHTML_cross( $game, $html, $update, $destdir){
   
+        global $CFG;
+    
         if( $html->filename == ''){
             $html->filename = 'cross';
         }
@@ -71,7 +71,7 @@
         
         file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $output_string);
                         
-        echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filename\">{$filename}</a>";
+        echo "$ret<a href=\"{$CFG->wwwroot}/file.php/{$game->course}/export/$filename\">{$filename}</a>";
     }
     
     function game_export_printheader( $title, $showbody=true)

@@ -660,7 +660,7 @@ if( $form->coursemodule){
     echo "<A HREF=\"{$CFG->wwwroot}/course/mod.php?update={$form->coursemodule}&amp;answers=$nanswers&amp;return=true&amp;sesskey={$form->sesskey}\">";
     echo get_string( $answers ? 'hideanswers' : 'showanswers', 'game')."</A>";
 
-    if( $form->gamekind == 'hangman' or $form->gamekind == 'cross'){
+    if( $form->gamekind == 'hangman' or $form->gamekind == 'cross' or $form->gamekind == 'millionaire'){
         echo " &nbsp;&nbsp;<a href=\"$CFG->wwwroot/mod/game/export.php?courseid=$form->course&target=html&update=".$_GET[ 'update']."\" target=\"_blank\">";
         echo get_string( 'export_to_html', 'game')."</a>\n";
     }

@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.10 2009/08/28 16:31:44 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
+ * @version $Id: export.php,v 1.10 2009/08/28 16:31:44 bdaloukas Exp $
  * @package game
  **/
  
@@ -162,11 +162,20 @@ function game_export_javame( $game, $update)
             game_OnExportJavaME( $gameid, $javame);
         }else if( $kind == 'html'){
             $html->id = $_POST[ 'id'];
-            $html->type = $_POST[ 'type'];
+            if( array_key_exists( 'type', $_POST))
+                $html->type = $_POST[ 'type'];
+            else
+                $html->type = '';
             $html->filename = $_POST[ 'filename'];
             $html->title = $_POST[ 'title'];
-            $html->maxpicturewidth = $_POST[ 'maxpicturewidth'];
-            $html->maxpictureheight = $_POST[ 'maxpictureheight'];
+            if( array_key_exists( 'maxpicturewidth', $_POST))
+                $html->maxpicturewidth = $_POST[ 'maxpicturewidth'];
+            else
+                $html->maxpicturewidth = 0;
+            if( array_key_exists( 'maxpictureheight', $_POST))
+                $html->maxpictureheight = $_POST[ 'maxpictureheight'];
+            else
+                $html->maxpictureheight = 0;
             if( array_key_exists( 'checkbutton', $_POST))
                 $html->checkbutton = ($_POST[ 'checkbutton'] ? 1: 0);
             if( array_key_exists( 'printbutton', $_POST))
@@ -223,6 +232,14 @@ function game_export_html( $game, $update)
             $html->filename = 'hangman';
         }
         break;
+    case 'millionaire':
+        if( $html->title == ''){
+            $html->title = get_string( 'game_millionaire', 'game');
+        }
+        if( $html->filename == ''){
+            $html->filename = 'millionaire';
+        }
+        break;    
     }
     
 ?>    
@@ -231,6 +248,10 @@ function game_export_html( $game, $update)
 <table>
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
 
+<?php
+if( $game->gamekind == 'cross')
+{
+?>
 <tr>
 <td><?php echo get_string( 'javame_type', 'game'); ?></td>
 <td>
@@ -240,6 +261,9 @@ function game_export_html( $game, $update)
 </select>
 </td>
 </tr>
+<?php
+}
+?>
 
 <tr>
 <td><?php echo get_string( 'javame_filename', 'game'); ?></td>

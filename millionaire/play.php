@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.13 2009/08/02 20:28:44 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.14 2009/08/28 16:31:44 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.13 2009/08/02 20:28:44 bdaloukas Exp $
+ * @version $Id: play.php,v 1.14 2009/08/28 16:31:44 bdaloukas Exp $
  * @package game
  **/
 
@@ -126,7 +126,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
       $gif = "telephone.gif";
       $disabled = "";
     }		
-		echo '<input type="image" name="HelpTelephone" '.$disabled.' id="Help5050" Title="'.get_string( 'millionaire_telephone', 'game').'" src="'.$dirgif.$gif.'" alt="" border="0">&nbsp;';
+		echo '<input type="image" name="HelpTelephone" '.$disabled.' id="HelpTelephone" Title="'.get_string( 'millionaire_telephone', 'game').'" src="'.$dirgif.$gif.'" alt="" border="0">&nbsp;';
 
     if( $state & 4)
     {
@@ -139,7 +139,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
     }		
 	echo '<input type="image" name="HelpPeople" '.$disabled.' id="HelpPeople" Title="'.get_string( 'millionaire_helppeople', 'game').'" src="'.$dirgif.$gif.'" alt="" border="0">&nbsp;';
 
-	echo '<input type="image" name="Quit" id="Quit" Title="Quit" src="'.$dirgif.'x.gif" alt="" border="0">&nbsp;';
+	echo '<input type="image" name="Quit" id="Quit" Title="'.get_string( 'millionaire_quit', 'game').'" src="'.$dirgif.'x.gif" alt="" border="0">&nbsp;';
 	echo "\r\n";
     echo "</td>\r\n";
 
@@ -148,7 +148,7 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
         $styletext = "style='background:black;color:white'";
     }
 
-    $aVal = array( 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 1000, 20000, 40000, 80000, 150000);
+    $aVal = array( 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 10000, 20000, 40000, 80000, 150000);
     for( $i=15; $i >= 1; $i--)
     {
       $bTR = false;

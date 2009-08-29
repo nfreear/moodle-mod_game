@@ -272,7 +272,7 @@ $string[ 'hiddenpicture_height'] = 'Ορισμός ύψους εικόνας';
 $string[ 'sourcemodule_include_subcategories'] = 'Να συμπεριλαμβάνονται οι υποκατηγορίες';
 $string[ 'print'] = 'Εκτύπωση';
 $string[ 'html_title'] = 'Τίτλος της ιστοσελίδας:';
-$string[ 'html_hascheckbutton'] = 'Να έχει κουμπί ελέγχου:';
+$string[ 'html_hascheckbutton'] = 'Να έχει κουμπί ελέγχου σωστής απάντησης:';
 $string[ 'html_hasprintbutton'] = 'Να έχει κουμπί εκτύπωσης:';
 
 $string[ 'javame_filename'] = 'Όνομα αρχείου:';

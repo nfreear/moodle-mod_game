@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.10 2009/08/28 16:31:44 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.11 2009/08/29 05:24:22 bdaloukas Exp $
 /**
  * This page edits the bottom text of a game
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.10 2009/08/28 16:31:44 bdaloukas Exp $
+ * @version $Id: export.php,v 1.11 2009/08/29 05:24:22 bdaloukas Exp $
  * @package game
  **/
  
@@ -249,7 +249,7 @@ function game_export_html( $game, $update)
 <tr><td colspan=2><center><b><?php echo get_string('export', 'game'); ?></td></tr>
 
 <?php
-if( $game->gamekind == 'cross')
+if( $game->gamekind == 'hangman')
 {
 ?>
 <tr>

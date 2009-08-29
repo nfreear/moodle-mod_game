@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.2 2009/08/28 23:36:53 bdaloukas Exp $
+<?php  // $Id: exporthtml_millionaire.php,v 1.3 2009/08/29 00:05:53 bdaloukas Exp $
 /**
- * This page export the game hangman to html
+ * This page export the game millionaire to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.2 2009/08/28 23:36:53 bdaloukas Exp $
+ * @version $Id: exporthtml_millionaire.php,v 1.3 2009/08/29 00:05:53 bdaloukas Exp $
  * @package game
  **/
 function game_millionaire_html_getquestions( $game, &$max)
@@ -67,6 +67,9 @@ function game_millionaire_html_getquestions( $game, &$max)
 <body onload="Reset();">
 
 <script type="text/javascript">
+
+    //Millionaire for Moodle by Vasilis Daloukas
+    
     <?php echo 'var questions = new Array('.game_millionaire_html_getquestions( $game,  $maxquestions).");\r"; ?>
     var current_question = 0;
     var level = 0;

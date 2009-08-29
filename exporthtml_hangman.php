@@ -1,16 +1,16 @@
-<?php  // $Id: exporthtml_hangman.php,v 1.1 2009/08/28 16:31:44 bdaloukas Exp $
+<?php  // $Id: exporthtml_hangman.php,v 1.2 2009/08/29 00:05:53 bdaloukas Exp $
 /**
  * This page export the game hangman to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_hangman.php,v 1.1 2009/08/28 16:31:44 bdaloukas Exp $
+ * @version $Id: exporthtml_hangman.php,v 1.2 2009/08/29 00:05:53 bdaloukas Exp $
  * @package game
  **/
 
 ?>
 <script type="text/javascript">
 
-// Hangman for moodle by Vasilis Daloukas
+// Hangman for Moodle by Vasilis Daloukas
 // The script is based on HangMan II script- By Chris Fortey (http://www.c-g-f.net/)
 
 var can_play = true;

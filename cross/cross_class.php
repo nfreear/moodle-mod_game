@@ -632,7 +632,7 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 			}
       
      		if( $showhtmlsolutions){
-				$shtmlsolutions .= ',"'.utf8_encode( $rec->answertext).'"';
+				$shtmlsolutions .= ',"'.base64_encode( $rec->answertext).'"';
 			}
 			
 			$attachment = '';

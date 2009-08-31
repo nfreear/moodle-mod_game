@@ -54,6 +54,9 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 		{
 			$query = get_record( 'game_queries', 'id', $snakes->queryid);
 		}
+		if( $game->toptext != ''){
+		    echo $game->toptext.'<br>';
+	    }
 		game_snakes_showquestion( $id, $game, $snakes, $query);
 	}
 	
@@ -91,7 +94,7 @@ if( $finish  == false){
 <?php
 
 	if( $game->bottomtext != ''){
-		echo '<br><br>'.$game->bottomtext;
+		echo '<br>'.$game->bottomtext;
 	}
 }
 

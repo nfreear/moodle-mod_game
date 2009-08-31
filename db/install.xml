@@ -26,8 +26,9 @@
 	    <FIELD NAME="param8" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="param7" NEXT="shuffle" />
 	    <FIELD NAME="shuffle" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" DEFAULT="1" PREVIOUS="param8" NEXT="timemodified" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="shuffle" NEXT="gameinputid" />
-            <FIELD NAME="gameinputid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="timemodified" NEXT="bottomtext" />
-            <FIELD NAME="bottomtext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="gameinputid" NEXT="grademethod" />
+            <FIELD NAME="gameinputid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="timemodified" NEXT="toptext" />
+            <FIELD NAME="toptext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="gameinputid" NEXT="bottomtext" />
+            <FIELD NAME="bottomtext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="toptext" NEXT="grademethod" />
             <FIELD NAME="grademethod" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="bottomtext" NEXT="grade" />
             <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grademethod" NEXT="decimalpoints" />
             <FIELD NAME="decimalpoints" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grade" NEXT="popup" />

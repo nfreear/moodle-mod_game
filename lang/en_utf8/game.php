@@ -170,6 +170,7 @@ $string[ 'sudoku_create_count'] = 'Number of sudokus that will be created';
 $string[ 'sudoku_create_start'] = 'Start creating sudokus';
 $string[ 'hideanswers'] = 'Hide answers';
 $string[ 'must_select_glossary'] = 'You must select a glossary';
+$string[ 'createtoptext'] = 'Text at the top';
 $string[ 'bottomtext'] = 'Text at the bottom';
 $string[ 'messagewin'] = 'Message when the student wins';
 $string[ 'messageloose'] = 'Message when the student looses';

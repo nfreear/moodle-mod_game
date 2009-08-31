@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.14 2009/08/28 16:31:44 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.15 2009/08/31 18:31:14 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.14 2009/08/28 16:31:44 bdaloukas Exp $
+ * @version $Id: play.php,v 1.15 2009/08/31 18:31:14 bdaloukas Exp $
  * @package game
  **/
 
@@ -249,10 +249,14 @@ function game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire)
 {
 	game_millionaire_SelectQuestion( $aAnswer, $game, $attempt, $millionaire, $query);
 	
+	if( $game->toptext != ''){
+		echo $game->toptext.'<br><br>';
+	}
+	
 	game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, "");
 	
 	if( $game->bottomtext != ''){
-		echo '<br><br>'.$game->bottomtext;
+		echo '<br>'.$game->bottomtext;
 	}
 }
 

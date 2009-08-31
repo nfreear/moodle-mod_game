@@ -145,6 +145,10 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
 
 function game_hiddenpicture_play( $id, $game, $attempt, $hiddenpicture, $showsolution=false)
 {
+	if( $game->toptext != ''){
+		echo $game->toptext.'<br>';
+	}
+	
 	//Show picture
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
     unset( $offsetquestions[ 0]);

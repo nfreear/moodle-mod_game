@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.17 2009/07/31 17:30:54 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.18 2009/08/31 18:31:14 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -774,7 +774,7 @@ function xmldb_game_upgrade($oldversion=0) {
         $result = $result && add_field($table, $field);
     }
 		
-	//game.gameinputid
+	//game.bottomtext
     if ($result && $oldversion < 2007111303) {
         $table = new XMLDBTable('game');
         $field = new XMLDBField('bottomtext');
@@ -862,6 +862,15 @@ function xmldb_game_upgrade($oldversion=0) {
     if ($result && $oldversion < 2007111843) {
         $table = new XMLDBTable('game_queries');
         $field = new XMLDBField('grade');
+	//game.bottomtext
+    if ($result && $oldversion < 2007111303) {
+        $table = new XMLDBTable('game');
+        $field = new XMLDBField('bottomtext');
+        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null);
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+    }
 
     /// Launch add field format
         $result = $result && drop_field($table, $field);
@@ -1252,7 +1261,16 @@ function xmldb_game_upgrade($oldversion=0) {
         $result = $result && rename_field( $table, $field, 'fileboard');
     }
 
-	//game_export_javame.maxpicturewidth
+	//game_exp	//game.bottomtext
+    if ($result && $oldversion < 2007111303) {
+        $table = new XMLDBTable('game');
+        $field = new XMLDBField('bottomtext');
+        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null);
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+    }
+
     if ($result && $oldversion < 2009010502) {
         $table = new XMLDBTable('game_export_javame');
         $field = new XMLDBField('maxpicturewidth');
@@ -1332,6 +1350,16 @@ function xmldb_game_upgrade($oldversion=0) {
     /// Launch add field format
         $result = $result && add_field($table, $field);
 	}
+
+	//game.toptext
+    if ($result && $oldversion < 2009083102) {
+        $table = new XMLDBTable('game');
+        $field = new XMLDBField('toptext');
+        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null, null, 'gameinputid');
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+    }
 
 	
     

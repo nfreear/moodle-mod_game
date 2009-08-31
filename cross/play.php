@@ -236,6 +236,10 @@ if( $print){
 }else{
     echo '<body>';
 }
+
+	if( $game->toptext != ''){
+		echo $game->toptext.'<br>';
+	}
 ?>
 
 <h1></h1>
@@ -245,6 +249,7 @@ if( $print){
 	or later, Netscape 7, Mozilla, Firefox, or Safari.  If you have disabled web page scripting, please re-enable it and refresh
 	the page.
 </div>
+
 
 <p><table cellpadding="0" cellspacing="0" border="0">
 

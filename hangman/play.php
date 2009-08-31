@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.10 2009/07/28 16:50:09 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.11 2009/08/31 18:31:14 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -184,6 +184,10 @@ function game_hangman_onfinishgame( $game, $attempt, $hangman)
 	global $CFG;
 	
 	$query = get_record( 'game_queries', 'id', $hangman->queryid);
+	
+	if( $game->toptext != ''){
+		echo $game->toptext.'<br>';
+	}
     $max=6;		// maximum number of wrong
     hangman_showpage( $done, $correct, $wrong, $max, $word_line, $word_line2, $links,  $game, $attempt, $hangman, $query, $onlyshow, $showsolution);
 	

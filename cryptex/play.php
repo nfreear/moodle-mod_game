@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.4 2009/08/31 13:53:48 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.5 2009/08/31 18:31:14 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.4 2009/08/31 13:53:48 bdaloukas Exp $
+ * @version $Id: play.php,v 1.5 2009/08/31 18:31:14 bdaloukas Exp $
  * @package game
  **/
 
@@ -132,6 +132,10 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 	$textlib = textlib_get_instance();
 	
 	global $CFG;
+
+	if( $game->toptext != ''){
+		echo $game->toptext.'<br>';
+	}
 	
 	echo '<br>';
 	

@@ -86,6 +86,10 @@ function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow=false, $show
 {
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
 
+	if( $game->toptext != ''){
+		echo $game->toptext.'<br>';
+	}
+	
 	game_sudoku_showsudoku( $sudoku->data, $sudoku->guess, true, $showsolution, $offsetquestions, $correctquestions, $id, $attempt, $game);
 	switch( $game->sourcemodule)
 	{
@@ -99,7 +103,7 @@ function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow=false, $show
 	}
 	
 	if( $game->bottomtext != ''){
-		echo '<br><br>'.$game->bottomtext;
+		echo '<br>'.$game->bottomtext;
 	}	
 }
 

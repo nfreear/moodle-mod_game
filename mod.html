@@ -607,6 +607,18 @@ if( $form->gamekind == 'hiddenpicture'){
 <?php
 }
 
+//a text at top
+if( $form->gamekind <> 'bookquiz'){
+    $url = $CFG->wwwroot.'/mod/game/bottomtext.php?update='.$_GET[ 'update'].'&amp;sesskey='.$_GET[ 'sesskey'].'&amp;top=1';
+?>        
+        <tr>
+        <td align="right"><b><a href="<?php echo $url ?>" ><?php print_string('createtoptext', 'game') ?></a>:</b></td>        
+        <td><?php echo $form->toptext; ?></td>
+        </tr>
+<?php
+}
+
+
 //a text at bottom
 if( $form->gamekind <> 'bookquiz'){
     $url = $CFG->wwwroot.'/mod/game/bottomtext.php?update='.$_GET[ 'update'].'&amp;sesskey='.$_GET[ 'sesskey'];
@@ -1037,7 +1049,7 @@ function onselectglossary( glossaryid)
         echo "\tvar s = window.location.href;\r\n";
         echo "\ts = s.substr( s.indexOf('?') + 1);\r\n";
         echo "\tvar url=\"$CFG->wwwroot/mod/game/updategame.php?glossaryid=\" + glossaryid + '&' + s;\r\n   ";
-        echo "\twindow.location.href = url;\r\n";
+        echo "\twindow.location.hrefbo = url;\r\n";
     }
 ?>
 }

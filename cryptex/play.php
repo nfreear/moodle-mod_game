@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.3 2009/06/28 07:36:00 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.4 2009/08/31 13:53:48 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.3 2009/06/28 07:36:00 bdaloukas Exp $
+ * @version $Id: play.php,v 1.4 2009/08/31 13:53:48 bdaloukas Exp $
  * @package game
  **/
 
@@ -233,6 +233,8 @@ width:	240pt;
 		
 		$question = game_filtertext( $q->questiontext, 0);
 		echo "$i. ".$question;
+		$question = strip_tags($question); //ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question
+		$question = str_replace("'","\'",$question);
 		if( $showsolution){
 			echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
 		}else if( $onlyshow == false){

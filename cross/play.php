@@ -271,7 +271,7 @@ if( $print){
 // Do not remove this copyright notice.  You can, however, change the rest of the page.
 // www.eclipsecrossword.com
 
-var BadChars = "`~!@^*()_={[}]\|:;\"',<>?";
+var BadChars = "`~!@^*()_={[}]\|:;\"',<>?&";
 
 var CrosswordWidth, CrosswordHeight;
 var TableAcrossWord, TableDownWord;

@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.11 2009/08/31 18:31:14 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2009/09/01 14:03:56 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -228,7 +228,7 @@ function game_hangman_onfinishgame( $game, $attempt, $hangman)
 	
 	echo "<br/><br/>".get_string( 'hangman_grade', 'game').' : '.round( $query->percent * 100).' %';
 	if( $hangman->maxtries > 1){
-		echo '<br/><br/>'.get_string( 'hangman_gradeinstance', 'game').' : '.round( $query->percent * 100).' %';
+		echo '<br/><br/>'.get_string( 'hangman_gradeinstance', 'game').' : '.round( $hangman->corrects / $hangman->maxtries * 100).' %';
 	}
 	
 	if( $game->bottomtext != ''){

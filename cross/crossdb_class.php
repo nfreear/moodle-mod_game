@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.4 2008/11/06 23:16:45 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.5 2009/09/01 13:33:53 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.4 2008/11/06 23:16:45 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.5 2009/09/01 13:33:53 bdaloukas Exp $
  * @package game
  **/
 
@@ -89,17 +89,17 @@ class CrossDB extends Cross
 
 		ksort( $a);
 		$b = array();
-		$correctletters = $spaces = $wrongletters = 0;
+		$correctletters = $wrongletters = 0;
 
 		foreach( $a as $rec){
-			$this->updatecrossquestions( $rec, $g, $pos, $correctletters, $wrongletters, $spaces, $game, $attempt, $crossrec);
+			$this->updatecrossquestions( $rec, $g, $pos, $correctletters, $wrongletters, $game, $attempt, $crossrec);
 			$b[] = $rec;
 
 			if( ($rec->col != 0) and ($rec->row != 0)){
 				$load = true;
 			}
 		}
-		$info = $this->game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt);
+		$info = $this->game_cross_computecheck( $correctletters,  $wrongletters, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt);
 		$html = $this->showhtml_base( $crossrec, $b, $showsolution, $showhtmlsolutions);
     }
 	
@@ -111,7 +111,7 @@ class CrossDB extends Cross
     return $info;
   }
 
-function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $game, $attempt, &$done, $onlyshow, $showsolution, $finishattempt)
+function game_cross_computecheck( $correctletters,  $wrongletters, $game, $attempt, &$done, $onlyshow, $showsolution, $finishattempt)
 {
 	$ret = '';
 	
@@ -126,10 +126,8 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 		$a[] = $correctletters.' '.( $correctletters > 1 ? get_string( 'cross_corrects', 'game') :get_string( 'cross_correct', 'game'));
 	if( $wrongletters)
 		$a[] = $wrongletters.' '.( $wrongletters > 1 ? get_string( 'cross_errors', 'game') : get_string( 'cross_error', 'game'));
-	if( $spaces)
-		$a[] = $spaces.' '.( $spaces > 1 ? get_string( 'cross_spaces', 'game') : get_string( 'cross_space', 'game'));
 	
-	if(  $correctletters > 1 or $wrongletters > 1 or $spaces > 1) {
+	if(  $correctletters > 1 or $wrongletters > 1) {
 		$ret = get_string( 'cross_found_many', 'game');
 	}else
 	{
@@ -152,7 +150,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 		}		
 	}
 	
-	$done = ( ($spaces > 0 or $wrongletters > 0) ? 0 : 1);
+	$done = ( $wrongletters > 0 ? 0 : 1);
 
 	if( $finishattempt == false){
 		if( $onlyshow or $showsolution){
@@ -162,7 +160,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 		$done = 1;
 	}
 
-	$grade = $correctletters / ($correctletters + $wrongletters + $spaces);
+	$grade = $correctletters / ($correctletters + $wrongletters);
 	$ret .= '<br>'.get_string( 'grade', 'game').' '.round( $grade * 100).' %';
 
 	game_updateattempts( $game, $attempt, $grade, $done);
@@ -171,20 +169,19 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 }
 
 	//rec is a record of cross_questions
-	function updatecrossquestions( &$rec, &$g, &$pos, &$correctletters, &$wrongletters, &$spaces, $game, $attempt, $crossrec)
+	function updatecrossquestions( &$rec, &$g, &$pos, &$correctletters, &$wrongletters, $game, $attempt, $crossrec)
 	{
 		$textlib = textlib_get_instance();
 
 		global $USER;
-		
+	
 		$word = $rec->answertext;
 		$len = $textlib->strlen( $word);
 		$guess = $textlib->substr( $g, $pos, $len);
 		$len_guess = $textlib->strlen( $guess);;
 		$pos += $len;
-
-		$cLetterGrade = 0;
-		$found = 0;
+		
+		$is_empty = true;
     
 		for($i = 0; $i < $len; $i++)
 		{
@@ -193,23 +190,30 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 			else
 				$letterguess = " ";
 				
+			if( $letterguess != ' ')
+			    $is_empty = false;
+				
 			$letterword= $textlib->substr( $word, $i, 1);
 			if( $letterword != $letterguess)
 			{
-				if( $letterguess != '_' and $letterguess != ' '){
-					$wrongletters++;
-					game_setchar( $guess, $i, '_');
-				}else
+                $wrongletters++;
+                game_setchar( $guess, $i, '_');
+		    }else if( $letterguess == ' '){
+                if( $guess == $word)
 				{
-					$spaces++;
+				    $correctletters++;
+                }else
+                {
+                    $wrongletters++;
+                    game_setchar( $guess, $i, '_');
 				}
 			}else
 			{
-				$correctletters++;
-				$found++;
+			    $correctletters++;
 			}
 		}
-		if( trim( $guess) == ''){
+		
+		if( $is_empty){
 			return;
 		}
 		if( ($rec->studentanswer == $guess )){
@@ -224,7 +228,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $spaces, $gam
 			error("Update game_queries: not updated");
 		}
 		
-		$score = $found / $len;
+		$score = $correctletters / $len;
 		game_update_queries( $game, $attempt, $rec, $score, $guess);
 	}
 

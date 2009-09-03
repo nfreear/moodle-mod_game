@@ -642,7 +642,7 @@ function PackPuzzle( sData)
   for(i=0; i < len; i++)
   {
     c = sData.charAt( i);
-    if( (c > "0") && (c < "9"))
+    if( (c > "0") && (c <= "9"))
     {
         s = s.concat( '/');
     }

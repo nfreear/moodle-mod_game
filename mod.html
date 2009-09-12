@@ -13,7 +13,6 @@ require_once( "$CFG->dirroot/lib/ddllib.php");
 require_once $CFG->dirroot.'/lib/accesslib.php';
 require_once $CFG->dirroot.'/lib/questionlib.php';
 
-
 /// First we check that form variables have been initialised
 if (!isset($form->name)) {
     $form->name = '';
@@ -28,7 +27,7 @@ if (!isset($form->name)) {
 
 $existsbook = ( get_record_select( 'modules', "name='book'", 'id,id') ? 1 : 0);
 
-if( $form->gamekind != $gamekind){
+if( array_key_exists( 'reset', $_GET)){
     //the variables need initialization
     switch( $form->gamekind){
     case 'hangman':
@@ -72,6 +71,7 @@ if( $form->gamekind != $gamekind){
 	    $form->param4 = 0;  //width
 	    $form->param5 = 0;  //height
 	    $form->param7 = 0;  //allow spaces
+	    $form->param8 = 0x408080;
 	    $form->shuffle = 1; //randomize questions
         break;
     }
@@ -285,6 +285,16 @@ if( $form->gamekind == 'millionaire' && $form->sourcemodule == 'quiz' ){
     <?php
         echo game_showcheckbox( 'shuffle', $form->shuffle);
     ?>
+    </tr>
+<?
+}
+
+if( $form->gamekind == 'millionaire' ){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('millionaire_background', 'game'); ?>:</b></td>
+    <td align="left">
+    <input type="grade" name="param8" size="6" value="<?php  echo base_convert($form->param8, 10, 16); ?>" />
     </tr>
 
 <?php

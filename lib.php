@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.8 2009/07/14 20:42:48 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.9 2009/09/12 08:12:55 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.8 2009/07/14 20:42:48 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.9 2009/09/12 08:12:55 bdaloukas Exp $
  * @package game
  **/
 
@@ -103,6 +103,14 @@ function game_update_instance($game) {
 
     if( $game->param2 == ''){
         $game->param2 = 0;
+    }
+    
+    if( $game->gamekind == 'millionaire')
+    {
+        if( $game->param8 != '')
+        {
+            $game->param8 = base_convert($game->param8, 16, 10);
+        }
     }
         	
     if( !update_record("game", $game)){

@@ -89,7 +89,7 @@
 
 		$url = $CFG->wwwroot."/course/mod.php?update=$update";
 		$url .= "&return=true";
-		$url .= "&sesskey=$sesskey";
+		$url .= "&sesskey=$sesskey&reset=1";
 		redirect( $url);
 	}
 

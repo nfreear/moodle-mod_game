@@ -290,5 +290,5 @@ $string[ 'html_hangman_inputsize'] = 'Size of input field:';
 $string[ 'millionaire_helppeople'] = 'Help of people';
 $string[ 'millionaire_telephone'] = 'Help of telephone';
 $string[ 'millionaire_quit'] = 'Quit';
-
+$string[ 'millionaire_background'] = 'Background color';
 ?>

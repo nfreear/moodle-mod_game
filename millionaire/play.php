@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.15 2009/08/31 18:31:14 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.16 2009/09/12 08:12:56 bdaloukas Exp $
 /**
- * This page prints a particular attempt of game
+ * This files plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.15 2009/08/31 18:31:14 bdaloukas Exp $
+ * @version $Id: play.php,v 1.16 2009/09/12 08:12:56 bdaloukas Exp $
  * @package game
  **/
 
@@ -64,11 +64,11 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire)
 	if( $found == 1)
 	    ;//nothing
 	else if( array_key_exists( "Help5050_x", $_POST))
-		game_millionaire_OnHelp5050( $id,  $millionaire, $game, $query);
+		game_millionaire_OnHelp5050( $game, $id,  $millionaire, $game, $query);
 	else if( array_key_exists( "HelpTelephone_x", $_POST))
-		game_millionaire_OnHelpTelephone( $id, $millionaire, $query);
+		game_millionaire_OnHelpTelephone( $game, $id, $millionaire, $query);
 	else if( array_key_exists( "HelpPeople_x", $_POST))
-		game_millionaire_OnHelpPeople( $id, $millionaire, $query);
+		game_millionaire_OnHelpPeople( $game, $id, $millionaire, $query);
 	else if( array_key_exists( "Quit_x", $_POST))
 		game_millionaire_OnQuit( $id,  $game, $attempt, $query);
     else
@@ -81,7 +81,7 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire)
   }
   
 
-function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
+function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aAnswer, $info)
 {	
 	$question = str_replace( '\"', '"', $query->questiontext);
 	
@@ -92,7 +92,12 @@ function game_millionaire_showgrid( $millionaire, $id, $query, $aAnswer, $info)
 	$state = $millionaire->state;
 	$level = $millionaire->level;
 	
-	$background = "style='background:#408080'";
+	if( $game->param8 == '')
+	    $color = 408080;
+	else
+	    $color = base_convert($game->param8, 10, 16);
+	    
+	$background = "style='background:#$color'";
     
 	echo '<form name="Form1" method="post" action="attempt.php" id="Form1">';
 	echo "<table cellpadding=0 cellspacing=0 border=0>\r\n";
@@ -253,7 +258,7 @@ function game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire)
 		echo $game->toptext.'<br><br>';
 	}
 	
-	game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, "");
+	game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, "");
 	
 	if( $game->bottomtext != ''){
 		echo '<br>'.$game->bottomtext;
@@ -410,13 +415,13 @@ function game_millionaire_setstate( &$millionaire, $mask)
 }
 
 
-function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
+function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query)
 {
 	game_millionaire_loadquestions( $millionaire, $query, $aAnswer);
 	
 	if( ($millionaire->state & 1) != 0)
 	{
-		game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, '');
+		game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, '');
 		return;
 	}
 		
@@ -440,17 +445,16 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
 		}
 	}
 	
-	game_millionaire_showgrid(  $millionaire, $id, $query, $aAnswer, '');
+	game_millionaire_showgrid(  $game, $millionaire, $id, $query, $aAnswer, '');
 }
 
-
-    function game_millionaire_OnHelpTelephone(  $id,  &$millionaire, $query)
+    function game_millionaire_OnHelpTelephone(  $game, $id,  &$millionaire, $query)
     {
 		game_millionaire_loadquestions( $millionaire, $query, $aAnswer);
 
 		if( ($millionaire->state & 2) != 0)
 		{
-			game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, '');
+			game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, '');
 			return;
 		}
 		
@@ -476,17 +480,17 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
           
 		$info = get_string( 'millionaire_info_telephone','game').'<br><b>'.$aAnswer[ $response-1].'</b>';
 		
-        game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, $info);
+        game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, $info);
     }
 
-    function game_millionaire_OnHelpPeople( $id,  &$millionaire, $query)
+    function game_millionaire_OnHelpPeople( $game, $id,  &$millionaire, $query)
     {
 		$textlib = textlib_get_instance();
 
 		game_millionaire_loadquestions( $millionaire, $query, $aAnswer);
 		
 		if( ($millionaire->state & 4) != 0){
-			game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, '');
+			game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, '');
 			return;
 		}
 		
@@ -506,13 +510,13 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
         {
           //with percent 80% sets in the correct answer the biggest percent
           $max_pos = 0;
-          for( $i=1; $i < $n; $i++)
+          for( $i=1; $i+1 < $n; $i++)
           {
             if( $aPercent[ $i] >= $aPercent[ $max_pos])
               $max_pos = $i;
           }
           $temp = $aPercent[ $max_pos];
-          $aPercent[ $max_pos] = $aPercent[ $query->correct];
+          $aPercent[ $max_pos] = $aPercent[ $query->correct-1];
           $aPercent[ $query->correct-1] = $temp;
         }
         
@@ -521,7 +525,7 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
 			$info .= "<br>".  $textlib->substr(  get_string( 'millionaire_letters_answers', 'game'), $i, 1) ." : ".$aPercent[ $i]. ' %';
 		}  
 		
-        game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, $textlib->substr( $info, 4));
+        game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, $textlib->substr( $info, 4));
     }
   
 
@@ -574,7 +578,7 @@ function game_millionaire_onhelp5050( $id,  &$millionaire, $query)
 					'<br><br><b><center>'.$aAnswer[ $query->correct-1].'</b>';
 				
 			$millionaire->state = 15;
-			game_millionaire_ShowGrid( $millionaire, $id, $query, $aAnswer, $info);
+			game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, $info);
 		}
     }
 

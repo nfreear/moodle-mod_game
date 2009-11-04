@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.12 2009/09/01 14:03:56 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.13 2009/11/04 06:30:29 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -91,6 +91,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
             $min->attachment = $rec->attachment;
             $min->questiontext = $rec->questiontext;
             $min->answerid = $rec->answerid;
+            $min->answer = $answer;
             
             if( $min_num == 0){
                 break;
@@ -123,7 +124,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 	$query->questiontext = addslashes( $min->questiontext);
 	$query->score = 0;
 	$query->timelastattempt = time();
-	$query->answertext = $answer;
+	$query->answertext = $min->answer;
 	$query->answerid = $min->answerid;
 	if( !($query->id = insert_record( 'game_queries', $query))){
 		print_object( $query);
@@ -145,10 +146,10 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 		
 	$letters = '';
 	if( $game->param1){
-		$letters .= $textlib->substr( $answer, 0, 1);
+		$letters .= $textlib->substr( $min->answer, 0, 1);
 	}
 	if( $game->param2){
-		$letters .= $textlib->substr( $answer, -1, 1);
+		$letters .= $textlib->substr( $min->answer, -1, 1);
 	}
 	$newrec->letters = $letters;
 

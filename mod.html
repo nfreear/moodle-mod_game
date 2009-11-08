@@ -101,7 +101,7 @@ if( $form->mode == 'add'){
 <?php
 
 
-if( $form->gamekind == ''){
+if( ($form->gamekind == '') && ($form->mode != 'add')){
     
     for( $i=1; $i <= 6; $i++){
         $name = 'param'.$i;

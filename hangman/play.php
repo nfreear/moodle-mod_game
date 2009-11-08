@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.13 2009/11/04 06:30:29 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.14 2009/11/08 15:12:54 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -22,12 +22,12 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 	$textlib = textlib_get_instance();
 
 	//new game
-    srand ((double)microtime()*1000000);
+    srand ((double)microtime()*1000003);
     
     //I try 10 times to find a new question
-    $found_words = 0;   //try to find CONST_GAME_TRIES_REPETITION words
-    $min_num = 0;   //number of repetitions
-    $min_id = 0;    //id with min_num repetitions
+    $found = false;
+    $min_num = 0;
+    $unchanged = 0;
     for($i=1; $i <= 10; $i++)
     {
 		$rec = game_question_shortanswer( $game, $game->param7, false);
@@ -81,10 +81,10 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
         {
             $min_num = 0;
             $copy = true;
-        }	   
+        }
        
         if( $copy){
-            $min_id = $rec->id;
+            $found = true;
             
             $min->questionid = $rec->questionid;
             $min->glossaryentryid = $rec->glossaryentryid;
@@ -93,17 +93,19 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
             $min->answerid = $rec->answerid;
             $min->answer = $answer;
             
-            if( $min_num == 0){
+            if( $min_num == 0)
+                break;  //We found an unused word
+        }else
+            $unchanged++;
+            
+        if( $unchanged > 2)
+        {
+            if( $found)
                 break;
-            }
         }
-	   
-	    //found a correct word
-	    if( $found_words >= CONST_GAME_TRIES_REPETITION)
-	        break;
 	}
 		
-	if( $min_id == 0){
+	if( $found == false){
 	    error( get_string( 'hangman_nowords', 'game'));
 	}
 	

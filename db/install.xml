@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="2009073102" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="2010031101" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -110,7 +110,8 @@
         <FIELD NAME="answertext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="horizontal" NEXT="correct" />
         <FIELD NAME="correct" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="answertext" NEXT="attachment"/>
         <FIELD NAME="attachment" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="correct" NEXT="answerid"/>
-        <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="attachment"/>
+        <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="attachment" NEXT="tries"/>
+		<FIELD NAME="tries" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" DEFAULT="0" PREVIOUS="answerid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

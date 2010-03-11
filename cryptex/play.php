@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.5 2009/08/31 18:31:14 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.6 2010/03/11 21:51:48 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.5 2009/08/31 18:31:14 bdaloukas Exp $
+ * @version $Id: play.php,v 1.6 2010/03/11 21:51:48 bdaloukas Exp $
  * @package game
  **/
 
@@ -117,7 +117,7 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer)
 	}
 	if( $equal == false)
 	{
-		game_update_queries( $game, $attempt, $query, 0, $answer2);
+		game_update_queries( $game, $attempt, $query, 0, $answer2, true);
 		game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, true);
 		return;
 	}
@@ -164,6 +164,18 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 		$gradeattempt = $count1 / ($count1 + $count2);
 	}
 	$finished = ($count2 == 0);
+	
+	if( ($finished === false) && ($game->param8 > 0))
+	{
+		$found = false;
+		foreach ( $questions as $q)
+		{
+			if ( $q->tries < $game->param8)
+				$found = true;
+		}	
+		if( $found == false)
+			$finished = true;	//rich max tries
+	}
 
 	if( $updateattempt){
 		game_updateattempts( $game, $attempt, $gradeattempt, $finished);
@@ -242,7 +254,8 @@ width:	240pt;
 		if( $showsolution){
 			echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
 		}else if( $onlyshow == false){
-			echo '<input type="submit" value="'.get_string( 'answer').'" onclick="OnCheck( '.$q->id.',\''.$question.'\');" />';
+			if( ($game->param8 == 0) || ($game->param8 > $q->tries))
+				echo '<input type="submit" value="'.get_string( 'answer').'" onclick="OnCheck( '.$q->id.',\''.$question.'\');" />';
 		}
 		echo "<br>\r\n";
 	}

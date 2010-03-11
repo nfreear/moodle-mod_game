@@ -52,6 +52,7 @@ if( array_key_exists( 'reset', $_GET)){
         $form->param2 = 0;  //max words
         $form->param3 = 0;  //layout
         $form->param7 = 0;  //allow spaces
+		$form->param8 = 0;  //maxtries
         break;
     case 'sudoku':
         $form->param2 = 0;  //max questions
@@ -478,6 +479,12 @@ if( $form->gamekind == 'cryptex'){
     </td>
     </tr>
 
+	    <tr>
+    <td align="right"><b><?php  echo get_string('cryptex_maxtries', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param8" value="<?php  p($form->param8) ?>" />
+    </td>
+    </tr>
 
 <?php
 }

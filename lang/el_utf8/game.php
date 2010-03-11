@@ -38,6 +38,7 @@ $string[ 'cross_word'] = 'λέξη';
 $string[ 'cryptex_maxcols'] = 'Μέγιστος αριθμός γραμμών/στηλών στο κρυπτόλεξο';
 $string[ 'cryptex_maxwords'] = 'Μέγιστος αριθμός λέξεων στο κρυπτόλεξο';
 $string[ 'cryptex_win'] = 'Συγχαρητήρια !!!!';
+$string[ 'cryptex_maxtries'] = 'Μέγιστος αριθμός προσπαθειών';
 $string[ 'cryptex_giveanswer'] = 'Δώστε την απάντηση';
 
 $string[ 'finish'] = 'Τέλος παιχνιδιού';

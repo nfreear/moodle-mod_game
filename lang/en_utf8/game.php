@@ -41,6 +41,7 @@ $string[ 'grade'] = 'Grade';
 $string[ 'game_bookquiz'] = 'Book with questions';
 $string[ 'cryptex_win'] = 'Congratulations !!!!';
 $string[ 'cryptex_giveanswer'] = 'Give the answer';
+$string[ 'cryptex_maxtries'] = 'Max tries';
 $string[ 'convertfrom1'] = '';      //Special convertation to capital letters
 $string[ 'convertto1'] = '';        //It is needed for some languages
 $string[ 'hangman_gradeinstance'] = 'Grade in whole game';

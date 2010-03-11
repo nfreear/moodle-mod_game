@@ -761,7 +761,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 			$recq->questionid = $query->questionid;
 			$recq->glossaryentryid = $query->glossaryentryid;
 			if ($updatetries)
-				$recq->tries = $recq->tries + 1;
+				$recq->tries = 1;
 
 			if (!($recq->id = insert_record( "game_queries", $recq))){
 				error("Insert page: new page game_queries not inserted");

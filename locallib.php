@@ -730,7 +730,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 		game_updateattempts( $game, $attempt, $grade, $finished);
 	}
 
-	function game_update_queries( $game, $attempt, $query, $score, $studentanswer)
+	function game_update_queries( $game, $attempt, $query, $score, $studentanswer, $updatetries=false)
 	{
 		global $USER;
 		
@@ -760,6 +760,8 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 			$recq->sourcemodule = $query->sourcemodule;
 			$recq->questionid = $query->questionid;
 			$recq->glossaryentryid = $query->glossaryentryid;
+			if ($updatetries)
+				$recq->tries = $recq->tries + 1;
 
 			if (!($recq->id = insert_record( "game_queries", $recq))){
 				error("Insert page: new page game_queries not inserted");
@@ -776,6 +778,10 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 		if( $studentanswer != ''){
 			$updrec->studentanswer = $studentanswer;
 		}
+		
+		if ($updatetries)
+			$updrec->tries = $recq->tries + 1;
+			
 		if (!(update_record( "game_queries", $updrec))){
 			error("game_update_queries: not updated id=$updrec->id");
 		}

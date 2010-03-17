@@ -1,4 +1,4 @@
-<?PHP // $Id: game.php,v 1.2 2010/03/17 08:04:32 bdaloukas Exp $
+<?PHP // $Id: game.php,v 1.3 2010/03/17 08:06:22 bdaloukas Exp $
       // game.php - created with Moodle 1.9.5
       // translated to uk_utf8 by Anastasiya Kolomoytseva
 
@@ -65,7 +65,6 @@ $string[ 'hangman_loose'] = '<BIG><B>Гру закінчено</B></BIG>';
 $string[ 'hangman_maxtries'] = 'Кількість слів у грі';
 $string[ 'hangman_nowords'] = 'Не знайшлось жодного слова';
 $string[ 'hangman_restletters_many'] = 'Ви маєте ще<b>$a</b> спроб';
-nastaia2@gmail.com
 
 $string[ 'hangman_restletters_one'] = 'Ви маєте ще<b>ТІЛЬКИ 1</b> спробу';
 $string[ 'hangman_restletters'] = 'Ви маєте ще<b>$a</b> спробу';
@@ -206,22 +205,22 @@ $string[ 'numattempts'] = '$a->studentnum $a->studentstring зробили $a->a
 
 $string[ 'allattempts'] = 'Показати всі зусилля';
 $string[ 'allstudents'] = 'Показати всі $a';
-$string['attemptduration'] = 'Тривалість гри';
- $string['startedon'] = 'Гра почалася в ';
+$string[ 'attemptduration'] = 'Тривалість гри';
+$string[ 'startedon'] = 'Гра почалася в ';
 $string[ 'reportoverview'] = 'Πерегляд';
 $string[ 'reportresponses'] = 'Докладні відповіді';
 $string[ 'unfinished'] = 'Відкритий';
- $string['unfinished'] = 'Нескінченно';
+$string[ 'unfinished'] = 'Нескінченно';
 $string[ 'selectnone'] = 'Відмінити все';
 $string[ 'deleteattemptcheck'] = 'Ви абсолютно впевнені,що хочете,повністю видалити ці спроби?';
-$string['selectnone'] = ' Відмінити все';
-$string['withselected'] = 'З вибраним';
-$string['displayoptions'] = 'Відображити параметри';
+$string[ 'selectnone'] = ' Відмінити все';
+$string[ 'withselected'] = 'З вибраним';
+$string[ 'displayoptions'] = 'Відображити параметри';
 $string[ 'showdetailedmarks'] = 'Показати віділенні деталі';
-$string['analysis'] = 'Аналіз';
+$string[ 'analysis'] = 'Аналіз';
 $string[ 'showdetailedmarks'] = 'Показати віділенні деталі'; 
-$string['showdetailedmarks'] = 'Інформація питань';
-$string['noattemptsonly'] = 'Відображити $a які не мають жодної спроби';
+$string[ 'showdetailedmarks'] = 'Інформація питань';
+$string[ 'noattemptsonly'] = 'Відображити $a які не мають жодної спроби';
 $string[ 'downloadods'] = 'Зберегти як ODS';
 
 $string[ 'reattemptgame'] = 'Почати гру знову';

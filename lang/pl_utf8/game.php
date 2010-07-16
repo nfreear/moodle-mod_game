@@ -1,4 +1,4 @@
-<?PHP // $Id: game.php,v 1.2 2008/10/05 09:15:00 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.3 2010/07/16 21:05:24 bdaloukas Exp $ 
 //Translated by Paweł Strzałkowski
 //students
 $string[ 'cross_across'] = 'Poziomo';
@@ -42,8 +42,6 @@ $string[ 'grade'] = 'Ocena';
 $string[ 'game_bookquiz'] = 'Książka z pytaniami';
 $string[ 'cryptex_win'] = 'Gratulacje !!!!';
 $string[ 'cryptex_giveanswer'] = 'Podaj odpowiedź';
-$string[ 'convertfrom1'] = '';      //Special convertation to capital letters
-$string[ 'convertto1'] = '';        //It is needed for some languages
 $string[ 'hangman_gradeinstance'] = 'Ocena za całą grę';
 $string[ 'hangman_grade'] = 'Ocena';
 $string[ 'hangman_letters'] = 'Litery: ';
@@ -51,7 +49,6 @@ $string[ 'hangman_loose'] = '<BIG><B>Koniec gry</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'Pozostało prób: <b>$a</b>';
 $string[ 'hangman_restletters_one'] = 'Pozostała <b>TYLKO 1</b> próba';
 $string[ 'hangman_restletters'] = 'Pozostało prób: <b>$a</b>';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 $string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'litery';
 $string[ 'letter'] = 'litera';
@@ -75,8 +72,6 @@ $string[ 'timelastattempt'] = 'Ostatnia próba';
 $string[ 'timestart'] = 'Start';
 $string[ 'and'] = 'i';
 $string[ 'snakes_background'] = 'Tło';
-$string[ 'useupdategame'] = 'Użyj przycisku "Zmień Gra" aby ustawić szczegóły gry';
-$string[ 'useeditgame'] = 'Użyj przycisku "Edytuj" aby ustawić szczegóły gry';
 $string[ 'cryptex_nowords'] = 'Nie znaleziono słów';
 $string[ 'millionaire_nowords'] = 'Nie znaleziono słów';
 $string[ 'tries'] = 'Próby';
@@ -123,7 +118,6 @@ $string[ 'hiddenpicture_height'] = 'Ustaw wysokość obrazka na';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'MUSISZ zapisać moduł gdy, aby wybrać jej rodzaj.';
 $string[ 'bookquiz_import_odt'] = 'Import z pliku OpenOffice (odt)';
 $string[ 'cryptex_maxcols'] = 'Maksymalna liczba kolumn/wierszy';
 $string[ 'cryptex_maxwords'] = 'Maksymalna liczba wyrazów';
@@ -258,7 +252,6 @@ $string[ 'hiddenpicture_across'] = 'Komórki poziomo';
 $string[ 'hiddenpicture_down'] = 'Komórki pionowo';
 $string[ 'hiddenpicture_pictureglossary'] = 'Słownik dla głównego pytania i obrazu';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Kategoria słownika dla głównego pytania';
-$string[ 'createbottomtext'] = 'Ustaw tekst dolny';
 
 //1.6.4
 $string[ 'hiddenpicture_nomainquestion'] = 'Brak wpisów z załączonym zdjęciem w słowniku $a->name';
@@ -272,4 +265,3 @@ $string[ 'javame_name'] = 'Nazwa:';
 $string[ 'javame_description'] = 'Opis:';
 $string[ 'javame_version'] = 'Wersja:';
 $string[ 'sourcemodule_include_subcategories'] = 'Dołącz podkategorie';
-?>

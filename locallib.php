@@ -1,4 +1,4 @@
-<?php
+<?php  // $Id: locallib.php,v 1.23 2010/07/16 21:05:22 bdaloukas Exp $
 
 /// CONSTANTS ///////////////////////////////////////////////////////////////////
 
@@ -32,9 +32,9 @@ function game_upper( $str, $lang='')
     if( $lang != ''){
         $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
         if (file_exists($langfile)) {
-            if ($result = get_string_from_file('convertfrom1', $langfile, "\$convert1")) {
+            if ($result = get_string_from_file('convertfrom', $langfile, "\$convert1")) {
                 eval($result);
-                if ($result = get_string_from_file('convertto1', $langfile, "\$convert2")) {
+                if ($result = get_string_from_file('convertto', $langfile, "\$convert2")) {
                     eval($result);
                     if( $convert1 != '' and $convert2 != ''){
 		                $len = $textlib->strlen( $convert1);
@@ -48,9 +48,9 @@ function game_upper( $str, $lang='')
        }
     }
 	
-    $convert1 = get_string( 'convertfrom1', 'game');
+    $convert1 = get_string( 'convertfrom', 'game');
     if( $convert1 != ""){
-		$convert2 = get_string( 'convertto1', 'game');
+		$convert2 = get_string( 'convertto', 'game');
 		$len = $textlib->strlen( $convert1);
 		for($i=0; $i < $len; $i++){
 			$str = str_replace( $textlib->substr( $convert1, $i, 1), $textlib->substr( $convert2, $i, 1), $str);
@@ -432,19 +432,17 @@ function game_questions_selectrandom_detail( $table, $select, $id_field="id", $c
 function game_detectlanguage( $word){
     global $CFG;
     
-    $langs = get_list_of_languages();
-    
-    foreach( $langs as $lang => $name){
+    $langs = get_directory_list( "{$CFG->dirroot}/mod/game/lang", '', true, true, false);
+
+    foreach( $langs as $lang){
         $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
         if (file_exists($langfile)) {
-            for( $i=1; $i <= 2; $i++){            
-                if ($result = get_string_from_file('lettersall'.$i, $langfile, "\$letters")) {
-                    eval($result);
-                    if( $letters != ''){
-                        $word2 = game_upper( $word, $lang);
-                        if( hangman_existall( $word2, $letters)){
-                            return $lang;
-                		}
+            if ($result = get_string_from_file('lettersall', $langfile, "\$letters")) {
+                eval($result);
+                if( $letters != ''){
+                    $word2 = game_upper( $word, $lang);
+                    if( hangman_existall( $word2, $letters)){
+                        return $lang;
                     }
                 }
             }
@@ -463,28 +461,20 @@ function game_getallletters( $word, $lang='')
     if( $lang != ''){
         $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
         if (file_exists($langfile)) {
-            for( $i=1; $i <= 2; $i++){            
-                if ($result = get_string_from_file('lettersall'.$i, $langfile, "\$letters")) {
-                    eval($result);
-                    if( $letters != ''){
-                        if( hangman_existall( $word, $letters)){
-                            return $letters;
-                		}
+            if ($result = get_string_from_file('lettersall', $langfile, "\$letters")) {
+                eval($result);
+                if( $letters != ''){
+                    if( hangman_existall( $word, $letters)){
+                        return $letters;
                     }
                 }
             }
        }
     }
     
-    for( $i=1; $i <= 2; $i++){
-        $letters = get_string( 'lettersall'.$i, 'game');
-        if( $letters == ''){
-            continue;
-		}
-		$letters = game_upper( $letters);
-        if( hangman_existall( $word, $letters)){
-            return $letters;
-		}
+    $letters = game_upper( get_string( 'lettersall', 'game'));
+    if( hangman_existall( $word, $letters)){
+        return $letters;
     }
     
     return '';
@@ -554,7 +544,7 @@ function game_questions_shortanswer_glossary( $game)
 
     $sql = 'SELECT ge.id, concept as answertext, definition as questiontext, ge.id as glossaryentryid, 0 as questionid, attachment '.
            " FROM $table WHERE $select";
-    
+
 	return get_records_sql( $sql);
 
 }
@@ -656,8 +646,8 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 	{
 		global $CFG;
 		
-		if( get_record_select($table, "id=$rec->id", 'id,id') == false){
-    		$sql = "INSERT INTO {$CFG->prefix}$table(id) VALUES($rec->id)";
+        if( get_record_select($table, "id=$rec->id", 'id,id') == false){
+            $sql = "INSERT INTO {$CFG->prefix}$table(id) VALUES($rec->id)";
 	    	if( !execute_sql( $sql, false)){
 	    		error( "Cannot insert an empty $table with id=$rec->id");
 	    		return false;
@@ -685,12 +675,12 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 		    $updrec->id = $attempt->id;
     		$updrec->timelastattempt = time();
     		$updrec->lastip = getremoteaddr();
-	    	if( isset( $_SERVER[ 'REMOTE_HOST'])){
+	    	if( isset( $_SERVER[ 'REMOTE_HOST']))
 	    		$updrec->lastremotehost = $_SERVER[ 'REMOTE_HOST'];
-	    	}
-	    	else{
+	    	else if( $updrec->lastip != '')
 	    		$updrec->lastremotehost = gethostbyaddr( $updrec->lastip);
-	    	}
+	    	else
+                $updrec->lastremotehost = '';
 
 	    	if( $score >= 0){
 	    		$updrec->score = $score;
@@ -812,8 +802,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 
 				return $attempt;
 			}
-		}
-		
+        }
 		return false;
 	}
 
@@ -1401,4 +1390,3 @@ function game_delete_attempt($attempt, $quiz) {
 
     game_update_grades( $game, $userid);
 }
-

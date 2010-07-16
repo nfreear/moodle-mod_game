@@ -1,4 +1,4 @@
-<?PHP // $Id: game.php,v 1.2 2008/07/22 11:23:24 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.3 2010/07/16 21:05:24 bdaloukas Exp $ 
       // game.php - created with Moodle 1.6.3
       // translated by Ивченко Анатолий
 
@@ -44,8 +44,6 @@ $string[ 'grade'] = 'Оценка';
 $string[ 'game_bookquiz'] = 'Книга с вопросами';
 $string[ 'cryptex_win'] = 'Поздравляем !!!!';
 $string[ 'cryptex_giveanswer'] = 'Дайте ответ';
-$string[ 'convertfrom1'] = 'ΆΈΉΊΌΎΏ';
-$string[ 'convertto1'] = 'ΑΕΗΙΟΥΩ';
 $string[ 'hangman_gradeinstance'] = 'Оценить всю игру';
 $string[ 'hangman_grade'] = 'Оценка';
 $string[ 'hangman_letters'] = 'Буквы: ';
@@ -53,8 +51,7 @@ $string[ 'hangman_loose'] = '<BIG><B>Игра окончена</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'У Вас <b>$a</b> попыток';
 $string[ 'hangman_restletters_one'] = 'У Вас <b>только 1</b> попытка';
 $string[ 'hangman_restletters'] = 'У Вас <b>$a</b> попыток';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ';
+$string[ 'lettersall'] = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ';
 $string[ 'letters'] = 'буквы';
 $string[ 'letter'] = 'буква';
 $string[ 'millionaire_info_people'] = 'Люди говорят';
@@ -77,7 +74,6 @@ $string[ 'timelastattempt'] = 'Последняя попытка';
 $string[ 'timestart'] = 'Начало';
 $string[ 'and'] = 'и';
 $string[ 'snakes_background'] = 'Фон';
-$string[ 'useupdategame'] = 'Пользуйтесь кнопкой \"Обновить установки игры\" для установки конфигурации игры по умолчанию';
 $string[ 'cryptex_nowords'] = 'Не найдено ни одного слова';
 $string[ 'millionaire_nowords'] = 'Не найдено ни одного слова';
 $string[ 'tries'] = 'Попытки';
@@ -122,7 +118,6 @@ $string[ 'hangman_allowsub'] =  'Разрешить дефис в словах';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'Только после сохранения вы можете изменить вид игры.';
 $string[ 'bookquiz_import_odt'] = 'Импортировать из файла OpenOffice(odt)';
 $string[ 'cryptex_maxcols'] = 'Макимальное число колонок/рядов в Криптексте';
 $string[ 'cryptex_maxwords'] = 'Макимальное число слов в Криптексте';
@@ -256,6 +251,5 @@ $string[ 'hiddenpicture_across'] = 'Клетки по горизонтали';
 $string[ 'hiddenpicture_down'] = 'Клетки по вертикали';
 $string[ 'hiddenpicture_pictureglossary'] = 'Глоссарий для главного вопроса';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Категория для главного вопроса';
-$string[ 'createbottomtext'] = 'Установить текст внизу экрана игры';
 
 ?>

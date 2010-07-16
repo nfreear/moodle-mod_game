@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.3 2009/08/29 00:05:53 bdaloukas Exp $
+<?php  // $Id: exporthtml_millionaire.php,v 1.4 2010/07/16 21:05:22 bdaloukas Exp $
 /**
  * This page export the game millionaire to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.3 2009/08/29 00:05:53 bdaloukas Exp $
+ * @version $Id: exporthtml_millionaire.php,v 1.4 2010/07/16 21:05:22 bdaloukas Exp $
  * @package game
  **/
 function game_millionaire_html_getquestions( $game, &$max)
@@ -39,7 +39,7 @@ function game_millionaire_html_getquestions( $game, &$max)
         }  						
 		$select .= " AND qtype='multichoice'";
 		
-		$table = "question";
+		$table = "question q";
 	}
 	$select .= " AND q.hidden=0";
 	
@@ -61,7 +61,8 @@ function game_millionaire_html_getquestions( $game, &$max)
     return $ret;
 }
 
-	$maxquestions = 0;
+function game_millionaire_html_print( $game,  $questions, $maxquestions)
+{
 ?>
 
 <body onload="Reset();">
@@ -70,7 +71,7 @@ function game_millionaire_html_getquestions( $game, &$max)
 
     //Millionaire for Moodle by Vasilis Daloukas
     
-    <?php echo 'var questions = new Array('.game_millionaire_html_getquestions( $game,  $maxquestions).");\r"; ?>
+    <?php echo 'var questions = new Array('.$questions.");\r"; ?>
     var current_question = 0;
     var level = 0;
     var posCorrect = 0;
@@ -501,3 +502,4 @@ for($i=1 ; $i <= $maxquestions; $i++)
 </body>
 </html>
 <?php
+}

@@ -6,24 +6,24 @@
 
 	if ($id) {
         if (! $cm = get_record("course_modules", "id", $id)) {
-            error("Course Module ID was incorrect id=$id");
+            print_error("Course Module ID was incorrect id=$id");
         }
         if (! $course = get_record("course", "id", $cm->course)) {
-            error("Course is misconfigured id=$cm->course");
+            print_error("Course is misconfigured id=$cm->course");
         }
     
         if (! $game = get_record("game", "id", $cm->instance)) {
-            error("Game id is incorrect (id=$cm->instance)");
+            print_error("Game id is incorrect (id=$cm->instance)");
         }
     } else {
         if (! $game = get_record("game", "id", $q)) {
-            error("Game module is incorrect (id=$a)");
+            print_error("Game module is incorrect (id=$q)");
         }
         if (! $course = get_record("course", "id", $game->course)) {
-            error("Course is misconfigured (id=$game->course)");
+            print_error("Course is misconfigured (id=$game->course)");
         }
         if (! $cm = get_coursemodule_from_instance("game", $game->id, $course->id)) {
-            error("Course Module ID was incorrect");
+            print_error("Course Module ID was incorrect");
         }
     }
 
@@ -55,4 +55,3 @@
                   "", "", true, update_module_button($cm->id, $course->id, $strgame), 
                   navmenu($course, $cm));        
     }
-?>

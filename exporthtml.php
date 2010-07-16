@@ -1,46 +1,41 @@
-<?php  // $Id: exporthtml.php,v 1.8 2009/08/28 23:43:25 bdaloukas Exp $
+<?php  // $Id: exporthtml.php,v 1.9 2010/07/16 21:05:22 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.8 2009/08/28 23:43:25 bdaloukas Exp $
+ * @version $Id: exporthtml.php,v 1.9 2010/07/16 21:05:22 bdaloukas Exp $
  * @package game
  **/
  
     require_once( "exportjavame.php");
         
-    function game_OnExportHTML( $gameid, $html, $update){
+    function game_OnExportHTML( $game, $html){
         global $CFG;
-        
-        $game = get_record_select( 'game', "id=$gameid");          
-        
+
         if( $game->gamekind == 'cross'){
             $destdir = "{$CFG->dataroot}/{$game->course}/export";
             if( !file_exists( $destdir)){
                 mkdir( $destdir);
             }
-            game_OnExportHTML_cross( $game, $html, $update, $destdir);
+            game_OnExportHTML_cross( $game, $html, $destdir);
             return;
         }
-        
+
         $destdir = game_export_createtempdir();
                 
         switch( $game->gamekind){
         case 'hangman':
-            game_OnExportHTML_hangman( $game, $html, $update);
+            game_OnExportHTML_hangman( $game, $html, $destdir);
             break;
         case 'millionaire':
-            game_OnExportHTML_millionaire( $game, $html, $update, $destdir);
+            game_OnExportHTML_millionaire( $game, $html, $destdir);
             break;
         }
-        
-        if( $destdir != ''){
-            remove_dir( $destdir);
-        }
 
+        remove_dir( $destdir);
     }
     
-    function game_OnExportHTML_cross( $game, $html, $update, $destdir){
+    function game_OnExportHTML_cross( $game, $html, $destdir){
   
         global $CFG;
     
@@ -53,6 +48,10 @@
         require( "cross/play.php");
         $attempt = false;
         game_getattempt( $game, $crossrec);
+        if( $crossrec == false){
+            game_cross_new( $game, $game->id, $crossm);
+            game_getattempt( $game, $crossrec);
+        }
         
         $ret = game_export_printheader( $html->title);
         
@@ -60,7 +59,7 @@
         
         ob_start();
 
-        game_cross_play( $update, $game, $attempt, $crossrec, '', true, false, false, false, $html->checkbutton, true, $html->printbutton);
+        game_cross_play( 0, $game, $attempt, $crossrec, '', true, false, false, false, $html->checkbutton, true, $html->printbutton);
 
         $output_string = ob_get_contents();
         ob_end_clean();
@@ -89,7 +88,7 @@
         return $ret;
     }    
     
-    function game_OnExportHTML_hangman( $game, $html, $update){
+    function game_OnExportHTML_hangman( $game, $html, $destdir){
     
         global $CFG;
         
@@ -102,14 +101,20 @@
         $ret = game_export_printheader( $html->title, false);
         $ret .= "\r<body onload=\"reset()\">\r";
 
+        $export_attachment = ( $html->type == 'hangmanp');
+        $map = game_exmportjavame_getanswers( $game, $export_attachment);
+        if( $map == false){
+            error( 'No Questions');
+        }
+
         ob_start();
         
         //Here is the code of hangman
         require( "exporthtml_hangman.php");        
-                        
+          
         $output_string = ob_get_contents();
         ob_end_clean();
-                        
+               
         $courseid = $game->course;
         $course = get_record_select( 'course', "id=$courseid");
                 
@@ -136,13 +141,13 @@
 	    	}
 	    }
 		
-		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');		
+		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
                         
         echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filezip\">{$filezip}</a>";
     }
 
 
-    function game_OnExportHTML_millionaire( $game, $html, $update, $destdir){
+    function game_OnExportHTML_millionaire( $game, $html, $destdir){
     
         global $CFG;
         
@@ -155,11 +160,14 @@
         $ret = game_export_printheader( $html->title, false);
         $ret .= "\r<body onload=\"Reset();\">\r";
 
-        ob_start();
-                        
         //Here is the code of millionaire
         require( "exporthtml_millionaire.php");
 
+        $questions = game_millionaire_html_getquestions( $game, $maxquestions);
+        ob_start();
+
+        game_millionaire_html_print( $game, $questions, $maxquestions);
+                        
         //End of millionaire code        
         $output_string = ob_get_contents();
         ob_end_clean();
@@ -171,32 +179,23 @@
         
         file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $output_string);
         
-        if( $html->type != 'hangmanp')
-        {
-            //Not copy the standard pictures when we use the "Hangman with pictures"
-            $src = $CFG->dirroot.'/mod/game/millionaire/1';                
-	    	$handle = opendir( $src);
-	    	while (false!==($item = readdir($handle))) {
-	    		if($item != '.' && $item != '..') {
-	    			if(!is_dir($src.'/'.$item)) {
-	    			    $itemdest = $item;
+        //Copy the standard pictures of Millionaire
+        $src = $CFG->dirroot.'/mod/game/millionaire/1';
+        $handle = opendir( $src);
+        while (false!==($item = readdir($handle))) {
+            if($item != '.' && $item != '..') {
+                if(!is_dir($src.'/'.$item)) {
+                    $itemdest = $item;
 
-	    			    if( strpos( $item, '.') === false)
-	    			        continue;
+                    if( strpos( $item, '.') === false)
+                        continue;
 
-	    				copy( $src.'/'.$item, $destdir.'/'.$itemdest);
-	    			}
-	    		}
+	    		    copy( $src.'/'.$item, $destdir.'/'.$itemdest);
+                }
 	    	}
 	    }
 		
-		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
-		
-        if( $destdir != ''){
-            remove_dir( $destdir);
-        }		
+		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');	
                         
         echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filezip\">{$filezip}</a>";
-}
-
-?>
+    }

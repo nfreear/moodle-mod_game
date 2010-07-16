@@ -1,4 +1,4 @@
-<?php  // $Id: importsnakes.php,v 1.2 2008/11/17 11:21:24 bdaloukas Exp $
+<?php  // $Id: importsnakes.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
 
 game_importsnakes();
 

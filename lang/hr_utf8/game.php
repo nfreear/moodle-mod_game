@@ -41,8 +41,6 @@ $string[ 'grade'] = 'Ocjena';
 $string[ 'game_bookquiz'] = 'Knjiga sa pitanjima';
 $string[ 'cryptex_win'] = 'Čestitamo !!!!';
 $string[ 'cryptex_giveanswer'] = 'Daj odgovor';
-$string[ 'convertfrom1'] = '';      //Special convertation to capital letters
-$string[ 'convertto1'] = '';        //It is needed for some languages
 $string[ 'hangman_gradeinstance'] = 'Ocjena u cijeloj igri';
 $string[ 'hangman_grade'] = 'Ocjena';
 $string[ 'hangman_letters'] = 'Slova: ';
@@ -50,8 +48,7 @@ $string[ 'hangman_loose'] = '<BIG><B>Kraj igre</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'Imate još <b>$a</b> pokušaja';
 $string[ 'hangman_restletters_one'] = 'Imate još <b>SAMO 1</b> pokušaj';
 $string[ 'hangman_restletters'] = 'Imate <b>$a</b> pokušaja';
-$string[ 'lettersall1'] = "ABCČĆDĐEFGHIJKLMNOPRSŠTUVZŽ ";
-$string[ 'lettersall2'] = 'ABCČĆDĐEFGHIJKLMNOPRSŠTUVZŽ';
+$string[ 'lettersall'] = 'ABCČĆDĐEFGHIJKLMNOPRSŠTUVZŽ';
 $string[ 'letters'] = 'slova';
 $string[ 'letter'] = 'slovo';
 $string[ 'millionaire_info_people'] = 'Publika kaže';
@@ -74,8 +71,6 @@ $string[ 'timelastattempt'] = 'Posljednji pokušaj';
 $string[ 'timestart'] = 'Početak';
 $string[ 'and'] = 'i';
 $string[ 'snakes_background'] = 'Pozadina';
-$string[ 'useupdategame'] = 'Koristite tipku \"Osvježi igru\" za promjenu postavki igre';
-$string[ 'useeditgame'] = 'Koristite Promijeni za postavljanje parametara igre';
 $string[ 'cryptex_nowords'] = 'Nije pronađena ni jedna riječ';
 $string[ 'millionaire_nowords'] = 'Nije pronađena ni jedna riječ';
 $string[ 'tries'] = 'Pokušaji';
@@ -121,7 +116,6 @@ $string[ 'hiddenpicture_height'] = 'Postavi visinu slike na';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'SAMO nakon spremanje možete promijeniti tip igre';
 $string[ 'bookquiz_import_odt'] = 'Uvezi iz OpenOffice datoteke (odt)';
 $string[ 'cryptex_maxcols'] = 'Maksimalan broj stupaca/redova cryptexa';
 $string[ 'cryptex_maxwords'] = 'Maksimalan broj riječi cryptexa';
@@ -256,7 +250,6 @@ $string[ 'hiddenpicture_across'] = 'Ćelije vodoravno';
 $string[ 'hiddenpicture_down'] = 'Ćelije okomito';
 $string[ 'hiddenpicture_pictureglossary'] = 'Rječnik za glavno pitanje i sliku';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Kategorija rječnika za glavno pitanje';
-$string[ 'createbottomtext'] = 'Postavi tekst na dnu';
 
 //1.6.4
 $string[ 'hiddenpicture_nomainquestion'] = 'Nije pronađen ni jedan zapis u rječniku $a->name sa pridruženom slikom';
@@ -289,4 +282,3 @@ $string[ 'millionaire_helppeople'] = 'Pitaj publiku';
 $string[ 'millionaire_telephone'] = 'Pomoć zovi';
 $string[ 'millionaire_quit'] = 'Kraj';
 $string[ 'millionaire_background'] = 'Boja pozadine';
-?>

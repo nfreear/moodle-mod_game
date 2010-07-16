@@ -1,4 +1,4 @@
-<?php  // $Id: tabs.php,v 1.1 2008/03/26 17:40:37 arborrow Exp $
+<?php  // $Id: tabs.php,v 1.2 2010/07/16 21:05:23 bdaloukas Exp $
 /**
  * Sets up the tabs used by the game pages based on the users capabilites.
  *
@@ -30,25 +30,44 @@ $activated = array();
 global $USER;
 
 
-//if (has_capability('mod/game:view', $context)) {
+if (has_capability('mod/game:view', $context)) {
     $row[] = new tabobject('info', "$CFG->wwwroot/mod/game/view.php?q=$game->id", get_string('info', 'game'));
-//}
-//if (has_capability('mod/game:viewreports', $context)) {
-if( isteacher( $game->course, $USER->id)){
+}
+
+if (has_capability('mod/game:viewreports', $context)){
     $row[] = new tabobject('reports', "$CFG->wwwroot/mod/game/report.php?q=$game->id", get_string('results', 'game'));  
 }
-//}
-//if (has_capability('mod/game:preview', $context)) {
-//    $row[] = new tabobject('preview', "$CFG->wwwroot/mod/game/attempt.php?a=$game->id", get_string('preview', 'game'));
-//}
-//if (has_capability('mod/game:manage', $context)) {
-if( isteacher( $game->course, $USER->id)){
+
+if (has_capability('mod/game:manage', $context)) {
 	global $USER;
 	$sesskey = $USER->sesskey;
 	$url = "$CFG->wwwroot/course/mod.php?update=$cm->id&return=true&sesskey=$sesskey";
     $row[] = new tabobject('edit', $url, get_string('edit'));
 }
-//}
+
+global $COURSE;
+
+        $link  = "{$CFG->wwwroot}/mod/game/preview.php?action=answers&amp;q={$game->id}";
+        $title = get_string( 'showanswers', 'game');
+        $row[] = new tabobject('answers', $link, $title);
+
+        $link  = "{$CFG->wwwroot}/mod/game/preview.php?action=showattempts&amp;q={$game->id}";
+        $title = get_string( 'showattempts', 'game')."</a>";
+        $row[] = new tabobject('showattempts', $link, $title);
+
+        $gamekind = $game->gamekind;
+        if( $gamekind == 'hangman' or $gamekind == 'cross' or $gamekind == 'millionaire'){
+            $link  = "$CFG->wwwroot/mod/game/export.php?courseid={$COURSE->id}&target=html&q={$game->id}";
+            $title = get_string( 'export_to_html', 'game');;
+            $row[] = new tabobject('exporthtml', $link, $title);
+        }
+
+        if( $gamekind == 'hangman'){
+            $link  = "$CFG->wwwroot/mod/game/export.php?courseid={$COURSE->id}&target=javame&q={$game->id}";
+            $title = get_string( 'export_to_javame', 'game');
+            $row[] = new tabobject('exportjavame', $link, $title);
+        }
+
 
 if ($currenttab == 'info' && count($row) == 1) {
     // Don't show only an info tab (e.g. to students).
@@ -96,7 +115,5 @@ if ($currenttab == 'edit' and isset($mode)) {
     questionbank_navigation_tabs($row, $context, $course->id);
     $tabs[] = $row;
 }
-
+        
 print_tabs($tabs, $currenttab, $inactive, $activated);
-
-?>

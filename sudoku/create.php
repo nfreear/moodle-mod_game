@@ -1,4 +1,4 @@
-<?php
+<?php  // $Id: create.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $
 
 require( "../../../config.php");
 include_once("class.Sudoku.php");

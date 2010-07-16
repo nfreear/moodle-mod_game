@@ -1,12 +1,12 @@
-<?php  // $Id: attempt.php,v 1.6 2008/11/06 23:16:45 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.7 2010/07/16 21:05:22 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.6 2008/11/06 23:16:45 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.7 2010/07/16 21:05:22 bdaloukas Exp $
  * @package game
  **/
- 
+
     require_once("../../config.php");
     require_once("lib.php");
     require_once("locallib.php");
@@ -22,206 +22,197 @@
     require_once( "hiddenpicture/play.php");
 	
 	$forcenew = optional_param('forcenew', false, PARAM_BOOL); // Teacher has requested new preview
+    
+    // Hangman params
+    $newletter = optional_param('newletter', PARAM_TEXT);
+    
+    // Bookquiz params
+    $chapterid = optional_param('chapterid', PARAM_INT);
 
-/// Print the main part of the page
+    // Sudoku params
+    $pos = optional_param('pos', PARAM_TEXT);
+    $num = optional_param('num', PARAM_INT);
+
+    // Cryptex (Wordfind) params
+    $q = optional_param('q', PARAM_TEXT);
+    $answer = optional_param('answer', PARAM_TEXT);
+
+    // Crossword params
+    $get_g = optional_param('g', PARAM_TEXT); 
+
+    
+    $endofgame = optional_param('endofgame', PARAM_TEXT);
+    $finishattempt = optional_param('finishattempt', PARAM_TEXT);
+
+    /// Print the main part of the page
 	switch( $action)
 	{
 	case 'crosscheck':
-		$attempt = game_getattempt( $game, $detail);
-		$g = game_cross_unpackpuzzle( $_GET[ 'g']);
-		$finishattempt = array_key_exists( 'finishattempt', $_GET);
+		$attempt = game_getattempt($game, $detail);
+		$g = game_cross_unpackpuzzle($get_g);
 		game_cross_continue( $id, $game, $attempt, $detail, $g, $finishattempt);
 		break;
 	case 'crossprint':
-		$attempt = game_getattempt( $game, $detail);
-		game_cross_play( $id, $game, $attempt, $detail, '', true, false, false, true);
+		$attempt = game_getattempt($game, $detail);
+		game_cross_play($id, $game, $attempt, $detail, '', true, false, false, true);
 		break;
     case 'sudokucheck':		//the student tries to answer a question
-		$attempt = game_getattempt( $game, $detail);
-		$finishattempt = array_key_exists( 'finishattempt', $_POST);
-		game_sudoku_check_questions( $id, $game, $attempt, $detail, $finishattempt);
+		$attempt = game_getattempt($game, $detail);
+		game_sudoku_check_questions($id, $game, $attempt, $detail, $finishattempt);
         break;
     case 'sudokucheckg':		//the student tries to guess a glossaryenry
-		$attempt = game_getattempt( $game, $detail);
-		$endofgame = array_key_exists( 'endofgame', $_GET);
-		game_sudoku_check_glossaryentries( $id, $game, $attempt, $detail, $endofgame);
+		$attempt = game_getattempt($game, $detail);
+		game_sudoku_check_glossaryentries($id, $game, $attempt, $detail, $endofgame);
         break;
     case 'sudokucheckn':	//the user tries to guess a number
-		$attempt = game_getattempt( $game, $detail);
-		$pos = $_GET[ 'pos'];
-		$num = $_GET[ 'num'];
-		game_sudoku_check_number( $id, $game, $attempt, $detail, $pos, $num);
+		$attempt = game_getattempt($game, $detail);
+		game_sudoku_check_number($id, $game, $attempt, $detail, $pos, $num);
         break;
 	case 'cryptexcheck':	//the user tries to guess a question
-		$attempt = game_getattempt( $game, $detail);
-		$q = $_GET[ 'q'];
-		$answer = $_GET[ 'answer'];
-		game_cryptex_check( $id, $game, $attempt, $detail, $q, $answer);
+		$attempt = game_getattempt($game, $detail);
+		game_cryptex_check($id, $game, $attempt, $detail, $q, $answer);
         break;
     case 'bookquizcheck':		//the student tries to answer a question
-		$attempt = game_getattempt( $game, $detail);
-		game_bookquiz_check_questions( $id, $game, $attempt, $detail);
+		$attempt = game_getattempt($game, $detail);
+		game_bookquiz_check_questions($id, $game, $attempt, $detail);
         break;
     case 'snakescheck':		//the student tries to answer a question
-		$attempt = game_getattempt( $game, $detail);
-		game_snakes_check_questions( $id, $game, $attempt, $detail);
+		$attempt = game_getattempt($game, $detail);
+		game_snakes_check_questions($id, $game, $attempt, $detail);
         break;
     case 'snakescheckg':		//the student tries to answer a question
-		$attempt = game_getattempt( $game, $detail);
-		game_snakes_check_glossary( $id, $game, $attempt, $detail);
+		$attempt = game_getattempt($game, $detail);
+		game_snakes_check_glossary($id, $game, $attempt, $detail);
         break;
-        
     case 'hiddenpicturecheck':		//the student tries to answer a question
-		$attempt = game_getattempt( $game, $detail);
-		$finishattempt = array_key_exists( 'finishattempt', $_POST);
-		game_hiddenpicture_check_questions( $id, $game, $attempt, $detail, $finishattempt);
+		$attempt = game_getattempt($game, $detail);
+        $finishattempt = optional_param('finishattempt', PARAM_TEXT);
+		game_hiddenpicture_check_questions($id, $game, $attempt, $detail, $finishattempt);
         break;
     case 'hiddenpicturecheckg':		//the student tries to guess a glossaryenry
-		$attempt = game_getattempt( $game, $detail);
-		$endofgame = array_key_exists( 'endofgame', $_GET);
-		game_hiddenpicture_check_mainquestion( $id, $game, $attempt, $detail, $endofgame);
+		$attempt = game_getattempt($game, $detail);
+        $endofgame = optional_param('endofgame', PARAM_TEXT);
+		game_hiddenpicture_check_mainquestion($id, $game, $attempt, $detail, $endofgame);
         break;        
 	case "":
-		game_create( $game, $id, $forcenew, $course);
+		game_create($game, $id, $forcenew, $course);
 		break;
 	default:
-		error( 'Not found action='.$action);
+		error('Not found action='.$action);
 	}
-/// Finish the page
+    /// Finish the page
     print_footer($course);
 
 
-	function game_create( $game, $id, $forcenew, $course)
-	{
+	function game_create($game, $id, $forcenew, $course){
 		global $USER, $CFG;
 		
-		$attempt = game_getattempt( $game, $detail);
+		$attempt = game_getattempt($game, $detail);
 
-		switch( $game->gamekind)
-		{
+		switch($game->gamekind){
 		case 'cross':
-			game_cross_continue( $id, $game, $attempt, $detail, '', $forcenew);
+			game_cross_continue($id, $game, $attempt, $detail, '', $forcenew);
 			break;
-		case 'hangman':
-			if( array_key_exists( 'newletter', $_GET))
-				$newletter = $_GET[ 'newletter'];
-			else
-				$newletter = '';
-			if( array_key_exists( 'action2', $_GET))
-				$action2 = $_GET[ 'action2'];
-			else
-				$action2 = '';
-			game_hangman_continue( $id, $game, $attempt, $detail, $newletter, $action2);
+        case 'hangman':
+            $action2 = optional_param('action2', PARAM_TEXT);
+            $newletter = optional_param('newletter', PARAM_TEXT);
+			game_hangman_continue($id, $game, $attempt, $detail, $newletter, $action2);
 			break;
 		case 'millionaire':
-			game_millionaire_continue( $id, $game, $attempt, $detail);
+			game_millionaire_continue($id, $game, $attempt, $detail);
 			break;
 		case 'bookquiz':
-			if( array_key_exists( 'chapterid', $_GET))
-				$chapterid = (int )$_GET[ 'chapterid'];
-			else
-				$chapterid = 0;		
-			game_bookquiz_continue( $id, $game, $attempt, $detail, $chapterid);
+            $chapterid = optional_param('chapterid', PARAM_INT);
+			game_bookquiz_continue($id, $game, $attempt, $detail, $chapterid);
 			break;
 		case 'sudoku':
-			game_sudoku_continue( $id, $game, $attempt, $detail);
+			game_sudoku_continue($id, $game, $attempt, $detail);
 			break;
 		case 'cryptex':
-			game_cryptex_continue( $id, $game, $attempt, $detail, $forcenew);
+			game_cryptex_continue($id, $game, $attempt, $detail, $forcenew);
 			break;
 		case 'snakes':
-			game_snakes_continue( $id, $game, $attempt, $detail);
+			game_snakes_continue($id, $game, $attempt, $detail);
 			break;
 		case 'hiddenpicture':
-			game_hiddenpicture_continue( $id, $game, $attempt, $detail);
-			break;
-		case '':
-			echo get_string( 'useupdategame', 'game');
-			print_continue($CFG->wwwroot . '/course/view.php?id=' . $course->id);
+			game_hiddenpicture_continue($id, $game, $attempt, $detail);
 			break;
 		default:
-			error( "Game {$game->gamekind} not found");
+			error("Game {$game->gamekind} not found");
 			break;
 		}
 	}
 	
-	//inserts a record to game_attempts
-	function game_addattempt( $game)
-	{
-		global $CFG, $USER;
-		
-		$newrec->gamekind = $game->gamekind;
-		$newrec->gameid = $game->id;
-		$newrec->userid = $USER->id;
-		$newrec->timestart = time();
-		$newrec->timefinish = 0;
-		$newrec->timelastattempt = 0;
-		$newrec->preview = 0;
-		$newrec->attempt = get_field( 'game_attempts', 'max(attempt)', 'gameid', $game->id, 'userid', $USER->id) + 1;
-		$newrec->score = 0;
+    //inserts a record to game_attempts
+    function game_addattempt($game){
+        global $CFG, $USER;
+        
+        $newrec->gamekind = $game->gamekind;
+        $newrec->gameid = $game->id;
+        $newrec->userid = $USER->id;
+        $newrec->timestart = time();
+        $newrec->timefinish = 0;
+        $newrec->timelastattempt = 0;
+        $newrec->preview = 0;
+        $newrec->attempt = get_field( 'game_attempts', 'max(attempt)', 'gameid', $game->id, 'userid', $USER->id) + 1;
+        $newrec->score = 0;
 
-		if (!($newid = insert_record( 'game_attempts', $newrec))){
-			error("Insert game_attempts: new rec not inserted");
-		}
-		
-		if( $USER->username == 'guest'){
-			$key = 'mod/game:instanceid'.$game->id;
-			$_SESSION[ $key] = $newid;
-		}
+        if (!($newid = insert_record( 'game_attempts', $newrec))){
+            error("Insert game_attempts: new rec not inserted");
+        }
+        
+        if($USER->username == 'guest'){
+            $key = 'mod/game:instanceid'.$game->id;
+            $_SESSION[ $key] = $newid;
+        }
 
-		return get_record_select( 'game_attempts', 'id='.$newid);
-	}
-	
-	
-function game_cross_unpackpuzzle( $g)
-{
-	$ret = "";
-	$textlib = textlib_get_instance();
-	
-	$len = $textlib->strlen( $g);
-	while( $len)
-	{
-		for( $i=0; $i < $len; $i++)
-		{
-			$c = $textlib->substr( $g, $i, 1);
-			if( $c >= '1' and $c <= '9'){
-			    if( $i > 0){
-			        //found escape character
-			        if(  $textlib->substr( $g, $i-1, 1) == '/'){
-			            $g = $textlib->substr( $g, 0, $i-1).$textlib->substr( $g, $i);
-			            $i--;
-			            $len--;
-			            continue;
-			        }
-			    }
-				break;
-			}
-		}
+        return get_record_select('game_attempts', 'id='.$newid);
+    }
+        
+        
+    function game_cross_unpackpuzzle($g){
+        $ret = "";
+        $textlib = textlib_get_instance();
+        
+        $len = $textlib->strlen($g);
+        while($len){
+            for($i=0; $i < $len; $i++){
+                $c = $textlib->substr($g, $i, 1);
+                if($c >= '1' and $c <= '9'){
+                    if($i > 0){
+                        //found escape character
+                        if($textlib->substr( $g, $i-1, 1) == '/'){
+                            $g = $textlib->substr( $g, 0, $i-1).$textlib->substr( $g, $i);
+                            $i--;
+                            $len--;
+                            continue;
+                        }
+                    }
+                    break;
+                }
+            }
 
-		if( $i < $len){
-			//found the start of a number
-			for( $j=$i+1; $j < $len; $j++)
-			{
-				$c = $textlib->substr( $g, $j, 1);
-				if( $c < '0' or $c > '9'){
-					break;
-				}
-			}
-			$count = $textlib->substr( $g, $i, $j-$i);
-			$ret .= $textlib->substr( $g, 0, $i) . str_repeat( '_', $count);
-			
-			$g = $textlib->substr( $g, $j);
-			$len = $textlib->strlen( $g);
-			
-		}else
-		{
-			$ret .= $g;
-			break;
-		}
-	}
-	
-	return $ret;
-}
-
-	
+            if( $i < $len){
+                //found the start of a number
+                for( $j=$i+1; $j < $len; $j++){
+                    $c = $textlib->substr( $g, $j, 1);
+                    if( $c < '0' or $c > '9'){
+                        break;
+                    }
+                }
+                $count = $textlib->substr( $g, $i, $j-$i);
+                $ret .= $textlib->substr( $g, 0, $i) . str_repeat( '_', $count);
+                
+                $g = $textlib->substr( $g, $j);
+                $len = $textlib->strlen( $g);
+                
+            }
+            else{
+                $ret .= $g;
+                break;
+            }
+        }
+        
+        return $ret;
+    }
 ?>

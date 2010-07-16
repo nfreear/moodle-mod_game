@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.6 2010/03/11 21:51:48 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.7 2010/07/16 21:05:23 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.6 2010/03/11 21:51:48 bdaloukas Exp $
+ * @version $Id: play.php,v 1.7 2010/07/16 21:05:23 bdaloukas Exp $
  * @package game
  **/
 

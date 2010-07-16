@@ -1,17 +1,15 @@
-<?php  // $Id: exportjavame.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.9 2009/07/31 17:30:53 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
  * @package game
  **/
     
-    function game_OnExportJavaME( $gameid, $javame){
+    function game_OnExportJavaME( $game, $javame){
         global $CFG;
                 
-        $game = get_record_select( 'game', "id=$gameid");
-        
         $courseid = $game->course;
         $course = get_record_select( 'course', "id=$courseid");
         
@@ -69,6 +67,8 @@
         }
         
         $file = ($filejar != '' ? $filejar : $filezip);
+        if( $javame->name == '')
+            $javame->name = $file;
 ?>        
 <HTML><HEAD>
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
@@ -308,62 +308,9 @@
         exec( $cmd);
 
         return (file_exists( $filejar) ? "{$javame->filename}.jar" : '');
-    }
-
-    function game_create_zip( $srcdir, $courseid, $filename){
-        global $CFG;
-        
-        $dir = $CFG->dataroot . '/' . $courseid;
-        $filezip = $dir . "/export/{$filename}";
-
-        if (file_exists( $filezip)){
-            unlink( $filezip);
-        }
-        
-        if (!file_exists( $dir)){
-            mkdir( $dir);
-        }
-        
-        if (!file_exists( $dir.'/export')){
-            mkdir( $dir.'/export');
-        }
-        
-        $srcfiles = get_directory_list( $srcdir, '', true, true, true);
-        $fullsrcfiles = array();
-        foreach( $srcfiles as $file){
-            $fullsrcfiles[] = $srcdir.'/'.$file;
-        }
-                
-        zip_files( $fullsrcfiles, $filezip);
-            
-        return (file_exists( $filezip) ? $filename : '');
-    }
+    }    
     
-    
-    function game_export_createtempdir(){
-        global $CFG;
-        
-        // create a random upload directory in temp
-	    $newdir = $CFG->dataroot."/temp/game";
-        if (!file_exists( $newdir)) 
-		    mkdir( $newdir);
 
-        $i = 1;
-        srand( (double)microtime()*1000000); 
-        while(true)
-        {
-            $r_basedir = "game/$i-".rand(0,10000);
-            $newdir = $CFG->dataroot.'/temp/'.$r_basedir;
-            if (!file_exists( $newdir)) 
-            {
-    		    mkdir( $newdir);
-                return $newdir;
-            }
-            $i++;
-        }
-        return '';
-    }
-    
 function game_showanswers_appendselect( $form)
 {
     switch( $form->gamekind){
@@ -382,53 +329,4 @@ function game_showanswers_appendselect( $form)
     return '';
 }
 
-function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth, $maxheight)
-{
-    if( $maxwidth == 0 && $maxheight == 0){
-        copy( $filename, $dest);
-        return;
-    }    
-
-    $size = getimagesize( $filename);
-    if( $size == false){
-        copy( $filename, $dest);
-        return;
-    }
-
-    $mul1 = $maxwidth / $size[ 0];
-    $mul2 = $maxheight / $size[ 1];
-    if( $mul1 == 0)
-        $mul = $mul2;
-    elseif ( $mul2 == 0)
-        $mul = $mul1;
-    else $mul = min( $mul1, $mul2);
-    
-    if( $mul > 1){
-        copy( $filename, $dest);
-        return;
-    }
-
-    $mime = $size[ 'mime'];
-    switch( $mime){
-    case 'image/png':
-        $src_image = imageCreateFromPNG( $filename);
-        break;
-    case 'image/jpeg':
-        $src_image = imagecreatefromjpeg( $filename);
-        break;
-    case 'image/gif':
-        $src_image = imageCreateFromGIF( $filename);
-        break;
-    default:
-        die('Aknown mime type $mime');
-        return false;
-    }
-        
-    $dst_w = $size[ 0] * $mul;
-    $dst_h = $size[ 1] * $mul;
-    $dst_image = imagecreatetruecolor( $dst_w, $dst_h);
-    imagecopyresampled( $dst_image, $src_image, 0, 0, 0, 0, $dst_w, $dst_h, $size[ 0], $size[ 1]);
-    
-    imagejpeg( $dst_image, $dest);
-} 
 ?>

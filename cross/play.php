@@ -1,11 +1,11 @@
-<?PHP
+<?php  // $Id: play.php,v 1.10 2010/07/16 21:05:23 bdaloukas Exp $
 
 require( "cross_class.php");
 require( "crossdb_class.php");
 
 function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame='')
-{	
-	if( $endofgame){
+{
+    if( $endofgame){
 		if( $g == ''){
 			game_updateattempts( $game, $attempt, -1, true);
 			$endofgame = false;
@@ -19,15 +19,35 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame=''
 	if( $attempt == false){
 		$attempt = game_addattempt( $game);
 	}
+    
+    game_cross_new( $game, $attempt->id, $crossm);
+    game_updateattempts( $game, $attempt, 0, 0);	
+    return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false, false, false, false, false);
+}
+
+function showlegend( $legend, $title)
+{
+  if( count( $legend) == 0)
+    return;
+    
+  echo "<br><b>$title</b><br>";
+  foreach( $legend as $key => $line)
+    echo game_filtertext( "$key: $line<br>", 0);
+}
+
+
+function game_cross_new( $game, $attemptid, &$crossm)
+{
 	$textlib = textlib_get_instance();
 
 	$cross = new CrossDB();
 
-	$questions = array();
+    $questions = array();
 	$infos = array();
 
 	$answers = array();
-	$recs = game_questions_shortanswer( $game);
+    $recs = game_questions_shortanswer( $game);
+
 	if( $recs == false){
 		error( 'game_cross_continue: '.get_string( 'cross_nowords', 'game'));
 	}
@@ -59,27 +79,15 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame=''
 			}
 			$new_crossd[] = $rec;
 		}
-		$cross->save( $game, $crossm, $new_crossd, $attempt->id);	
-		
-		game_updateattempts( $game, $attempt, 0, 0);
-		
-		return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false, false, false, false, false);
+		$cross->save( $game, $crossm, $new_crossd, $attemptid);			
+		return true;
 	}
 	
 	if( count( $crossd) == 0){
 		error( 'game_cross_continue: '.get_string( 'cross_nowords', 'game'));
-	}		
+	}
 }
 
-function showlegend( $legend, $title)
-{
-  if( count( $legend) == 0)
-    return;
-    
-  echo "<br><b>$title</b><br>";
-  foreach( $legend as $key => $line)
-    echo game_filtertext( "$key: $line<br>", 0);
-}
 
 function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution, $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton)
 {
@@ -717,9 +725,10 @@ function CheckServerClick( endofgame)
 	
 <?php
 	if( $onlyshow == false){
-			global $CFG; 
-			$params = 'id='.$_GET[ 'id'].'&action=crosscheck&g=';
-			echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
+        global $CFG;
+        $param_id = optional_param('id', PARAM_INT); 
+		$params = 'id='.$param_id.'&action=crosscheck&g=';
+		echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
 	}
 ?>
 }

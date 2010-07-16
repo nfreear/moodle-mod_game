@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.19 2010/03/11 21:51:49 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.20 2010/07/16 21:05:23 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1371,7 +1371,58 @@ function xmldb_game_upgrade($oldversion=0) {
         $result = $result && add_field($table, $field);
     }
 
+
+    if ($result && $oldversion < 2010071606) {
+        $table = new XMLDBTable('game_export_html');
+        $field = new XMLDBField('id');
+        $result = $result && drop_field($table, $field, false);
+    }
 	
+	//rename field game_export_html.gameid to id
+    if ($result && $oldversion < 2010071607) {
+        $table = new XMLDBTable( 'game_export_html');
+		$field = new XMLDBField( 'gameid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, '0');
+		
+        $result = $result && rename_field( $table, $field, 'id', false);
+    }
+
+	//game_export_html.type
+    if ($result && $oldversion < 2010071608) {
+        $table = new XMLDBTable('game_export_html');
+        $field = new XMLDBField('type');
+        $field->setAttributes(XMLDB_TYPE_CHAR, '10');
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+	}
+
+    if ($result && $oldversion < 2010071609) {
+        $table = new XMLDBTable('game_export_javame');
+        $field = new XMLDBField('id');
+        $result = $result && drop_field($table, $field, false);
+    }
+	
+	//rename field game_export_html.gameid to id
+    if ($result && $oldversion < 2010071610) {
+        $table = new XMLDBTable( 'game_export_javame');
+		$field = new XMLDBField( 'gameid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, '0');
+		
+        $result = $result && rename_field( $table, $field, 'id', false);
+    }
+
+	//game_export_html.type
+    if ($result && $oldversion < 2010071611) {
+        $table = new XMLDBTable('game_export_javame');
+        $field = new XMLDBField('type');
+        $field->setAttributes(XMLDB_TYPE_CHAR, '10');
+
+    /// Launch add field format
+        $result = $result && add_field($table, $field);
+	}
+
+
     
     return $result;
 }

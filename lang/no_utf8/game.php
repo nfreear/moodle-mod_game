@@ -1,9 +1,8 @@
-<?PHP // $Id: game.php,v 1.1 2008/03/30 16:05:18 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $ 
       // game.php - created with Moodle 1.9 (2007101509)
       // local modifications from http://localhost
 
 
-$string['after_add_can_change_game'] = 'Du kan BARE endre spillet etter at du har lagret det.';
 $string['allattempts'] = 'Alle forsøk';
 $string['allstudents'] = 'Alle studenter';
 $string['analysis'] = 'Vis karakterdetaljer';
@@ -34,9 +33,6 @@ $string['confirmstartattemptlimit'] = 'Spillet er begrenset til $a forsøk. Du h
 $string['confirmstartattempttimelimit'] = 'Dette spillet har en tidsgrense og er begrenset til $a forsøk. Du holder på å starte et nytt forsøk. Vil du fortsette?';
 $string['confirmstarttimelimit'] = 'Spillet har en tidsgrense. Er du sikker på at du vil starte?';
 $string['continueattemptgame'] = 'Fortsette et tidligere forsøk av spillet';
-$string['convertfrom1'] = 'Konverter fra';
-$string['convertto1'] = 'Konverter til';
-$string['createbottomtext'] = 'Sett bunntekst';
 $string['cross_across'] = 'Horisontal/bortover';
 $string['cross_checkbutton'] = 'Sjekk kryssord';
 $string['cross_congratulations'] = 'Gratulerer';
@@ -138,8 +134,7 @@ $string['info'] = 'Info';
 $string['lastip'] = 'IP student';
 $string['letter'] = 'bokstav';
 $string['letters'] = 'bokstaver';
-$string['lettersall1'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-$string['lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
+$string['lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
 $string['marks'] = 'Markeringer';
 $string['messageloose'] = 'Melding når studenten taper';
 $string['messagewin'] = 'Melding når studenten vinner';
@@ -222,8 +217,5 @@ $string['timestart'] = 'Start';
 $string['timetaken'] = 'Tid brukt';
 $string['tries'] = 'Forsøk';
 $string['unfinished'] = 'åpne';
-$string['useupdategame'] = 'Bruk \"Oppdater dette spillet\" knappen for å angi detaljer for spillet';
 $string['withselected'] = 'Med valgte';
 $string['yourfinalgradeis'] = 'Din endelige karakter for spillet er $a.';
-
-?>

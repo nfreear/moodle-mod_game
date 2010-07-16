@@ -41,8 +41,6 @@ $string['grade'] = 'Maila';
 $string['game_bookquiz'] = 'Galdera-,liburua';
 $string['cryptex_win'] = 'Zorionak!!!!';
 $string['cryptex_giveanswer'] = 'Erantzuna eman';
-$string['convertfrom1'] = 'ΆΈΉΊΌΎΏ';
-$string['convertto1'] = 'ΆΈΉΊΌΎΏ';
 $string['hangman_gradeinstance'] = 'Maila jolas osoan';
 $string['hangman_grade'] = 'Maila';
 $string['hangman_letters'] = 'Letrak: ';
@@ -50,8 +48,7 @@ $string['hangman_loose'] = '<BIG><B>Jolasa bukatu da</B></BIG>';
 $string['hangman_restletters_many'] = '<b>$a</b> saiakera dituzu';
 $string['hangman_restletters_one'] = '<b>Saiakera bakarra</b> daukazu';
 $string['hangman_restletters'] = '<b>$a</b> saiakera dituzu';
-$string['lettersall1'] = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ ";
-$string['lettersall2'] = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ ';
+$string['lettersall'] = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
 $string['letters'] = 'letrak';
 $string['letter'] = 'letra';
 $string['millionaire_info_people'] = 'Jendeak zera dio: ';
@@ -74,8 +71,6 @@ $string['timelastattempt'] = 'Azken saiakera';
 $string['timestart'] = 'Hasiera';
 $string['and'] = 'eta';
 $string['snakes_background'] = 'Hondoa';
-$string['useupdategame'] = ' \"Jolas hau eguneratu\" botoia jolasaren zehaztapenak ikusteko erabili';
-$string['useeditgame'] = 'Jolasaren zehaztapenak ezartzeko edizioa erabili';
 $string['cryptex_nowords'] = 'Ez da hitzik aurkitu';
 $string['millionaire_nowords'] = 'Ez da hitzik aurkitu';
 $string['tries'] = 'Saiakerak';
@@ -122,7 +117,6 @@ $string['hiddenpicture_height'] = 'Irudiaren altuera neurri honetara egokitu: ';
 
 
 //teachers
-$string['after_add_can_change_game'] = 'Jolas mota gorde ondoren SOILIK alda dezakezu.';
 $string['bookquiz_import_odt'] = 'OpenOffice (odt) fitxategitik inportatu';
 $string['cryptex_maxcols'] = 'Zutabe/lerroen gehienezko kopurua Hitz Zopan';
 $string['cryptex_maxwords'] = 'Gehienezko hitz-kopurua Hitz Zopan';
@@ -257,7 +251,6 @@ $string['hiddenpicture_across'] = 'Laukitxo horizontalen kopurua';
 $string['hiddenpicture_down'] = 'Laukitxo bertikalen kopurua';
 $string['hiddenpicture_pictureglossary'] = 'Galdera nagusiaren glosategia';
 $string['hiddenpicture_pictureglossarycategories'] = 'Galdera nagusiaren glosategiko kategoria';
-$string['createbottomtext'] = 'Testua behealdean kokatu';
 
 //1.6.4
 $string['hiddenpicture_nomainquestion'] = '$a->name glosategian ez dago irudia duen hitzik';
@@ -273,5 +266,3 @@ $string['javame_version'] = 'Bertsioa:';
 $string['sourcemodule_include_subcategories'] = 'Azpikategoriak sartu';
 
 $string['percent'] = 'Portzentaia';
-?>
-

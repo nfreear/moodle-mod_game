@@ -42,8 +42,6 @@ $string[ 'grade'] = 'ציון';
 $string[ 'game_bookquiz'] = 'ספר עם שאלות';
 $string[ 'cryptex_win'] = 'כל הכבוד !!!!';
 $string[ 'cryptex_giveanswer'] = 'בחרו תשובה';
-$string[ 'convertfrom1'] = '';      //Special convertation to capital letters
-$string[ 'convertto1'] = '';        //It is needed for some languages
 $string[ 'hangman_gradeinstance'] = 'הציון הכללי במשחק';
 $string[ 'hangman_grade'] = 'ציון';
 $string[ 'hangman_letters'] = 'אותיות: ';
@@ -51,8 +49,7 @@ $string[ 'hangman_loose'] = '<BIG><B>המשחק הסתיים</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'יש לכם <b>$a</b> נסיונות';
 $string[ 'hangman_restletters_one'] = 'יש לכם ניסיון <b>אחד</b> בלבד';
 $string[ 'hangman_restletters'] = 'יש לכם <b>$a</b> ניסיונות';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'אותיות';
 $string[ 'letter'] = 'אות';
 $string[ 'millionaire_info_people'] = 'אנשים אומרים';
@@ -76,8 +73,6 @@ $string[ 'timelastattempt'] = 'ניסיון אחרון';
 $string[ 'timestart'] = 'התחלה';
 $string[ 'and'] = 'וגם';
 $string[ 'snakes_background'] = 'רקע';
-$string[ 'useupdategame'] = 'Use the button \"Update this game\" to set the details of the game';
-$string[ 'useeditgame'] = 'Use the Edit to set the details of the game';
 $string[ 'cryptex_nowords'] = 'לא נמצאה אף מילה';
 $string[ 'millionaire_nowords'] = 'לא נמצאה אף מילה';
 $string[ 'tries'] = 'ניסיונות';
@@ -124,7 +119,6 @@ $string[ 'hiddenpicture_height'] = 'קבעו גובה תמונה ל';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'רק לאחר שמירת המשחק ניתן לשנות את סוגו.';
 $string[ 'bookquiz_import_odt'] = 'יבוא מקובץ אופן אופיס (odt)';
 $string[ 'cryptex_maxcols'] = 'מספר העמודות/שורות במשחק cryptex';
 $string[ 'cryptex_maxwords'] = 'מספר המילים במשחק cryptex';
@@ -281,4 +275,3 @@ $string[ 'print'] = 'Print';
 $string[ 'html_title'] = 'Title of html:';
 $string[ 'html_hascheckbutton'] = 'Has check button:';
 $string[ 'html_hasprintbutton'] = 'Has print button:';
-?>

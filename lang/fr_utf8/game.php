@@ -41,8 +41,6 @@ $string[ 'grade'] = 'Note';
 $string[ 'game_bookquiz'] = 'Livre de questions';
 $string[ 'cryptex_win'] = 'Bravo !!!!';
 $string[ 'cryptex_giveanswer'] = 'Montrer la réponse';
-$string[ 'convertfrom1'] = 'ΆΈΉΊΌΎΏ';
-$string[ 'convertto1'] = 'ΑΕΗΙΟΥΩ';
 $string[ 'hangman_gradeinstance'] = 'Note pour tout l\'ensemble';
 $string[ 'hangman_grade'] = 'Note';
 $string[ 'hangman_letters'] = 'Lettres : ';
@@ -50,8 +48,7 @@ $string[ 'hangman_loose'] = '<BIG><B>Jeu terminé</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'Vous avez effectué <b>$a</b> tentatives';
 $string[ 'hangman_restletters_one'] = 'Vous n\'avez <b>SEULEMENT QU\'UNE</b> tentative';
 $string[ 'hangman_restletters'] = 'Vous avez effectué <b>$a</b> tentatives';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
+$string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'lettres';
 $string[ 'letter'] = 'lettre';
 $string[ 'millionaire_info_people'] = 'Les gens disent';
@@ -74,7 +71,6 @@ $string[ 'timelastattempt'] = 'Dernière tentative';
 $string[ 'timestart'] = 'Démarrer';
 $string[ 'and'] = 'et';
 $string[ 'snakes_background'] = 'Arrière-plan';
-$string[ 'useupdategame'] = 'Utilisez le boutton \"mettre à jour le jeu\" pour régler les paramètres du jeu';
 $string[ 'cryptex_nowords'] = 'Aucun mot trouvé';
 $string[ 'millionaire_nowords'] = 'Aucun mot trouvé';
 $string[ 'tries'] = 'Tentatives';
@@ -117,7 +113,6 @@ $string['timetaken'] = 'Temps consomé';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'Vous pourrez changer le type du jeu après avoir sauvegardé l\'activité.';
 $string[ 'bookquiz_import_odt'] = 'Importer à partir d\'un fichier OpenOffice (odt)';
 $string[ 'cryptex_maxcols'] = 'Nombre maximum de col./lignes du cryptex';
 $string[ 'cryptex_maxwords'] = 'Nombre maximum de mots du cryptex';

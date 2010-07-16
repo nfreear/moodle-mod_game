@@ -1,10 +1,7 @@
 <?php
 //By Dimitris Mpelos
-$string[ 'after_add_can_change_game'] = 'Erst nachdem die Änderungen gespeichert sind, kann man das Spiel ändern.';
 $string[ 'and'] = 'und';
 $string[ 'bookquiz_import_odt'] = 'OpenOffice Datei hinzufügen (odt)';
-$string[ 'convertfrom1'] = '';
-$string[ 'convertto1'] = '';
 
 $string[ 'cross_across'] = 'waagerecht';
 $string[ 'cross_checkbutton'] = 'Kreuzworträtsel kontrollieren';
@@ -71,8 +68,7 @@ $string[ 'hangman_showquestion'] = 'Fragen zeigen?';
 $string[ 'hangman_win'] = 'Glückwünsch!';
 $string[ 'hangman_wrongnum'] = 'Falsch: %%d out of %%d';
 
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'Buchstaben';
 $string[ 'letter'] = 'Buchstabe';
 
@@ -128,7 +124,6 @@ $string[ 'game_snakes'] = 'Schlangen und Leitern';
 $string[ 'snakes_background'] = 'Hintergrund';
 $string[ 'snakes_win'] = 'Gratulation';
 $string[ 'snakes_new'] = 'Neues Spiel';
-$string[ 'useupdategame'] = 'Druecken Sie den Button \"game bearbeiten\" um die Details f�r das Spiel festzulegen';
 $string[ 'cryptex_nowords'] = 'kein Wort gefunden';
 $string[ 'millionaire_nowords'] = 'kein Wort gefunden';
 

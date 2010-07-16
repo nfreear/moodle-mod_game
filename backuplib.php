@@ -1,4 +1,4 @@
-<?php //$Id: backuplib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
+<?php //$Id: backuplib.php,v 1.4 2010/07/16 21:05:22 bdaloukas Exp $
     //This php script contains all the stuff to backup games
 
 //This version uses only the table game
@@ -105,6 +105,12 @@
         $recs = get_records_select( 'game_grades', "gameid=$game->id");
 		game_backup_table( $bf, $recs, 'GAME_GRADES',5, 'GAME_GRADE', 6);
 		
+        $recs = get_records_select( 'game_export_html', "id=$game->id");
+		game_backup_table( $bf, $recs, 'GAME_GRADES',5, 'GAME_GRADE', 6);
+
+        $recs = get_records_select( 'game_export_javame', "id=$game->id");
+		game_backup_table( $bf, $recs, 'GAME_GRADES',5, 'GAME_GRADE', 6);
+
 		$sql = "SELECT DISTINCT g.questioncategoryid as id,qc.stamp FROM ".
 		        " {$CFG->prefix}game g,{$CFG->prefix}question_categories qc ".
 		        " WHERE g.questioncategoryid = qc.id";

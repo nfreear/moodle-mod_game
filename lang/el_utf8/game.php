@@ -1,9 +1,8 @@
 <?php
-$string[ 'after_add_can_change_game'] = 'ΜΟΝΟ μετά την αποθήκευση των αλλαγών μπορείτε να αλλάξετε παιχνίδι.';
 $string[ 'and'] = 'και';
 $string[ 'bookquiz_import_odt'] = 'Εισαγωγή από ένα αρχείο OpenOffice (odt)';
-$string[ 'convertfrom1'] = 'ΆΈΉΊΌΎΏ';
-$string[ 'convertto1'] = 'ΑΕΗΙΟΥΩ';
+$string[ 'convertfrom'] = 'ΆΈΉΊΌΎΏ';
+$string[ 'convertto'] = 'ΑΕΗΙΟΥΩ';
 
 $string[ 'cross_across'] = 'Οριζόντια';
 $string[ 'cross_checkbutton'] = 'Έλεγχος σταυρολέξου';
@@ -46,7 +45,7 @@ $string[ 'finish'] = 'Τέλος παιχνιδιού';
 $string[ 'game_bookquiz'] = 'Βιβλίο με ερωτήσεις';
 $string[ 'game_cross'] = 'Σταυρόλεξο';
 $string[ 'game_cryptex'] = 'Κρυπτόλεξο';
-$string[ 'game'] = 'game';
+$string[ 'game'] = 'Παιχνίδι';
 $string[ 'game_hangman'] = 'Κρεμάλα';
 $string[ 'game_millionaire'] = 'Εκατομμυριούχος';
 $string[ 'game_sudoku'] = 'Sudoku';
@@ -70,8 +69,8 @@ $string[ 'hangman_showlast'] = 'Να εμφανίζει το τελευταίο 
 $string[ 'hangman_showquestion'] = 'Να εμφανίζει τις ερωτήσεις ;';
 $string[ 'hangman_win'] = 'Συγχαρητήρια !!!';
 $string[ 'hangman_wrongnum'] = 'Λανθασμένα: %%d out of %%d';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
+$string[ 'hangman_options'] = 'Παράμετροι Κρεμάλας';
+$string[ 'lettersall'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
 $string[ 'letters'] = 'γράμματα';
 $string[ 'letter'] = 'γράμμα';
 
@@ -99,7 +98,7 @@ $string[ 'sourcemodule_glossarycategory'] = 'Διαλέξτε κατηγορία
 $string[ 'sourcemodule_glossary'] = 'Διαλέξτε λεξικό';
 $string[ 'sourcemodule_questioncategory'] = 'Διαλέξτε κατηγορία ερωτήσεων';
 $string[ 'sourcemodule_question'] = 'Ερωτήσεις';
-$string[ 'sourcemodule_quiz'] = 'Διαλέξτε κουιζ';
+$string[ 'sourcemodule_quiz'] = 'Διαλέξτε κουίζ';
 $string[ 'sourcemodule'] = 'Πηγή ερωτήσεων';
 
 $string[ 'sudoku_emptydatabase'] = 'Η βάση με τα έτοιμα sudoku είναι άδεια. Τρέξτε το $a για να τη δημιουργήσετε';
@@ -126,7 +125,6 @@ $string[ 'game_snakes'] = 'Φιδάκι';
 $string[ 'snakes_background'] = 'Πίστα';
 $string[ 'snakes_win'] = 'Συγχαρητήρια';
 $string[ 'snakes_new'] = 'Νέο παιχνίδι';
-$string[ 'useupdategame'] = 'Χρησιμοποιήστε το κουμπί  \"Τροποποίηση του/της Παιχνίδι\" για να ορίσετε τις παραμέτρους του παιχνιδιού';
 $string[ 'cryptex_nowords'] = 'Δεν βρέθηκε καμία λέξη';
 $string[ 'millionaire_nowords'] = 'Δεν βρέθηκε καμία λέξη';
 
@@ -143,6 +141,7 @@ $string[ 'hideanswers'] = 'Απόκρυψη απαντήσεων';
 $string[ 'must_select_glossary'] = 'Πρέπει να επιλέξετε οπωσδήποτε ένα λεξιλόγιο';
 $string[ 'tries'] = 'Προσπάθειες';
 $string[ 'bottomtext'] = 'Κείμενο στο κάτω μέρος της σελίδας';
+$string[ 'toptext'] = 'Κείμενο στο πάνω μέρος της σελίδας';
 
 $string[ 'messagewin'] = 'Μήνυμα που θα εμφανίζεται όταν ο σπουδαστής κερδίζει';
 $string[ 'messageloose'] = 'Μήνυμα που θα εμφανίζεται όταν ο σπουδαστής χάνει';
@@ -256,7 +255,6 @@ $string[ 'hiddenpicture_pictureglossary'] = 'Το λεξικό για την κ�
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Η κατηγορία λεξικού για την κυρίως ερώτηση';
 //1.6.4
 $string[ 'hiddenpicture_nomainquestion'] = 'Δεν υπάρχει καμία εγγραφή στο λεξικό $a->name που να περιλαμβάνει και εικόνα';
-$string['createbottomtext'] = "Ορισμός του κειμένου στο κάτω μέρος";
 $string['game_hiddenpicture'] = "Η κρυμμένη εικόνα";
 $string['hangman_countwords'] = "Πόσες λέξεις θα περιλαμβάνει το κάθε παιχνίδι;";
 $string['hiddenpicture_across'] = "Αριθμός κελιών οριζόντια";
@@ -289,11 +287,11 @@ $string[ 'export_kind'] = 'Είδος εξαγωγής';
 $string[ 'millionaire_shuffle'] = 'Ανακάτεμα ερωτήσεων';
 $string[ 'html_hangman_new'] = 'Νέα';
 $string[ 'html_hangman_inputsize'] = 'Μέγεθος πεδίου εισόδου';
-$string['export_to_html'] = 'Εξαγωγή σε HTML';
-$string['export_to_javame'] = 'Εξαγωγή σε JavaMe για κινητά τηλέφωνα';
-$string['hangman_html_new'] = 'Νέα';
-$string['javame_maxpicturewidth'] = 'Μέγιστο πλάτος εικόνας:';
-$string['javame_maxpictureheight'] = 'Μέγιστο ύψος εικόνας:';
-$string['percent'] = 'Ποσοστό';
-$string['useeditgame'] = 'Χρησιμοποιήστε το κουμπί Επεξεργασία για να αλλάξετε τις παραμέτρους του παιχνιδιού';
-?>
+$string[ 'export_to_html'] = 'Εξαγωγή σε HTML';
+$string[ 'export_to_javame'] = 'Εξαγωγή σε JavaMe για κινητά τηλέφωνα';
+$string[ 'hangman_html_new'] = 'Νέα';
+$string[ 'javame_maxpicturewidth'] = 'Μέγιστο πλάτος εικόνας:';
+$string[ 'javame_maxpictureheight'] = 'Μέγιστο ύψος εικόνας:';
+$string[ 'percent'] = 'Ποσοστό';
+$string[ 'headerfooter_options'] = 'Παράμετροι κεφαλίδας/υποσελίδου';
+$string[ 'showattempts'] = 'Εμφάνιση προσπαθειών';

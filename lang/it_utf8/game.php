@@ -1,12 +1,9 @@
- <?PHP // $Id: game.php,v 1.1 2010/05/02 14:45:36 bdaloukas Exp $
+ <?PHP // $Id: game.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $
       // game.php - created with Moodle 1.9.5
       // translated by Aristogeiton Ferentinos
 
-$string[ 'after_add_can_change_game'] = 'SOLO dopo il risparmio degli alterazioni potete cambiare gioco .';
 $string[ 'and'] = 'e';
 $string[ 'bookquiz_import_odt'] = 'inseriozine da un archivio OpenOffice(odt)';
-$string[ 'convertfrom1'] = '';
-$string[ 'convertto1'] = '';
 
 $string[ 'cross_across'] = 'orizzontale';
 $string[ 'cross_checkbutton'] = 'controllo della cruciverba';
@@ -71,8 +68,7 @@ $string[ 'hangman_showlast'] = 'mostrare la ultima lettera della parola';
 $string[ 'hangman_showquestion'] = ' mostrare le domande ;';
 $string[ 'hangman_win'] = 'congratulazioni!!!';
 $string[ 'hangman_wrongnum'] = 'Sbagliati: %%d out of %%d';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'lettere';
 $string[ 'letter'] = 'lettera';
 
@@ -124,7 +120,6 @@ $string[ 'game_snakes'] = 'serpentino';
 $string[ 'snakes_background'] = 'livello';
 $string[ 'snakes_win'] = ' congratulazioni';
 $string[ 'snakes_new'] = 'novo gioco';
-$string[ 'useupdategame'] = ' Us ail bottone \" Modificazione del gioco\" per determinare gli fattori del gioco';
 $string[ 'cryptex_nowords'] = 'non si e trovata qualche parola';
 $string[ 'millionaire_nowords'] = ' non e trovata nessuna parola';
 
@@ -252,7 +247,6 @@ $string[ 'hiddenpicture_pictureglossary'] = 'il vocabolario per la primaria doma
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Il dizionario di classe per la questione particolare';
 //1.6.4
 $string[ 'hiddenpicture_nomainquestion'] = ' non c’e qualche registrazione che $a->name contenga la pittura';
-$string[ 'createbottomtext'] = ' Definizione del testo sul fondo ';
 $string[ 'game_hiddenpicture'] = 'la pittura nascosta ';
 $string[ 'hangman_countwords'] = 'quande parole contenga ogni gioco';
 $string[ 'hiddenpicture_across'] = ' numero di celli orizzontalmente';
@@ -291,9 +285,3 @@ $string['hangman_html_new'] = ' nova';
 $string['javame_maxpicturewidth'] = 'massima larghezza della pittura:';
 $string['javame_maxpictureheight'] = 'massima altezza della pittura:';
 $string['percent'] = 'percentuale';
-$string['useeditgame'] = 'Us ail bottone Trattamento per cambiare le parametri del gioco';
-?>
-
-
-
-

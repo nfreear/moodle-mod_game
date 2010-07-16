@@ -1,4 +1,4 @@
-<?PHP // $Id: game.php,v 1.5 2008/07/23 11:26:48 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.6 2010/07/16 21:05:24 bdaloukas Exp $ 
       // game.php - created with Moodle 1.9.1+ (Build: 20080702) (2007101514)
       // thanks to Wilmack Sanchez, Antonio Vicent
 
@@ -46,8 +46,6 @@ $string[ 'grade'] = 'Nivel';
 $string[ 'game_bookquiz'] = 'Libro con preguntas';
 $string[ 'cryptex_win'] = '¡¡¡ Felicitaciones !!!!';
 $string[ 'cryptex_giveanswer'] = 'De la respuesta';
-$string[ 'convertfrom1'] = '';
-$string[ 'convertto1'] = '';
 $string[ 'hangman_gradeinstance'] = 'Nivel en el juego completo';
 $string[ 'hangman_grade'] = 'Nivel';
 $string[ 'hangman_letters'] = 'Letras: ';
@@ -55,8 +53,7 @@ $string[ 'hangman_loose'] = '<BIG><B>Fin del juego</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'Ud. tiene <b>$a</b> intentos';
 $string[ 'hangman_restletters_one'] = 'Ud. tienen <b>ÚNICAMENTE 1</b> intento';
 $string[ 'hangman_restletters'] = 'Ud. tiene <b>$a</b> intentos';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+$string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'letters'] = 'letras';
 $string[ 'letter'] = 'letra';
 $string[ 'millionaire_info_people'] = 'La gente dice';
@@ -79,7 +76,6 @@ $string[ 'timelastattempt'] = 'Último intento';
 $string[ 'timestart'] = 'Comienzo';
 $string[ 'and'] = 'y';
 $string[ 'snakes_background'] = 'Fondo';
-$string['useupdategame'] = 'Use el boton  \"Actualizar este Juego\" para ver el detalle del juego';
 $string[ 'cryptex_nowords'] = 'No encontró ninguna palabra';
 $string[ 'millionaire_nowords'] = 'No encontró ninguna palabra';
 $string[ 'tries'] = 'Intentos';
@@ -116,11 +112,11 @@ $string[ 'snakes_win'] = 'Felicitaciones';
 $string[ 'snakes_new'] = 'Nuevo juego';
 $string[ 'formatdatetime'] = '%%d %%b %%Y, %%I:%%M %%p';
 $string['gametimelimit'] = 'Tiempo límite: $a';
-$string['gameclosed'] = 'El juego está cerrado $a';$string['timetaken'] = 'Tiempo utilizado';
+$string['gameclosed'] = 'El juego está cerrado $a';
+$string['timetaken'] = 'Tiempo utilizado';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'ÚNICAMENTE despues de guardar, Ud. puede cambiar el tipo de juego.';
 $string[ 'bookquiz_import_odt'] = 'Importar de archivo OpenOffice (odt)';
 $string[ 'cryptex_maxcols'] = 'Máximo número de columnas/filas en Sopa de Letras';
 $string[ 'cryptex_maxwords'] = 'Máximo número de palabras en Sopa de Letras';
@@ -221,7 +217,8 @@ $string['analysis'] = 'Mostrar detalles de marca';
 $string['showdetailedmarks'] = 'Mostrar detalles de marca';
 $string['noattemptsonly'] = 'Mostrar $a unicamente sin intentos';
 $string[ 'downloadods'] = 'Descargar en formato ODS';
-
+
+
 
 
 $string[ 'reattemptgame'] = 'Juego de reintento';
@@ -237,7 +234,6 @@ $string[ 'reviewofattempt'] = 'Revisar intentos $a';
 $string[ 'score'] = 'Puntaje';
 $string[ 'sudoku_finishattemptbutton'] = 'Fin del juego de sudoku';
 $string[ 'must_select_quiz'] = 'Ud debe seleccionar un cuestionario';
-$string[ 'createbottomtext'] = 'Establezca el texto en la parte inferior';
 $string[ 'game_hiddenpicture'] = 'Imagen oculta';
 $string[ 'hiddenpicture_across'] = 'Celdas horizontales';
 $string[ 'hiddenpicture_down'] = 'Celdas verticales';
@@ -253,7 +249,6 @@ $string[ 'hiddenpicture_pictureglossarycategories'] = 'La categoría de glosario
 $string[ 'hiddenpicture_submit'] = 'Calificar respuestas';
 $string[ 'hiddenpicture_width'] = 'Establecer el ancho de la imagen en';
 $string[ 'hiddenpicture_win'] = 'Felicidades';
-$string[ 'useeditgame'] = 'Utilice la Edición para establecer los detalles del juego';
 $string[ 'export'] = 'Exporta a móvil';
 
 $string[ 'javame_createdby'] = 'Creado por:';
@@ -263,4 +258,3 @@ $string[ 'javame_icon'] = 'Icono:';
 $string[ 'javame_name'] = 'Nombre:';
 $string[ 'javame_vendor'] = 'Vendedor:';
 $string[ 'javame_version'] = 'Versión';
-?>

@@ -1,3 +1,6 @@
+17/7/2010
+    * use Moodle forms
+
 28/8/2009:
     * Millionaire: Export to html
 
@@ -80,5 +83,4 @@ Upgrade
 
     * Delete the files from mod/game
     * Copy the new files to mod/game
-    * It's better to uninstall and install again
 

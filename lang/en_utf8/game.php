@@ -42,8 +42,8 @@ $string[ 'game_bookquiz'] = 'Book with questions';
 $string[ 'cryptex_win'] = 'Congratulations !!!!';
 $string[ 'cryptex_giveanswer'] = 'Give the answer';
 $string[ 'cryptex_maxtries'] = 'Max tries';
-$string[ 'convertfrom1'] = '';      //Special convertation to capital letters
-$string[ 'convertto1'] = '';        //It is needed for some languages
+$string[ 'convertfrom'] = '';      //Special convertation to capital letters
+$string[ 'convertto'] = '';        //It is needed for some languages
 $string[ 'hangman_gradeinstance'] = 'Grade in whole game';
 $string[ 'hangman_grade'] = 'Grade';
 $string[ 'hangman_letters'] = 'Letters: ';
@@ -51,8 +51,7 @@ $string[ 'hangman_loose'] = '<BIG><B>Game over</B></BIG>';
 $string[ 'hangman_restletters_many'] = 'You have <b>$a</b> tries';
 $string[ 'hangman_restletters_one'] = 'You have <b>ONLY 1</b> try';
 $string[ 'hangman_restletters'] = 'You have <b>$a</b> tries';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string[ 'lettersall'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 $string[ 'letters'] = 'letters';
 $string[ 'letter'] = 'letter';
 $string[ 'millionaire_info_people'] = 'People say';
@@ -75,8 +74,6 @@ $string[ 'timelastattempt'] = 'Last attempt';
 $string[ 'timestart'] = 'Start';
 $string[ 'and'] = 'and';
 $string[ 'snakes_background'] = 'Background';
-$string[ 'useupdategame'] = 'Use the button \"Update this game\" to set the details of the game';
-$string[ 'useeditgame'] = 'Use the Edit to set the details of the game';
 $string[ 'cryptex_nowords'] = 'Not found any word';
 $string[ 'millionaire_nowords'] = 'Not found any word';
 $string[ 'tries'] = 'Tries';
@@ -123,7 +120,6 @@ $string[ 'hiddenpicture_height'] = 'Set height of picture to';
 
 
 //teachers
-$string[ 'after_add_can_change_game'] = 'ONLY aftering saving the game you can change the kind of game.';
 $string[ 'bookquiz_import_odt'] = 'Import from an OpenOffice file (odt)';
 $string[ 'cryptex_maxcols'] = 'Maximum number of cols/rows in cryptex';
 $string[ 'cryptex_maxwords'] = 'Maximum number of words in cryptex';
@@ -171,7 +167,7 @@ $string[ 'sudoku_create_count'] = 'Number of sudokus that will be created';
 $string[ 'sudoku_create_start'] = 'Start creating sudokus';
 $string[ 'hideanswers'] = 'Hide answers';
 $string[ 'must_select_glossary'] = 'You must select a glossary';
-$string[ 'createtoptext'] = 'Text at the top';
+$string[ 'toptext'] = 'Text at the top';
 $string[ 'bottomtext'] = 'Text at the bottom';
 $string[ 'messagewin'] = 'Message when the student wins';
 $string[ 'messageloose'] = 'Message when the student looses';
@@ -259,7 +255,6 @@ $string[ 'hiddenpicture_across'] = 'Cells horizontal';
 $string[ 'hiddenpicture_down'] = 'Cells down';
 $string[ 'hiddenpicture_pictureglossary'] = 'The glossary for main question and picture';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'The category of glossary for main question';
-$string[ 'createbottomtext'] = 'Set the text at the bottom';
 
 //1.6.4
 $string[ 'hiddenpicture_nomainquestion'] = 'There are no glossary entries on glossary $a->name with an attached picture';
@@ -288,8 +283,9 @@ $string[ 'export_to_html'] = 'Export to HTML';
 $string[ 'export_to_javame'] = 'Export to Javame';
 $string[ 'hangman_html_new'] = 'New';
 $string[ 'html_hangman_inputsize'] = 'Size of input field:';
+$string[ 'html_hangman_new'] = 'New';
 $string[ 'millionaire_helppeople'] = 'Help of people';
 $string[ 'millionaire_telephone'] = 'Help of telephone';
 $string[ 'millionaire_quit'] = 'Quit';
 $string[ 'millionaire_background'] = 'Background color';
-?>
+$string[ 'showattempts'] = 'Show attempts';

@@ -1,9 +1,8 @@
-<?PHP // $Id: game.php,v 1.1 2008/08/20 20:14:47 bdaloukas Exp $ 
+<?PHP // $Id: game.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $ 
       // game.php - created with Moodle 1.9 (2007101509)
       // local modifications from http://www.indegroep.nl
 
 
-$string['after_add_can_change_game'] = 'Pas ZODRA je het spel hebt bewaard kan je het speltype kiezen';
 $string['allattempts'] = 'Alle pogingen';
 $string['allstudents'] = 'Alle leerlingen';
 $string['analysis'] = 'Laat details zien';
@@ -34,9 +33,6 @@ $string['confirmstartattemptlimit'] = 'Dit spel mag slechts $a keer geprobeerd w
 $string['confirmstartattempttimelimit'] = 'Dit spel heeft een tijdslimiet en mag maar $a keer gespeeld worden. Je gaat nu bijna met een nieuwe poging beginnen. Weet je zeker dat je verder wilt gaan?';
 $string['confirmstarttimelimit'] = 'Dit spel heeft een tijdslimiet. Weet je zeker dat je verder wilt gaan?';
 $string['continueattemptgame'] = 'Ga verder met een vorige poging';
-$string['convertfrom1'] = 'Zet het om vanuit 1';
-$string['convertto1'] = 'Zet het om naar 1';
-$string['createbottomtext'] = 'Stel de tekst aan de onderkant in';
 $string['cross_across'] = 'Schuin';
 $string['cross_checkbutton'] = 'Controleer het kruiswoordraadsel';
 $string['cross_congratulations'] = 'Gefeliciteerd';
@@ -140,8 +136,7 @@ $string['info'] = 'Info';
 $string['lastip'] = 'IP leerling';
 $string['letter'] = 'letter';
 $string['letters'] = 'letters';
-$string['lettersall1'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-$string['lettersall2'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string['lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string['marks'] = 'Markeringen';
 $string['messageloose'] = 'Bericht wanneer de leerling verliest';
 $string['messagewin'] = 'Bericht wanneer de leerling wint';
@@ -224,8 +219,5 @@ $string['timestart'] = 'Start';
 $string['timetaken'] = 'Gebruikte tijd';
 $string['tries'] = 'Pogingen';
 $string['unfinished'] = 'open';
-$string['useupdategame'] = 'Gebruik de knop \"Update dit spel\" om de details in te stellen.';
 $string['withselected'] = 'Met geselecteerde';
 $string['yourfinalgradeis'] = 'Je uiteindelijke cijfer voor dit spel is $a.';
-
-?>

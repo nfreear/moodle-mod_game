@@ -1,12 +1,9 @@
-<?PHP // $Id: game.php,v 1.3 2010/03/17 08:06:22 bdaloukas Exp $
+<?PHP // $Id: game.php,v 1.4 2010/07/16 21:05:24 bdaloukas Exp $
       // game.php - created with Moodle 1.9.5
       // translated to uk_utf8 by Anastasiya Kolomoytseva
 
-$string[ 'after_add_can_change_game'] = 'ТІЛЬКИ після збереження змін ви можете зміниті гру.';
 $string[ 'and'] = 'і';
 $string[ 'bookquiz_import_odt'] = 'Імпорт з файлу OpenOffice (odt)';
-$string[ 'convertfrom1'] = ' ';
-$string[ 'convertto1'] = '';
 
 $string[ 'cross_across'] = 'По горизонталі';
 $string[ 'cross_checkbutton'] = 'Перевірити кросворд';
@@ -74,8 +71,7 @@ $string[ 'hangman_showlast'] = 'Відображати останню літер
 $string[ 'hangman_showquestion'] = 'Відобразити всі запитання?';
 $string[ 'hangman_win'] = 'Вітання!!!';
 $string[ 'hangman_wrongnum'] = 'Не вірно: %%d з %%d';
-$string[ 'lettersall1'] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-$string[ 'lettersall2'] = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЧШЩЬЮЯ";
+$string[ 'lettersall'] = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЧШЩЬЮЯ';
 $string[ 'letters'] = 'літери';
 $string[ 'letter'] = 'літера';
 
@@ -131,7 +127,6 @@ $string[ 'game_snakes'] = 'Змія ';
 $string[ 'snakes_background'] = 'Рівень';
 $string[ 'snakes_win'] = 'Вітання';
 $string[ 'snakes_new'] = 'Нова гра';
-$string[ 'useupdategame'] = 'Використовуйте кнопку  \"Установка гри\" щоб визначити параметри гри';
 $string[ 'cryptex_nowords'] = 'Не знайшлось жодного слова';
 $string[ 'millionaire_nowords'] = 'Не знайшлось жодного слова';
 
@@ -249,7 +244,6 @@ $string[ 'hiddenpicture_pictureglossary'] = 'Словник для конкре�
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Катигорія словника для конкретного питання';
 
 $string[ 'hiddenpicture_nomainquestion'] = 'Не існує жодного запису в словнику $a->name який має зображення';
-$string[ 'createbottomtext'] = "Розмістіть текст внизу";
 $string[ 'game_hiddenpicture'] = "Приховане зображення";
 $string[ 'hangman_countwords'] = "Яка кількість слів вміщається в грі?";
 $string[ 'hiddenpicture_across'] = "Кількість горизонтальних клітин";
@@ -287,6 +281,3 @@ $string[ 'hangman_html_new'] = 'Новини';
 $string[ 'javame_maxpicturewidth'] = 'Максимальний розмір ширини зображення:';
 $string[ 'javame_maxpictureheight'] = 'Максимальний розмір висоти зображення:';
 $string[ 'percent'] = 'Відсоток';
-$string[ 'useeditgame'] = 'Використовуйте кнопку "Змінити" щоб змінити параметри гри';
-?>
-

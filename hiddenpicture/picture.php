@@ -1,16 +1,17 @@
-<?php
+<?php  // $Id: picture.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $
 
 require( '../../../config.php');
-//print_object( $_GET);
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID
 $attemptid = optional_param('id2', 0, PARAM_INT); // Course Module ID
-$foundcells = $_GET[ 'f'];
-$cells = $_GET[ 'cells'];
-$filename = $_GET[ 'p'];
-$cols = $_GET[ 'cols'];
-$rows = $_GET[ 'rows'];
-$filenamenumbers = $_GET[ 'n'];
+
+$foundcells = optional_param('f', PARAM_SEQUENCE); //CSV
+$cells = optional_param('cells', PARAM_SEQUENCE); //CSV
+$filename = optional_param('p', PARAM_PATH);
+$cols = optional_param('cols', PARAM_INT);
+$rows = optional_param('rows', PARAM_INT);
+$filenamenumbers = optional_param('n', PARAM_PATH); //Path to numbers picture
+
 create_image( $id, $attemptid, $foundcells, $cells, $filename, $cols, $rows, $filenamenumbers);
 
 function create_image( $id, $attemptid, $foundcells, $cells, $filename, $cols, $rows, $filenamenumbers)

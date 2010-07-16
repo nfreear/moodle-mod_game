@@ -1,4 +1,4 @@
-<?php
+<?php  // $Id: play.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
 
 function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid=0)
 {	
@@ -10,11 +10,12 @@ function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid=0)
 		$attempt = game_addattempt( $game);
 	}
 
-	unset( $bookquiz);
+    unset($bookquiz);
 	$bookquiz->lastchapterid = 0;
 	$bookquiz->id = $attempt->id;
-	
-	if( !game_insert_record(  'game_bookquiz', $bookquiz)){
+    $bookquiz->bookid = $game->bookid;
+
+	if( !game_insert_record('game_bookquiz', $bookquiz)){
 		error( 'game_bookquiz_continue: error inserting in game_bookquiz');
 	}	
 	
@@ -25,7 +26,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid)
 {
 	if( $bookquiz->lastchapterid == 0){
 		game_bookquiz_play_computelastchapter( $game, $bookquiz);
-		
+
 		if( $bookquiz->lastchapterid == 0){
 			error( get_string( 'bookquiz_empty', 'game'));
 		}

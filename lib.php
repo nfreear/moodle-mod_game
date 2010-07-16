@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.9 2009/09/12 08:12:55 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.9 2009/09/12 08:12:55 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
  * @package game
  **/
 
@@ -665,7 +665,80 @@ function game_reset_gradebook($courseid, $type='') {
     }
 }
 
+/**
+ * Returns an array of game type objects to construct
+ * menu list when adding new game 
+ *
+ */
+function game_get_types(){
+    global $CFG;
 
+    $types = array();
 
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game_group_start";
+    $type->typestr = '--'.'Games';
+    $types[] = $type;
+
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=hangman";
+    $type->typestr = get_string('game_hangman', 'game');
+    $types[] = $type;
+
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=cross";
+    $type->typestr = get_string('game_cross', 'game');
+    $types[] = $type;
+    
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=cryptex";
+    $type->typestr = get_string('game_cryptex', 'game');
+    $types[] = $type;
+    
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=millionaire";
+    $type->typestr = get_string('game_millionaire', 'game');
+    $types[] = $type;
+    
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=sudoku";
+    $type->typestr = get_string('game_sudoku', 'game');
+    $types[] = $type;
+   
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=snakes";
+    $type->typestr = get_string('game_snakes', 'game');
+    $types[] = $type;
+
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game&amp;type=hiddenpicture";
+    $type->typestr = get_string('game_hiddenpicture', 'game');
+    $types[] = $type;
+
+    if(get_record_select( 'modules', "name='book'", 'id,id')){
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=bookquiz";
+        $type->typestr = get_string('game_bookquiz', 'game');
+        $types[] = $type;
+    }
+
+    $type = new object();
+    $type->modclass = MOD_CLASS_ACTIVITY;
+    $type->type = "game_group_end";
+    $type->typestr = '--';
+    $types[] = $type;
+
+    return $types;
+
+}
 
 ?>

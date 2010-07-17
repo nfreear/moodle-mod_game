@@ -1,9 +1,9 @@
-<?php // $Id: index.php,v 1.2 2010/07/17 18:08:09 bdaloukas Exp $
+<?php // $Id: index.php,v 1.3 2010/07/17 19:03:22 bdaloukas Exp $
 /**
  * This page lists all the instances of game module in a particular course
  *
  * @author 
- * @version $Id: index.php,v 1.2 2010/07/17 18:08:09 bdaloukas Exp $
+ * @version $Id: index.php,v 1.3 2010/07/17 19:03:22 bdaloukas Exp $
  * @package game
  **/
 
@@ -85,6 +85,10 @@
         array_push($headings, get_string('attempts', 'game'));
         array_push($align, 'left');
         $showing = 'stats';
+    } else if (has_any_capability(array('mod/game:reviewmyattempts', 'mod/game:attempt'), $coursecontext)) {
+        array_push($headings, get_string('bestgrade', 'quiz'));
+        array_push($align, 'left');
+        $showing = 'scores';  // default
     }
 
     $table->head  = $headings;
@@ -93,6 +97,8 @@
     /// Populate the table with the list of instances.
     $currentsection = '';
     foreach ($games as $game) {
+        $cm = get_coursemodule_from_instance('game', $game->id);
+        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
         $data = array();
 
         // Section number if necessary.
@@ -116,7 +122,7 @@
         $data[] = $link;
 
         if ($showing == 'stats') {
-            // The $quiz objects returned by get_all_instances_in_course have the necessary $cm
+            // The $game objects returned by get_all_instances_in_course have the necessary $cm
             // fields set to make the following call work.
             $attemptcount = game_num_attempt_summary($game, $game);
             if ($attemptcount) {
@@ -124,6 +130,24 @@
             } else {
                 $data[] = '';
             }
+        } else if ($showing == 'scores') {
+
+            // Grade and feedback.
+            $bestscore = game_get_best_score($game, $USER->id);
+            $attempts = game_get_user_attempts($game->id, $USER->id, 'all');
+            list($someoptions, $alloptions) = game_get_combined_reviewoptions($game, $attempts, $context);
+
+            $grade = '';
+            $feedback = '';
+            if ($game->grade && !is_null($bestscore)) {
+                if ($alloptions->scores) {
+                    $bestgrade = round( $bestscore * $game->grade / 100, $game->decimalpoints);
+                    $grade = "$bestgrade / $game->grade";
+                }
+            }else if( $bestscore != 0){
+                $grade = round( 100 * $bestscore, $game->decimalpoints).' %';
+            }
+            $data[] = $grade;
         }
 
         $table->data[] = $data;

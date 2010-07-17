@@ -1,4 +1,4 @@
-<?php  // $Id: tabs.php,v 1.2 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: tabs.php,v 1.3 2010/07/17 19:03:22 bdaloukas Exp $
 /**
  * Sets up the tabs used by the game pages based on the users capabilites.
  *
@@ -47,6 +47,7 @@ if (has_capability('mod/game:manage', $context)) {
 
 global $COURSE;
 
+if (has_capability('mod/game:viewreports', $context)){
         $link  = "{$CFG->wwwroot}/mod/game/preview.php?action=answers&amp;q={$game->id}";
         $title = get_string( 'showanswers', 'game');
         $row[] = new tabobject('answers', $link, $title);
@@ -67,7 +68,7 @@ global $COURSE;
             $title = get_string( 'export_to_javame', 'game');
             $row[] = new tabobject('exportjavame', $link, $title);
         }
-
+}
 
 if ($currenttab == 'info' && count($row) == 1) {
     // Don't show only an info tab (e.g. to students).

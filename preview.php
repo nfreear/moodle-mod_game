@@ -1,9 +1,9 @@
-<?php  // $Id: preview.php,v 1.4 2010/07/17 06:35:56 bdaloukas Exp $
+<?php  // $Id: preview.php,v 1.5 2010/07/17 19:03:22 bdaloukas Exp $
 /**
  * This page shows info about an user's attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: preview.php,v 1.4 2010/07/17 06:35:56 bdaloukas Exp $
+ * @version $Id: preview.php,v 1.5 2010/07/17 19:03:22 bdaloukas Exp $
  * @package game
  **/
  
@@ -235,7 +235,7 @@ function showanswers_question( $game)
                 $select = "course=$game->course";
             }else{
                 $context = get_context_instance(50, $game->course);
-                $select = " contextid in ($context->id)";
+                $select = "contextid in ($context->id)";
             }
             break;
         }
@@ -253,7 +253,7 @@ function showanswers_question( $game)
     
     $showcategories = ($game->gamekind == 'bookquiz');
     $order = ($showcategories ? 'category,questiontext' : 'questiontext');
-    showanswers_question_select( $game, 'question', substr( $select, 4), '*', $order, $showcategories, $game->course);
+    showanswers_question_select( $game, 'question', $select, '*', $order, $showcategories, $game->course);
 }
 
 

@@ -1,9 +1,9 @@
-<?php // $Id: index.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php // $Id: index.php,v 1.2 2010/07/17 18:08:09 bdaloukas Exp $
 /**
  * This page lists all the instances of game module in a particular course
  *
  * @author 
- * @version $Id: index.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+ * @version $Id: index.php,v 1.2 2010/07/17 18:08:09 bdaloukas Exp $
  * @package game
  **/
 
@@ -13,9 +13,11 @@
 
     $id = required_param('id', PARAM_INT);   // course
 
-    if (! $course = get_record("course", "id", $id)) {
-        error("Course ID is incorrect");
+    if (! $course = get_record('course', 'id', $id)) {
+        error('Course ID is incorrect');
     }
+
+    $coursecontext = get_context_instance(CONTEXT_COURSE, $id);
 
     require_login($course->id);
 
@@ -67,30 +69,64 @@
     $strtopic  = get_string("topic");
 
     if ($course->format == "weeks") {
-        $table->head  = array ($strweek, $strname);
-        $table->align = array ("center", "left");
+        $headings  = array ($strweek, $strname);
+        $align = array ("center", "left");
     } else if ($course->format == "topics") {
-        $table->head  = array ($strtopic, $strname);
-        $table->align = array ("center", "left", "left", "left");
+        $headings  = array ($strtopic, $strname);
+        $align = array ("center", "left", "left", "left");
     } else {
-        $table->head  = array ($strname);
-        $table->align = array ("left", "left", "left");
+        $headings  = array ($strname);
+        $align = array ("left", "left", "left");
     }
 
+    $showing = '';  // default
+
+    if (has_capability('mod/game:viewreports', $coursecontext)) {
+        array_push($headings, get_string('attempts', 'game'));
+        array_push($align, 'left');
+        $showing = 'stats';
+    }
+
+    $table->head  = $headings;
+    $table->align = $align;
+
+    /// Populate the table with the list of instances.
+    $currentsection = '';
     foreach ($games as $game) {
+        $data = array();
+
+        // Section number if necessary.
+        $strsection = '';
+        if ($game->section != $currentsection) {
+            if ($game->section) {
+                $strsection = $game->section;
+            }
+
+            $currentsection = $game->section;
+        }
+        $data[] = $strsection;
+
+        // Link to the instance.
+        $class = '';
         if (!$game->visible) {
-            //Show dimmed if the mod is hidden
-            $link = "<a class=\"dimmed\" href=\"view.php?id=$game->coursemodule\">$game->name</a>";
-        } else {
-            //Show normal if the mod is visible
-            $link = "<a href=\"view.php?id=$game->coursemodule\">$game->name</a>";
+            $class = ' class="dimmed"';
+        }
+        $link = "<a$class href=\"view.php?id=$game->coursemodule\">" . format_string($game->name, true) . '</a>';
+
+        $data[] = $link;
+
+        if ($showing == 'stats') {
+            // The $quiz objects returned by get_all_instances_in_course have the necessary $cm
+            // fields set to make the following call work.
+            $attemptcount = game_num_attempt_summary($game, $game);
+            if ($attemptcount) {
+                $data[] = "<a$class href=\"report.php?id=$game->coursemodule\">$attemptcount</a>";
+            } else {
+                $data[] = '';
+            }
         }
 
-        if ($course->format == "weeks" or $course->format == "topics") {
-            $table->data[] = array ($game->section, $link);
-        } else {
-            $table->data[] = array ($link);
-        }
+        $table->data[] = $data;
     }
 
     echo "<br />";

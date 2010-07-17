@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.11 2010/07/17 18:08:09 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.11 2010/07/17 18:08:09 bdaloukas Exp $
  * @package game
  **/
 
@@ -741,4 +741,39 @@ function game_get_types(){
 
 }
 
-?>
+/**
+ * Return a textual summary of the number of attemtps that have been made at a particular game,
+ * returns '' if no attemtps have been made yet, unless $returnzero is passed as true.
+ * @param object $game the game object. Only $game->id is used at the moment.
+ * @param object $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
+ * @param boolean $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
+ * @param int $currentgroup if there is a concept of current group where this method is being called
+ *         (e.g. a report) pass it in here. Default 0 which means no current group.
+ * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)" or
+ *          "Attemtps 123 (45 from this group)".
+ */
+function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup = 0) {
+    global $CFG, $USER;
+    $numattempts = count_records('game_attempts', 'gameid', $game->id, 'preview', 0);
+    if ($numattempts || $returnzero) {
+        if (groups_get_activity_groupmode($cm)) {
+            $a->total = $numattempts;
+            if ($currentgroup) {
+                $a->group = count_records_sql('SELECT count(1) FROM ' .
+                        $CFG->prefix . 'game_attempts qa JOIN ' .
+                        $CFG->prefix . 'groups_members gm ON qa.userid = gm.userid ' .
+                        'WHERE gameid = ' . $game->id . ' AND preview = 0 AND groupid = ' . $currentgroup);
+                return get_string('attemptsnumthisgroup', 'game', $a);
+            } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) { 
+                $a->group = count_records_sql('SELECT count(1) FROM ' .
+                        $CFG->prefix . 'game_attempts qa JOIN ' .
+                        $CFG->prefix . 'groups_members gm ON qa.userid = gm.userid ' .
+                        'WHERE gameid = ' . $game->id . ' AND preview = 0 AND ' .
+                        'groupid IN (' . implode(',', array_keys($groups)) . ')');
+                return get_string('attemptsnumyourgroups', 'game', $a);
+            }
+        }
+        return get_string('attemptsnum', 'quiz', $numattempts);
+    }
+    return '';
+}

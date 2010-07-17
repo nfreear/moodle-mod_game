@@ -1,9 +1,9 @@
-<?php  // $Id: preview.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: preview.php,v 1.4 2010/07/17 06:35:56 bdaloukas Exp $
 /**
  * This page shows info about an user's attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: preview.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
+ * @version $Id: preview.php,v 1.4 2010/07/17 06:35:56 bdaloukas Exp $
  * @package game
  **/
  
@@ -217,20 +217,43 @@ function showanswers_appendselect( $game)
 
 function showanswers_question( $game)
 {
-    
-    $select = ' category='.$game->questioncategoryid;
-        
-    if( $game->subcategories){
-        $cats = question_categorylist( $game->questioncategoryid);
-        if( strpos( $cats, ',') > 0){
-            $select = ' category in ('.$cats.')';
+    if( $game->gamekind != 'bookquiz'){
+        $select = ' category='.$game->questioncategoryid;
+
+        if( $game->subcategories){
+            $cats = question_categorylist( $game->questioncategoryid);
+            if( strpos( $cats, ',') > 0){
+                $select = ' category in ('.$cats.')';
+            }
         }
+    }else
+    {
+        $select = '';
+        $recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
+        foreach( $recs as $rec){
+            if( array_key_exists( 'course', $rec)){
+                $select = "course=$game->course";
+            }else{
+                $context = get_context_instance(50, $game->course);
+                $select = " contextid in ($context->id)";
+            }
+            break;
+        }
+        $select2 = '';
+        if( $recs = get_records_select( 'question_categories', $select, 'id,id')){
+            foreach( $recs as $rec){
+                $select2 .= ','.$rec->id;
+            }
+        }
+        $select = ' AND category IN ('.substr( $select2, 1).')';
     }
     
     $select .= ' AND hidden = 0 ';
     $select .= showanswers_appendselect( $game);
     
-    showanswers_question_select( $game, 'question', $select, '*', 'questiontext', false, $game->course);
+    $showcategories = ($game->gamekind == 'bookquiz');
+    $order = ($showcategories ? 'category,questiontext' : 'questiontext');
+    showanswers_question_select( $game, 'question', substr( $select, 4), '*', $order, $showcategories, $game->course);
 }
 
 
@@ -244,14 +267,14 @@ function showanswers_quiz( $game)
               showanswers_appendselect( $game);
 	$table = "question,{$CFG->prefix}quiz_question_instances";
 	
-    showanswers_question_select( $game, $table, $select, "{$CFG->prefix}question.*", 'category,questiontext', true, $game->course);
+    showanswers_question_select( $game, $table, $select, "{$CFG->prefix}question.*", 'category,questiontext', false, $game->course);
 }
 
 
 function showanswers_question_select( $game, $table, $select, $fields='*', $order='questiontext', $showcategoryname=false, $courseid=0)
 {
     global $CFG;
-    
+
     if( ($questions = get_records_select( $table, $select, $order, $fields)) === false){
         return;
     }

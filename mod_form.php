@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.1 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.2 2010/07/17 06:35:56 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -54,7 +54,8 @@ class mod_game_mod_form extends moodleform_mod {
         if($hasglossary)
             $questionsourceoptions['glossary'] = get_string('modulename', 'glossary');
         $questionsourceoptions['question'] = get_string('sourcemodule_question', 'game');
-        $questionsourceoptions['quiz'] = get_string('modulename', 'quiz');
+        if( $gamekind != 'bookquiz')
+            $questionsourceoptions['quiz'] = get_string('modulename', 'quiz');
         $mform->addElement('select', 'sourcemodule', get_string('sourcemodule','game'), $questionsourceoptions);
 
         if($hasglossary){
@@ -95,30 +96,32 @@ class mod_game_mod_form extends moodleform_mod {
         
         //*********************
         // Question Category
-        $select = '';
-        $recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
-        foreach( $recs as $rec){
-            if( array_key_exists( 'course', $rec)){
-                $select = "course=$course->id";
-            }else{
-                $context = get_context_instance(50, $COURSE->id);
-	    		$select = " contextid in ($context->id)";
-            }
-            break;
-        }
-
-        $a = array();
-        if( $recs = get_records_select( 'question_categories', $select, 'id,name')){
+        if( $gamekind != 'bookquiz'){
+            $select = '';
+            $recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
             foreach( $recs as $rec){
-                $s = $rec->name;
-                if( ($count = count_records_select( 'question', "category={$rec->id}")) != 0){
-                    $s .= " ($count)";
+                if( array_key_exists( 'course', $rec)){
+                    $select = "course=$course->id";
+                }else{
+                    $context = get_context_instance(50, $COURSE->id);
+	        		$select = " contextid in ($context->id)";
                 }
-                $a[ $rec->id] = $s;
+                break;
             }
+
+            $a = array();
+            if( $recs = get_records_select( 'question_categories', $select, 'id,name')){
+                foreach( $recs as $rec){
+                    $s = $rec->name;
+                    if( ($count = count_records_select( 'question', "category={$rec->id}")) != 0){
+                        $s .= " ($count)";
+                    }
+                    $a[ $rec->id] = $s;
+                }
+            }
+            $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
+            $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
         }
-        $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
-        $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
 
         //***********************
         // Quiz        

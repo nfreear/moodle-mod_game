@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.7 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.8 2010/07/20 21:03:40 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.7 2010/07/16 21:05:22 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.8 2010/07/20 21:03:40 bdaloukas Exp $
  * @package game
  **/
 
@@ -24,25 +24,25 @@
 	$forcenew = optional_param('forcenew', false, PARAM_BOOL); // Teacher has requested new preview
     
     // Hangman params
-    $newletter = optional_param('newletter', PARAM_TEXT);
+    $newletter = optional_param('newletter', '', PARAM_TEXT);
     
     // Bookquiz params
-    $chapterid = optional_param('chapterid', PARAM_INT);
+    $chapterid = optional_param('chapterid', 0, PARAM_INT);
 
     // Sudoku params
-    $pos = optional_param('pos', PARAM_TEXT);
-    $num = optional_param('num', PARAM_INT);
+    $pos = optional_param('pos', 0, PARAM_INT);
+    $num = optional_param('num', 0, PARAM_INT);
 
     // Cryptex (Wordfind) params
-    $q = optional_param('q', PARAM_TEXT);
-    $answer = optional_param('answer', PARAM_TEXT);
+    $q = optional_param('q', '', PARAM_TEXT);
+    $answer = optional_param('answer', '', PARAM_TEXT);
 
     // Crossword params
-    $get_g = optional_param('g', PARAM_TEXT); 
+    $get_g = optional_param('g', '', PARAM_TEXT); 
 
     
-    $endofgame = optional_param('endofgame', PARAM_TEXT);
-    $finishattempt = optional_param('finishattempt', PARAM_TEXT);
+    $endofgame = optional_param('endofgame', 0, PARAM_INT);
+    $finishattempt = optional_param('finishattempt', 0, PARAM_INT);
 
     /// Print the main part of the page
 	switch( $action)
@@ -86,12 +86,12 @@
         break;
     case 'hiddenpicturecheck':		//the student tries to answer a question
 		$attempt = game_getattempt($game, $detail);
-        $finishattempt = optional_param('finishattempt', PARAM_TEXT);
+        $finishattempt = optional_param('finishattempt', 0, PARAM_INT);
 		game_hiddenpicture_check_questions($id, $game, $attempt, $detail, $finishattempt);
         break;
     case 'hiddenpicturecheckg':		//the student tries to guess a glossaryenry
 		$attempt = game_getattempt($game, $detail);
-        $endofgame = optional_param('endofgame', PARAM_TEXT);
+        $endofgame = optional_param('endofgame', 0, PARAM_INT);
 		game_hiddenpicture_check_mainquestion($id, $game, $attempt, $detail, $endofgame);
         break;        
 	case "":
@@ -114,15 +114,15 @@
 			game_cross_continue($id, $game, $attempt, $detail, '', $forcenew);
 			break;
         case 'hangman':
-            $action2 = optional_param('action2', PARAM_TEXT);
-            $newletter = optional_param('newletter', PARAM_TEXT);
+            $action2 = optional_param('action2', '', PARAM_TEXT);
+            $newletter = optional_param('newletter', '', PARAM_TEXT);
 			game_hangman_continue($id, $game, $attempt, $detail, $newletter, $action2);
 			break;
 		case 'millionaire':
 			game_millionaire_continue($id, $game, $attempt, $detail);
 			break;
 		case 'bookquiz':
-            $chapterid = optional_param('chapterid', PARAM_INT);
+            $chapterid = optional_param('chapterid', 0, PARAM_INT);
 			game_bookquiz_continue($id, $game, $attempt, $detail, $chapterid);
 			break;
 		case 'sudoku':
@@ -215,4 +215,3 @@
         
         return $ret;
     }
-?>

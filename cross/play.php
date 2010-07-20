@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.10 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.11 2010/07/20 21:03:40 bdaloukas Exp $
 
 require( "cross_class.php");
 require( "crossdb_class.php");
@@ -95,18 +95,17 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
 	$cross = new CrossDB();
 
 	$info = $cross->load( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow, $showsolution, $endofgame, $showhtmlsolutions);
-
 	if( $done or $endofgame){
-		if (! $cm = get_record("course_modules", "id", $id)) {
+		if (! $cm = get_record('course_modules', 'id', $id)) {
 			error("Course Module ID was incorrect id=$id");
 		}
-		
+
 		if( $endofgame == false){
 			echo '<B>'.get_string( 'cross_win', 'game').'</B><BR>';
 		}
-		echo '<br>';	
+		echo '<br>';
 		echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id&forcenew=1\">".get_string( 'cross_new', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-		echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
+		echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> <br>';
 	}else if( $info != ''){
 		echo "<br>$info<br>";
 	}
@@ -726,7 +725,7 @@ function CheckServerClick( endofgame)
 <?php
 	if( $onlyshow == false){
         global $CFG;
-        $param_id = optional_param('id', PARAM_INT); 
+        $param_id = optional_param('id', 0, PARAM_INT); 
 		$params = 'id='.$param_id.'&action=crosscheck&g=';
 		echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
 	}

@@ -1,9 +1,9 @@
-<?php  // $Id: export.php,v 1.12 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.13 2010/07/21 10:37:09 bdaloukas Exp $
 /**
- * This page edits the bottom text of a game
+ * This page exports a game to a html or jar file
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.12 2010/07/16 21:05:22 bdaloukas Exp $
+ * @version $Id: export.php,v 1.13 2010/07/21 10:37:09 bdaloukas Exp $
  * @package game
  **/
 

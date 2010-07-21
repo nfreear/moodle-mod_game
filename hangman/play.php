@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.15 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.16 2010/07/21 10:37:09 bdaloukas Exp $
 
 // This files plays the game hangman
 
@@ -202,6 +202,7 @@ function game_hangman_play($id, $game, $attempt, $hangman, $onlyshow=false, $sho
         if ($wrong >= $max){
 			//This word is incorrect. If reach the max number of word I have to finish else continue with next word
 			hangman_oninncorrect( $id, $word_line, $query->answertext, $game, $attempt, $hangman);
+            $query->percent = 0;
         }
         else{
             $i = $max-$wrong;
@@ -220,8 +221,8 @@ function game_hangman_play($id, $game, $attempt, $hangman, $onlyshow=false, $sho
     else{
 		//This word is correct. If reach the max number of word I have to finish else continue with next word
 		hangman_oncorrect($id, $word_line, $game, $attempt, $hangman, $query);
+        $query->percent = 1;
 	}
-	
 	echo "<br/><br/>".get_string('hangman_grade', 'game').' : '.round($query->percent * 100).' %';
 	if( $hangman->maxtries > 1){
 		echo '<br/><br/>'.get_string('hangman_gradeinstance', 'game').' : '.round($hangman->corrects / $hangman->maxtries * 100).' %';

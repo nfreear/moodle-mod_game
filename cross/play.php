@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.11 2010/07/20 21:03:40 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2010/07/21 20:56:55 bdaloukas Exp $
 
 require( "cross_class.php");
 require( "crossdb_class.php");
@@ -1027,14 +1027,14 @@ if( $attempt != false){
 
 function game_cross_show_welcome( $game){
     if( $game->param3 <> 2){
-        game_cross_show_welcome0();
+        game_cross_show_welcome0( $game);
     }else{
         game_cross_show_welcome1();
     }
             
 }
 
-function game_cross_show_welcome0(){
+function game_cross_show_welcome0( $game){
 ?>
 <td valign="top" style="padding-left: 1em;">
 

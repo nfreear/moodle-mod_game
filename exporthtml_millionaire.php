@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.4 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: exporthtml_millionaire.php,v 1.5 2010/07/21 20:56:54 bdaloukas Exp $
 /**
  * This page export the game millionaire to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.4 2010/07/16 21:05:22 bdaloukas Exp $
+ * @version $Id: exporthtml_millionaire.php,v 1.5 2010/07/21 20:56:54 bdaloukas Exp $
  * @package game
  **/
 function game_millionaire_html_getquestions( $game, &$max)
@@ -13,7 +13,7 @@ function game_millionaire_html_getquestions( $game, &$max)
 	$max = 0;
 	
 	if( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')){
-		error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $attempt->sourcemodule));
+		error( get_string('millionaire_sourcemodule_must_quiz_question', 'game'));
 	}
 	
 	if( $game->sourcemodule == 'quiz'){

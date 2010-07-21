@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.9 2010/07/16 21:05:24 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.10 2010/07/21 20:56:55 bdaloukas Exp $
 
 function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 {
@@ -31,7 +31,7 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
     $newrec = game_hiddenpicture_selectglossaryentry( $game, $attempt);
 	
 	if( $recs === false){
-		error( get_string( 'hiddenpicture_no_questions', 'game'));
+		error( get_string( 'no_questions', 'game'));
 	}	
 
 	$positions = array();

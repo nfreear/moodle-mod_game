@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.7 2010/07/21 10:57:37 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.8 2010/07/21 20:56:55 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -37,7 +37,7 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame=''){
 	$recs = game_questions_selectrandom( $game, $need);
 	
 	if( $recs === false){
-		error( get_string( 'sudoku_no_questions', 'game'));
+		error( get_string( 'no_questions', 'game'));
 	}
 	
 	$closed = game_sudoku_getclosed( $newrec->data);
@@ -298,7 +298,7 @@ function game_sudoku_getquestionlist($offsetquestions){
     $questionlist = substr( $questionlist, 1);
 	
     if ($questionlist == '') {
-        error(get_string('noquestionsfound', 'game'));
+        error(get_string('no_questions', 'game'));
     }
 
 	return $questionlist;
@@ -343,10 +343,10 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
 	/// Start the form
     echo "<form id=\"responseform\" method=\"post\" action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
 	if( ($onlyshow === false) and ($showsolution  === false)){
-		echo "<br><center><input type=\"submit\" name=\"submit\" value=\"".get_string($game->gamekind.'_submit', 'game')."\">";
+		echo "<br><center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\">";
 		
 		echo " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" name=\"finishattempt\" value=\"".
-		        get_string($game->gamekind.'_finishattemptbutton', 'game')."\">";
+		        get_string('sudoku_finishattemptbutton', 'game')."\">";
 	}
 
     // Add a hidden field with the quiz id
@@ -401,7 +401,7 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
     // Finish the form
     echo '</div>';
 	if( ($onlyshow === false) and ($showsolution === false)){
-		echo "<center><input type=\"submit\" name=\"submit\" value=\"".get_string($game->gamekind.'_submit', 'game')."\"></center>\n";
+		echo "<center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
 	}
 
     echo "</form>\n";
@@ -480,7 +480,7 @@ function game_sudoku_showquestion_onfinish( $id, $game, $attempt, $sudoku){
 		
 	echo '<b>'.get_string( 'sudoku_win', 'game').'</b><br>';	
 	echo '<br>';	
-	echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id\">".get_string('sudoku_new', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+	echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id\">".get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
 	echo "<a href=\"$CFG->wwwroot?id=$id\">".get_string('finish', 'game').'</a> ';	
 }
 

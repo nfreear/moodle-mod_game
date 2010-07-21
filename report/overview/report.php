@@ -2,7 +2,7 @@
 /**
  * This script lists student attempts
  *
- * @version $Id: report.php,v 1.3 2008/10/25 18:34:23 bdaloukas Exp $
+ * @version $Id: report.php,v 1.4 2010/07/21 20:56:55 bdaloukas Exp $
  * @author bdaloukas.
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
@@ -21,7 +21,7 @@ class game_report extends game_default_report {
         // Define some strings
         $strreallydel  = addslashes(get_string('deleteattemptcheck','game'));
         $strtimeformat = get_string('strftimedatetime');
-        $strreviewquestion = get_string('reviewresponse', 'game');
+        $strreviewquestion = get_string('reviewresponse', 'quiz');
 
         // Only print headers if not asked to download data
         if (!$download = optional_param('download', NULL)) {
@@ -195,7 +195,11 @@ class game_report extends game_default_report {
             $formatg->set_align('center');
             // Here starts workshhet headers
 
-            $headers = array(get_string('fullname'), get_string('startedon', 'game'), get_string('timecompleted', 'game'), get_string('attemptduration', 'game'));
+            $headers = array(get_string('fullname'), 
+                    get_string('startedon', 'game'), 
+                    get_string('timecompleted', 'game'), 
+                    get_string('attemptduration', 'game')
+                );
 
             if ($game->grade) {
                 $headers[] = get_string('grade', 'game').'/'.$game->grade;
@@ -552,7 +556,7 @@ class game_report extends game_default_report {
                     print_single_button('report.php', $options, get_string("downloadtext"));
                     echo "</td>\n";
                     echo "<td>";
-                    helpbutton('overviewdownload', get_string('overviewdownload', 'game'), 'game');
+                    helpbutton('overviewdownload', get_string('overviewdownload', 'quiz'), 'game');
                     echo "</td>\n";
                     echo '</tr></table>';
                 }

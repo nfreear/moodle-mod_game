@@ -1,4 +1,4 @@
-<?php  // $Id: view.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: view.php,v 1.4 2010/07/21 20:56:54 bdaloukas Exp $
 
 // This page prints a particular instance of game
 
@@ -183,23 +183,6 @@
             echo "<p>".get_string('grademethod', 'game').': '.$GAME_GRADE_METHOD[$game->grademethod]."</p>";
         }
 
-        // Print information about timings.
-        $timenow = time();
-        //$available = ($game->timeopen < $timenow and ($timenow < $game->timeclose or !$game->timeclose));
-		$available = true;
-		$game->timelimit = 0;
-        if ($available){
-            if ($game->timelimit){
-                echo "<p>".get_string("gametimelimit","game", format_time($game->timelimit * 60))."</p>";
-            }
-            game_view_dates( $game);
-        } 
-        else if ($timenow < $game->timeopen){
-            echo "<p>".get_string("gamenotavailable", "game", userdate($game->timeopen))."</p>";
-        } 
-        else{
-            echo "<p>".get_string("gameclosed", "game", userdate($game->timeclose))."</p>";
-        }
         echo '</div>';
 		
 		return $available;
@@ -375,9 +358,6 @@
 
         // Print a button to start/continue an attempt, if appropriate.
 
-        //if (!$game->questions) {
-         //   print_heading( get_string("noquestions", "game"));
-        //} else 
 		if ($available && $moreattempts) {
 			game_view_capability_attempt_showinfo( $game, $course, $cm, $unfinished, $numattempts);
 		}else {
@@ -407,13 +387,6 @@
 				$tempunavailable = '';
 				$lastattempt = end( $attempts);
 				$lastattempttime = $lastattempt->timefinish;
-				if ($numattempts == 1 && $game->delay1 && $timenow <= $lastattempttime + $game->delay1) {
-					$tempunavailable = get_string('temporaryblocked', 'game') .
-						' <strong>'. userdate($lastattempttime + $game->delay1). '</strong>';
-				} else if ($numattempts > 1 && $game->delay2 && $timenow <= $lastattempttime +  $game->delay2) {
-					$tempunavailable = get_string('temporaryblocked', 'game') .
-							' <strong>'. userdate($lastattempttime + $game->delay2). '</strong>';
-				}
                 print_object($course);
 				// If so, display a message and prevent the start button from appearing.
 				if ($tempunavailable) {
@@ -431,12 +404,8 @@
 			// Do we need a confirm javascript alert?
 			if ($unfinished) {
 				$strconfirmstartattempt =  '';
-			} else if ($game->timelimit && $game->attempts) {
-				$strconfirmstartattempt = addslashes(get_string('confirmstartattempttimelimit','game', $game->attempts));
-			} else if ($game->timelimit) {
-				$strconfirmstartattempt = addslashes(get_string('confirmstarttimelimit','game'));
 			} else if ($game->attempts) {
-				$strconfirmstartattempt = addslashes(get_string('confirmstartattemptlimit','game', $game->attempts));
+				$strconfirmstartattempt = addslashes(get_string('confirmstartattemptlimit','quiz', $game->attempts));
 			} else {
 				$strconfirmstartattempt =  '';
 			}
@@ -472,7 +441,7 @@ document.write('<center><input type="button" value="<?php echo $buttontext ?>" o
 </script>
 <noscript>
 <div>
-    <?php print_heading(get_string('noscript', 'game')); ?>
+    <?php print_heading(get_string('noscript', 'quiz')); ?>
 </div>
 </noscript>
 <?php

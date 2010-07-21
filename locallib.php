@@ -1,4 +1,4 @@
-<?php  // $Id: locallib.php,v 1.23 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: locallib.php,v 1.24 2010/07/21 20:56:54 bdaloukas Exp $
 
 /// CONSTANTS ///////////////////////////////////////////////////////////////////
 
@@ -380,7 +380,7 @@ function game_questions_selectrandom( $game, $count=1)
 
 	$ids = game_questions_selectrandom_detail( $table, $select, $field, $count);
 	if( $ids === false){
-		error( get_string( 'sudoku_no_questions', 'game'));
+		error( get_string( 'no_questions', 'game'));
 	}
 
 	if( count( $ids) > 1){
@@ -605,7 +605,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
     
 	$recs = get_records_sql( $sql);
 	if( $recs == false){
-	    error( get_string( 'millionaire_no_questions', 'game'));
+	    error( get_string( 'no_questions', 'game'));
 	}
 	
 	$recs2 = array();
@@ -805,30 +805,6 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
         }
 		return false;
 	}
-
-/**
-* Print a box with quiz start and due dates
-*
-* @param object $game
-*/
-function game_view_dates( $game) {
-    if (!$game->timeopen && !$game->timeclose) {
-        return;
-    }
-
-    print_simple_box_start('center', '', '', '', 'generalbox', 'dates');
-    echo '<table>';
-    if ($game->timeopen) {
-        echo '<tr><td class="c0">'.get_string("gameopen", "game").':</td>';
-        echo '    <td class="c1">'.userdate($game->timeopen).'</td></tr>';
-    }
-    if ($game->timeclose) {
-        echo '<tr><td class="c0">'.get_string("gameclose", "game").':</td>';
-        echo '    <td class="c1">'.userdate($game->timeclose).'</td></tr>';
-    }
-    echo '</table>';
-    print_simple_box_end();
-}
 
 /**
  * @param integer $gameid the game id.

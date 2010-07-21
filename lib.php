@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.11 2010/07/17 18:08:09 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.12 2010/07/21 20:56:54 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.11 2010/07/17 18:08:09 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.12 2010/07/21 20:56:54 bdaloukas Exp $
  * @package game
  **/
 
@@ -428,56 +428,11 @@ function game_grade_item_update($game, $grades=NULL) {
         $params['gradetype'] = GRADE_TYPE_NONE;
     }
 
-/* description by TJ:
-1/ If the game is set to not show scores while the game is still open, and is set to show scores after
-   the game is closed, then create the grade_item with a show-after date that is the game close date.
-2/ If the game is set to not show scores at either of those times, create the grade_item as hidden.
-3/ If the game is set to show scores, create the grade_item visible.
-*/
-/*
-    if (!($game->review & GAME_REVIEW_SCORES & GAME_REVIEW_CLOSED)
-    and !($game->review & GAME_REVIEW_SCORES & GAME_REVIEW_OPEN)) {
-        $params['hidden'] = 1;
-
-    } else if ( ($game->review & GAME_REVIEW_SCORES & GAME_REVIEW_CLOSED)
-           and !($game->review & GAME_REVIEW_SCORES & GAME_REVIEW_OPEN)) {
-        if ($game->timeclose) {
-            $params['hidden'] = $game->timeclose;
-        } else {
-            $params['hidden'] = 1;
-        }
-
-    } else {
-        // a) both open and closed enabled
-        // b) open enabled, closed disabled - we can not "hide after", grades are kept visible even after closing
-        $params['hidden'] = 0;
-    }
-*/
     if ($grades  === 'reset') {
         $params['reset'] = true;
         $grades = NULL;
     }
-/*  
-    $gradebook_grades = grade_get_grades($game->course, 'mod', 'gameid', $game->id);
-    $grade_item = $gradebook_grades->items[0];
-    if ($grade_item->locked) {
-        $confirm_regrade = optional_param('confirm_regrade', 0, PARAM_INT);
-        if (!$confirm_regrade) {
-            $message = get_string('gradeitemislocked', 'grades');
-            $back_link = $CFG->wwwroot . '/mod/game/report.php?q=' . $game->id . '&amp;mode=overview';
-            $regrade_link = qualified_me() . '&amp;confirm_regrade=1';
-            print_box_start('generalbox', 'notice');
-            echo '<p>'. $message .'</p>';
-            echo '<div class="buttons">';
-            print_single_button($regrade_link, null, get_string('regradeanyway', 'grades'), 'post', $CFG->framename);
-            print_single_button($back_link,  null,  get_string('cancel'),  'post',  $CFG->framename);
-            echo '</div>';
-            print_box_end();
 
-            return GRADE_UPDATE_ITEM_LOCKED;
-        }
-    }
-*/
     return grade_update('mod/game', $game->course, 'mod', 'game', $game->id, 0, $grades, $params);
 }
 
@@ -763,14 +718,14 @@ function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup
                         $CFG->prefix . 'game_attempts qa JOIN ' .
                         $CFG->prefix . 'groups_members gm ON qa.userid = gm.userid ' .
                         'WHERE gameid = ' . $game->id . ' AND preview = 0 AND groupid = ' . $currentgroup);
-                return get_string('attemptsnumthisgroup', 'game', $a);
+                return get_string('attemptsnumthisgroup', 'quiz', $a);
             } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) { 
                 $a->group = count_records_sql('SELECT count(1) FROM ' .
                         $CFG->prefix . 'game_attempts qa JOIN ' .
                         $CFG->prefix . 'groups_members gm ON qa.userid = gm.userid ' .
                         'WHERE gameid = ' . $game->id . ' AND preview = 0 AND ' .
                         'groupid IN (' . implode(',', array_keys($groups)) . ')');
-                return get_string('attemptsnumyourgroups', 'game', $a);
+                return get_string('attemptsnumyourgroups', 'quiz', $a);
             }
         }
         return get_string('attemptsnum', 'quiz', $numattempts);

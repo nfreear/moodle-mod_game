@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.2 2010/07/17 06:35:56 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.3 2010/07/21 20:56:54 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -173,8 +173,18 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('selectyesno', 'param2', get_string('hangman_showlast', 'game'));
             $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
             $mform->addElement('selectyesno', 'param8', get_string('hangman_allowsub', 'game'));
+
+            $a = array( 1 => 1);
+            $mform->addElement('select', 'param', get_string('hangman_imageset','game'), $a);
+
             $mform->addElement('selectyesno', 'param5', get_string('hangman_showquestion', 'game'));
             $mform->addElement('selectyesno', 'param6', get_string('hangman_showcorrectanswer', 'game'));
+
+            $a = array();
+            $a = get_list_of_languages();
+		    $a[ ''] = '----------';
+            ksort( $a);
+            $mform->addElement('select', 'language', get_string('hangman_language','game'), $a);
         }
 
 //---------------------------------------------------------------------------
@@ -214,6 +224,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('header', 'millionaire', 'Millionare Options');
             $mform->addElement('text', 'param8', get_string('millionaire_background', 'game'));
             $mform->setDefault('param8', 0x408080);
+            $mform->addElement('selectyesno', 'shuffle', get_string('millionaire_shuffle','game'));
         }
 
 //---------------------------------------------------------------------------
@@ -265,6 +276,30 @@ class mod_game_mod_form extends moodleform_mod {
             }
             $mform->addElement('select', 'glossaryid2', get_string('hiddenpicture_pictureglossary', 'game'), $a);
 
+if( count( $a) == 0)
+                $select = 'glossaryid=-1';
+            else if( count( $a) == 1)
+                $select = 'glossaryid='.$rec->id;
+            else
+            {
+                $select = '';
+                foreach($recs as $rec){
+                    $select .= ','.$rec->id;
+                }
+                $select = 'g.id IN ('.substr( $select, 1).')';
+            }
+            $select .= ' AND g.id=gc.glossaryid';
+            $table = "glossary g, {$CFG->prefix}glossary_categories gc";
+            $a = array();
+            $a[ ] = '';
+            if($recs = get_records_select( $table, $select, 'g.name,gc.name', 'gc.id,gc.name,g.name as name2')){
+                foreach($recs as $rec){
+                    $a[$rec->id] = $rec->name2.' -> '.$rec->name;
+                }
+            }
+            $mform->addElement('select', 'glossarycategoryid2', get_string('hiddenpicture_pictureglossarycategories', 'game'), $a);
+            $mform->disabledIf('glossarycategoryid2', 'glossaryid', 'eq', 0);
+
             $mform->addElement('text', 'param4', get_string('hiddenpicture_width', 'game'));
             $mform->setType('param4', PARAM_INT);
             $mform->addELement('text', 'param5', get_string('hiddenpicture_height', 'game'));
@@ -275,7 +310,7 @@ class mod_game_mod_form extends moodleform_mod {
 //---------------------------------------------------------------------------
 // Header/Footer options
 
-        $mform->addElement('header', 'headerfooteroptions', 'Header/Footer Options');
+        $mform->addElement('header', 'headerfooteroptions', get_string( 'headerfooter_options', 'game'));
         $mform->addElement('htmleditor', 'toptext', get_string('toptext','game'));
         $mform->addElement('htmleditor', 'bottomtext', get_string('bottomtext','game'));
 

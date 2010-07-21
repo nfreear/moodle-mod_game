@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.17 2010/07/21 10:57:37 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.18 2010/07/21 20:56:55 bdaloukas Exp $
 /**
  * This files plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.17 2010/07/21 10:57:37 bdaloukas Exp $
+ * @version $Id: play.php,v 1.18 2010/07/21 20:56:55 bdaloukas Exp $
  * @package game
  **/
 
@@ -11,7 +11,10 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire)
 {
 	//User must select quiz or question as a source module
 	if( ($game->quizid == 0) and ($game->questioncategoryid == 0)){
-		error( get_string( $game->sourcemodule == 'quiz' ? 'millionaire_must_select_quiz' : 'millionaire_must_select_questioncategory'));
+        if( $game->sourcemodule == 'quiz')
+    		error( get_string('millionaire_must_select_quiz', 'game'));
+        else
+            error( get_string('millionaire_must_select_questioncategory','game'));
 	}
 	
 	if( $attempt != false and $millionaire != false){
@@ -322,7 +325,7 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	$recs = get_records_select( 'question_answers', "question=$questionid");
 	
 	if( $recs === false){
-		error( get_string( 'millionaire_no_questions', 'game'));
+		error( get_string( 'no_questions', 'game'));
 	}
 	
 	$correct = 0;

@@ -1,8 +1,8 @@
-<?php  // $Id: review.php,v 1.4 2010/07/21 10:57:37 bdaloukas Exp $
+<?php  // $Id: review.php,v 1.5 2010/07/21 20:56:54 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.4 2010/07/21 10:57:37 bdaloukas Exp $
+* @version $Id: review.php,v 1.5 2010/07/21 20:56:54 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
@@ -41,48 +41,17 @@
     $options = game_get_reviewoptions( $game, $attempt, $context);
     $popup = $isteacher ? 0 : $game->popup; // Controls whether this is shown in a javascript-protected window.
 
-    /*if (!has_capability('mod/game:viewreports', $context)) {
-        if (!$attempt->timefinish) {
-            redirect('attempt.php?q='.$game->id);
-        }
-        // If not even responses are to be shown in review then we
-        // don't allow any review
-        if (!($game->review & GAME_REVIEW_RESPONSES)) {
-            if (empty($popup)) {
-                redirect('view.php?q='.$game->id);
-            } else {
-                ?><script type="text/javascript">
-                opener.document.location.reload();
-                self.close();
-                </script><?php
-                die();
-            }
-        }
-        if ((time() - $attempt->timefinish) > 120) { // always allow review right after attempt
-            if ((!$game->timeclose or time() < $game->timeclose) and !($game->review & GAME_REVIEW_OPEN)) {
-                redirect('view.php?q='.$game->id, get_string( "noreviewuntil", "game", userdate( $game->timeclose)));
-            }
-            if ($game->timeclose and time() >= $game->timeclose and !($game->review & GAME_REVIEW_CLOSED)) {
-                redirect('view.php?q='.$game->id, get_string("noreview", "game"));
-            }
-        }
-        if ($attempt->userid != $USER->id) {
-            error("This is not your attempt!", 'view.php?q='.$game->id);
-        }
-    }*/
-
     add_to_log($course->id, "game", "review", "review.php?id=$cm->id&amp;attempt=$attempt->id", "$game->id", "$cm->id");
 
 /// Print the page header
 
-    $strgames = get_string("modulenameplural", "game");
-    $strreview  = get_string("review", "game");
-    $strscore  = get_string("score", "game");
-    $strgrade  = get_string("grade");
-    $strbestgrade  = get_string("bestgrade", "game");
-    $strtimetaken     = get_string("timetaken", "game");
-    $strtimecompleted = get_string("completedon", "game");
-    $stroverdue = get_string("overdue", "game");
+    $strgames = get_string('modulenameplural', 'game');
+    $strreview  = get_string('review', 'game');
+    $strscore  = get_string('score', 'game');
+    $strgrade  = get_string('grade');
+    $strbestgrade  = get_string('bestgrade', 'quizre');
+    $strtimetaken     = get_string('timetaken', 'game');
+    $strtimecompleted = get_string('completedon', 'game');
 
     if (!empty($popup)) {
         define('MESSAGE_WINDOW', true);  // This prevents the message window coming up
@@ -93,13 +62,9 @@
         $strupdatemodule = has_capability('moodle/course:manageactivities', $coursecontext)
                     ? update_module_button($cm->id, $course->id, get_string('modulename', 'game'))
                     : "";
-       // print_header_simple(format_string($game->name), "",
-       //          "<a href=\"index.php?id=$course->id\">$strgames</a>
-       //           -> <a href=\"view.php?id=$cm->id\">".format_string($game->name,true)."</a> -> $strreview",
-       //          "", "", true, $strupdatemodule);
                  
-    $strgames = get_string("modulenameplural", "game");
-    $strgame  = get_string("modulename", "game");
+    $strgames = get_string('modulenameplural', 'game');
+    $strgame  = get_string('modulename', 'game');
                      
     if( function_exists( 'build_navigation')){
         $navigation = build_navigation('', $cm);
@@ -215,9 +180,6 @@
         $table->data[] = array("$strtimecompleted:", userdate($attempt->timefinish));
         $table->data[] = array("$strtimetaken:", $timetaken);
     }
-    if (!empty($overtime)) {
-        $table->data[] = array("$stroverdue:", $overtime);
-    }
     //if the student is allowed to see their score
     if ($options->scores) {
         if ($game->grade) {
@@ -260,7 +222,7 @@
     if ($numpages > 1 and !$showall) {
         print_paging_bar($numpages, $page, 1, 'review.php?attempt='.$attempt->id.'&amp;');
         echo '<div class="controls"><a href="review.php?attempt='.$attempt->id.'&amp;showall=true">';
-        print_string('showall', 'game');
+        print_string('showall', 'quiz');
         echo '</a></div>';
     }
 
@@ -331,7 +293,7 @@
 			if (!isset($questions[$i])) {
 				print_simple_box_start('center', '90%');
 				echo '<strong><font size="+1">' . $number . '</font></strong><br />';
-				notify(get_string('errormissingquestion', 'game', $i));
+				notify(get_string('errormissingquestion', 'quiz', $i));
 				print_simple_box_end();
 				$number++; // Just guessing that the missing question would have lenght 1
 				continue;
@@ -367,5 +329,3 @@
 			$number += $questions[$i]->length;
 		}
 	}
-
-?>

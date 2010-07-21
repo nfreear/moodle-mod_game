@@ -1,4 +1,4 @@
- <?php // $Id: game.php,v 1.13 2010/07/21 20:56:55 bdaloukas Exp $
+<?php // $Id: game.php,v 1.14 2010/07/21 21:00:12 bdaloukas Exp $
        // translated by Vasilis Daloukas
 
 //bookquiz/importodt.php

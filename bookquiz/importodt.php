@@ -1,11 +1,11 @@
-<?php // $Id: importodt.php,v 1.1 2008/03/26 17:40:39 arborrow Exp $
+<?php // $Id: importodt.php,v 1.2 2010/07/21 10:57:37 bdaloukas Exp $
 /**
  * This is a very rough importer for odt
  * 
  * The script supports book
  * Is based on class  office  from http://www.phpclasses.org/browse/package/2586.html
  *
- * @version $Id: importodt.php,v 1.1 2008/03/26 17:40:39 arborrow Exp $
+ * @version $Id: importodt.php,v 1.2 2010/07/21 10:57:37 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
  **/
@@ -35,8 +35,8 @@
 		{  // Valid file is found            
             if ( readdata( $course->id, 'game', $dirtemp, $r_levels, $r_titles, $r_texts, $dirfordelete)) 
 			{  // first try to reall all of the data in
-				$subchapter = ($_POST[ 'subchapter'] != 0);
-				$overwrite = ((int )$_POST[ 'overwrite'] != 0);
+                $subchapter = optional_param('subchapter', 0, PARAM_BOOL);
+                $overwrite = optional_param('overwrite', 0, PARAM_BOOL);
 				if( $overwrite){
 					game_bookquiz_deletebook( $course->id, $bookid);
 				}				

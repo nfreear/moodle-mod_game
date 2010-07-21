@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.6 2010/07/20 21:03:40 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.7 2010/07/21 10:57:37 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.6 2010/07/20 21:03:40 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.7 2010/07/21 10:57:37 bdaloukas Exp $
  * @package game
  **/
 
@@ -232,8 +232,5 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 		$score = $correctletters / $len;
 		game_update_queries( $game, $attempt, $rec, $score, $guess);
 	}
-
-
-
 }
 

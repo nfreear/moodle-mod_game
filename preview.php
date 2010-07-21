@@ -1,14 +1,14 @@
-<?php  // $Id: preview.php,v 1.5 2010/07/17 19:03:22 bdaloukas Exp $
+<?php  // $Id: preview.php,v 1.6 2010/07/21 10:57:37 bdaloukas Exp $
 /**
  * This page shows info about an user's attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: preview.php,v 1.5 2010/07/17 19:03:22 bdaloukas Exp $
+ * @version $Id: preview.php,v 1.6 2010/07/21 10:57:37 bdaloukas Exp $
  * @package game
  **/
  
     require_once("../../config.php");
-    require_once("$CFG->dirroot/lib/questionlib.php");
+    require_once("$CFG->libdir/questionlib.php");
     require_once("$CFG->dirroot/question/type/shortanswer/questiontype.php");
     require_once("lib.php");
     require_once("locallib.php");
@@ -84,11 +84,8 @@
           "timestart, timefinish, timelastattempt, score, ga.lastip, ga.lastremotehost";
             
         $count = count_records_select( $table, $select, 'COUNT( *)');
-        $limitfrom = 0;
         $maxlines = 20;
-        if (array_key_exists( 'limitfrom', $_GET)) {
-            $limitfrom = $_GET[ 'limitfrom'];
-        }
+        $limitfrom = optional_param('limitfrom', 0, PARAM_INT);
         $recslimitfrom = $recslimitnum = '';
         if( $count > $maxlines){
             $recslimitfrom = ( $limitfrom ? $limitfrom * $maxlines : '');

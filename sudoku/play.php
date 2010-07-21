@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.6 2010/07/16 21:05:25 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.7 2010/07/21 10:57:37 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -556,14 +556,9 @@ function game_sudoku_check_glossaryentries($id, $game, $attempt, $sudoku, $finis
         error(get_string('noglossaryentriesfound', 'game'));
     }
     foreach($entries as $entry) {
-        //TODO: fix this $_POST
-        if( !array_key_exists('resp'.$entry->id, $_POST)){
+        if(!$answer = optional_param('resp'.$entry->id, '', PARAM_TEXT))
             continue;
-        }
-		$answer = $_POST['resp'.$entry->id]; 
-		if($answer == ''){
-			continue;
-		}
+
 		if(game_upper($entry->concept) != game_upper($answer)){
 			continue;
 		}
@@ -585,7 +580,7 @@ function game_sudoku_check_glossaryentries($id, $game, $attempt, $sudoku, $finis
 
 
 //this is the last function after submiting the answers.
-function game_sudoku_check_last($id, $game, $attempt, $sudoku, $finishattempto){
+function game_sudoku_check_last($id, $game, $attempt, $sudoku, $finishattempt){
 	global $CFG;
 	
 	$correct = get_field_select('game_queries', 'COUNT(*) AS c', "attemptid=$attempt->id AND score > 0.9");

@@ -1,15 +1,15 @@
-<?php  // $Id: review.php,v 1.3 2008/10/28 22:34:07 bdaloukas Exp $
+<?php  // $Id: review.php,v 1.4 2010/07/21 10:57:37 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.3 2008/10/28 22:34:07 bdaloukas Exp $
+* @version $Id: review.php,v 1.4 2010/07/21 10:57:37 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
 
     require_once("../../config.php");
     require_once("locallib.php");
-    require_once("../../lib/questionlib.php");
+    require_once($CFG->libdir."questionlib.php");
 
     $attempt = required_param('attempt', PARAM_INT);    // A particular attempt ID for review
     $page = optional_param('page', 0, PARAM_INT); // The required page

@@ -1,17 +1,17 @@
-<?php  // $Id: print.php,v 1.1 2008/11/06 23:16:45 bdaloukas Exp $
+<?php  // $Id: print.php,v 1.2 2010/07/21 10:57:37 bdaloukas Exp $
 /**
  * This page export the game to html
  * 
  * @author  bdaloukas
- * @version $Id: print.php,v 1.1 2008/11/06 23:16:45 bdaloukas Exp $
+ * @version $Id: print.php,v 1.2 2010/07/21 10:57:37 bdaloukas Exp $
  * @package game
  **/
     require_once("../../config.php");
     require_once("lib.php");
     require_once("locallib.php");
     
-    $id = $_GET[ 'id'];
-    $gameid = $_GET[ 'gameid'];
+    $id = required_param('id', PARAM_INT);
+    $gameid = required_param('gameid', PARAM_INT);
 
     $game = get_record_select( 'game', "id=$gameid");
     

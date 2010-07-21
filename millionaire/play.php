@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.16 2009/09/12 08:12:56 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.17 2010/07/21 10:57:37 bdaloukas Exp $
 /**
  * This files plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.16 2009/09/12 08:12:56 bdaloukas Exp $
+ * @version $Id: play.php,v 1.17 2010/07/21 10:57:37 bdaloukas Exp $
  * @package game
  **/
 
@@ -39,6 +39,10 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire)
 function game_millionaire_play( $id, $game, $attempt, $millionaire)
 {
 	global $CFG;
+    $help5050 = optional_param('Help5050_x', 0, PARAM_INT);
+    $helptelephone = optional_param('HelpTelephone_x', 0, PARAM_INT);
+    $helppeople = optional_param('HelpPeople_x', 0, PARAM_INT);
+    $quit =  optional_param('Quit_x', 0, PARAM_INT);
 	
 	if( $millionaire->queryid){
 		$query = get_record( 'game_queries', 'id', $millionaire->queryid);
@@ -47,38 +51,37 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire)
 		$query = new StdClass;
 	}
     
-    if( array_key_exists( 'buttons', $_POST))
-        $buttons = $_POST[ 'buttons'];
-    else
-        $buttons = 0;
-        
+    $buttons = optional_param('buttons', 0, PARAM_INT);
+
     $found = 0;
     for($i=1; $i <= $buttons; $i++){
         $letter = substr( 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', $i-1, 1);
-    	if( array_key_exists( 'btAnswer'.$letter, $_POST) or array_key_exists( "btAnswer{$letter}1", $_POST)){
+        $bt = optional_param('btAnswer'.$letter, 0, PARAM_BOOL);
+        $bt1 = optional_param("btAnswer{$letter}1", 0, PARAM_BOOL);
+        if( !empty($bt) or !empty($bt1)){
 	    	game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, $i);
 	    	$found = 1;
 	    }
 	}
 		
-	if( $found == 1)
-	    ;//nothing
-	else if( array_key_exists( "Help5050_x", $_POST))
-		game_millionaire_OnHelp5050( $game, $id,  $millionaire, $game, $query);
-	else if( array_key_exists( "HelpTelephone_x", $_POST))
-		game_millionaire_OnHelpTelephone( $game, $id, $millionaire, $query);
-	else if( array_key_exists( "HelpPeople_x", $_POST))
-		game_millionaire_OnHelpPeople( $game, $id, $millionaire, $query);
-	else if( array_key_exists( "Quit_x", $_POST))
-		game_millionaire_OnQuit( $id,  $game, $attempt, $query);
-    else
-    {
-      $millionaire->state = 0;
-      $millionaire->grade = 1;
-      
-      game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire);
+	if($found != 1){
+        if( !empty($help5050))
+            game_millionaire_OnHelp5050( $game, $id,  $millionaire, $game, $query);
+        else if( !empty($helptelephone))
+            game_millionaire_OnHelpTelephone( $game, $id, $millionaire, $query);
+        else if( !empty($helppeople))
+            game_millionaire_OnHelpPeople( $game, $id, $millionaire, $query);
+        else if( !empty($quit))
+            game_millionaire_OnQuit( $id,  $game, $attempt, $query);
+        else
+        {
+            $millionaire->state = 0;
+            $millionaire->grade = 1;
+
+            game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire);
+        }
     }
-  }
+}
   
 
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aAnswer, $info)

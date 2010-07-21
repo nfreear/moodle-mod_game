@@ -1,4 +1,6 @@
-<?php  // $Id: play.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.4 2010/07/21 10:57:37 bdaloukas Exp $
+
+// This files plays the game "Book with Questions"
 
 function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid=0)
 {	
@@ -377,7 +379,7 @@ function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz)
 			error( "Can't compute next chapter");
 		}
 		$scorequestion = 1;
-		$scoreattempt = $_POST[ 'scoreattempt'];
+        $scoreattempt = required_param('scoreattempt', PARAM_INT);
 		
 		break;
     }

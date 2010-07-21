@@ -1,4 +1,4 @@
-<?php  // $Id: view.php,v 1.4 2010/07/21 20:56:54 bdaloukas Exp $
+<?php  // $Id: view.php,v 1.5 2010/07/21 21:32:01 bdaloukas Exp $
 
 // This page prints a particular instance of game
 
@@ -61,8 +61,6 @@
     if ($edit != -1 and $PAGE->user_allowed_editing()) {
         $USER->editing = $edit;
     }
-
-    //only check pop ups if the user is not a teacher, and popup is set
 
     if(function_exists('build_navigation')){
         //for version 1.9
@@ -156,12 +154,7 @@
         }
 
         $url = "review.php?q=$game->id&amp;attempt=$attempt->id";
-        if ($game->popup) {
-            $windowoptions = "left=0, top=0, channelmode=yes, fullscreen=yes, scrollbars=yes, resizeable=no, directories=no, toolbar=no, titlebar=no, location=no, status=no, menubar=no";
-            return link_to_popup_window('/mod/game/' . $url, 'gamepopup', $linktext, '+window.screen.height+', '+window.screen.width+', '', $windowoptions, true);
-        } else {
-            return "<a href='$url'>$linktext</a>";
-        }
+        return "<a href='$url'>$linktext</a>";
     }
 
 	function game_view_capability_view($game){
@@ -410,17 +403,8 @@
 				$strconfirmstartattempt =  '';
 			}
 
-			// Prepare options depending on whether the game should be a popup.
-			if (!empty($game->popup)) {
-				$window = 'gamepopup';
-				$windowoptions = "left=0, top=0, height='+window.screen.height+', " .
-						"width='+window.screen.width+', channelmode=yes, fullscreen=yes, " .
-						"scrollbars=yes, resizeable=no, directories=no, toolbar=no, " .
-						"titlebar=no, location=no, status=no, menubar=no";
-			} else {
-				$window = '_self';
-				$windowoptions = '';
-			}
+		    $window = '_self';
+			$windowoptions = '';
 
 			// Determine the URL to use.
 			$attempturl = "attempt.php?id=$cm->id";

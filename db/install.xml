@@ -31,9 +31,8 @@
             <FIELD NAME="bottomtext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="toptext" NEXT="grademethod" />
             <FIELD NAME="grademethod" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="bottomtext" NEXT="grade" />
             <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grademethod" NEXT="decimalpoints" />
-            <FIELD NAME="decimalpoints" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grade" NEXT="popup" />
-            <FIELD NAME="popup" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="decimalpoints" NEXT="review" />
-            <FIELD NAME="review" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="popup" NEXT="attempts" />
+            <FIELD NAME="decimalpoints" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grade" NEXT="review" />
+            <FIELD NAME="review" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="decimalpoints" NEXT="attempts" />
             <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="review" NEXT="glossaryid2"/>
             <FIELD NAME="glossaryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="attempts" NEXT="glossarycategoryid2"/>
             <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="glossaryid2" NEXT="language" />

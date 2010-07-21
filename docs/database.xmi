@@ -55,7 +55,6 @@
         <UML:Attribute isSpecification="false" visibility="private" xmi.id="taysnxnLok0L" type="cY8yE8UEqyvS" name="*grademethod" />
         <UML:Attribute isSpecification="false" visibility="private" xmi.id="6du0emCChmzM" type="wzKR3Lxs81Ah" name="*grade" />
         <UML:Attribute isSpecification="false" visibility="private" xmi.id="hOAAe0yFdvgq" type="cY8yE8UEqyvS" name="*decimalpoints" />
-        <UML:Attribute isSpecification="false" visibility="private" xmi.id="KteICcNaSBFg" type="fYnIKSZZRY0C" name="*popup" />
         <UML:Attribute isSpecification="false" visibility="private" xmi.id="bmGv1MH7UBRk" type="wzKR3Lxs81Ah" name="*review" />
         <UML:Attribute isSpecification="false" visibility="private" xmi.id="TRhZ3HxAobIE" type="wzKR3Lxs81Ah" name="*attempts" />
        </UML:Classifier.feature>

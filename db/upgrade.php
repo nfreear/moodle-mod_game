@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.20 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.21 2010/07/21 21:32:01 bdaloukas Exp $
 
 // This file keeps track of upgrades to 
 // the lesson module
@@ -1421,6 +1421,12 @@ function xmldb_game_upgrade($oldversion=0) {
     /// Launch add field format
         $result = $result && add_field($table, $field);
 	}
+
+  if ($result && $oldversion < 2010072201) {
+        $table = new XMLDBTable('game');
+        $field = new XMLDBField('popup');
+        $result = $result && drop_field($table, $field, false);
+    }
 
 
     

@@ -1,8 +1,8 @@
-<?php  // $Id: review.php,v 1.5 2010/07/21 20:56:54 bdaloukas Exp $
+<?php  // $Id: review.php,v 1.6 2010/07/21 21:32:01 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.5 2010/07/21 20:56:54 bdaloukas Exp $
+* @version $Id: review.php,v 1.6 2010/07/21 21:32:01 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
@@ -39,7 +39,6 @@
     $coursecontext = get_context_instance( CONTEXT_COURSE, $cm->course);
     $isteacher = isteacher( $game->course, $USER->id);
     $options = game_get_reviewoptions( $game, $attempt, $context);
-    $popup = $isteacher ? 0 : $game->popup; // Controls whether this is shown in a javascript-protected window.
 
     add_to_log($course->id, "game", "review", "review.php?id=$cm->id&amp;attempt=$attempt->id", "$game->id", "$cm->id");
 
@@ -53,15 +52,10 @@
     $strtimetaken     = get_string('timetaken', 'game');
     $strtimecompleted = get_string('completedon', 'game');
 
-    if (!empty($popup)) {
-        define('MESSAGE_WINDOW', true);  // This prevents the message window coming up
-        print_header($course->shortname.': '.format_string($game->name), '', '', '', '', false, '', '', false, '');
-        /// Include Javascript protection for this page
-        include('protect_js.php');
-    } else {
-        $strupdatemodule = has_capability('moodle/course:manageactivities', $coursecontext)
-                    ? update_module_button($cm->id, $course->id, get_string('modulename', 'game'))
-                    : "";
+
+    $strupdatemodule = has_capability('moodle/course:manageactivities', $coursecontext)
+            ? update_module_button($cm->id, $course->id, get_string('modulename', 'game'))
+            : "";
                  
     $strgames = get_string('modulenameplural', 'game');
     $strgame  = get_string('modulename', 'game');
@@ -83,8 +77,6 @@
                   navmenu($course, $cm));        
     }                 
                  
-                 
-    }
     echo '<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>'; // for overlib
 /// Print heading and tabs if this is part of a preview
     //if (has_capability('mod/game:preview', $context)) {
@@ -241,9 +233,7 @@
         include('attempt_close_js.php');
     }
 
-    if (empty($popup)) {
-        print_footer($course);
-    }
+    print_footer($course);
 	
 	function game_compute_states( $game, $questions)
 	{

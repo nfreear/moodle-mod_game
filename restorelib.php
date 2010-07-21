@@ -1,4 +1,4 @@
-<?php //$Id: restorelib.php,v 1.3 2008/10/11 19:12:35 bdaloukas Exp $
+<?php //$Id: restorelib.php,v 1.4 2010/07/21 21:32:01 bdaloukas Exp $
     //This php script contains all the stuff to restore game mods
 
 // Todo:
@@ -47,7 +47,7 @@
 
 			$fields = array( 'name', 'sourcemodule', 'quizid', 'glossaryid', 'glossarycategoryid', 'questioncategoryid',
 					'bookid', 'gameinputid', 'gamekind', 'param1', 'param2', 'param3', 'param4', 'param5', 'param6', 'param7', 'param8',
-					'timemodified', 'bottomtext', 'grademethod', 'grade', 'decimalpoints', 'popup', 'review', 'attempts',
+					'timemodified', 'bottomtext', 'grademethod', 'grade', 'decimalpoints', 'review', 'attempts',
 					'glossaryid2', 'glossarycategoryid2', 'language');
 			game_restore_record( $mod_info, $game, $fields);
 			

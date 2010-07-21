@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml.php,v 1.9 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: exporthtml.php,v 1.10 2010/07/21 11:32:53 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.9 2010/07/16 21:05:22 bdaloukas Exp $
+ * @version $Id: exporthtml.php,v 1.10 2010/07/21 11:32:53 bdaloukas Exp $
  * @package game
  **/
  
@@ -69,8 +69,7 @@
         $filename = $html->filename . '.htm';
         
         file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $output_string);
-                        
-        echo "$ret<a href=\"{$CFG->wwwroot}/file.php/{$game->course}/export/$filename\">{$filename}</a>";
+        game_send_stored_file($destdir.'/'.$filename);
     }
     
     function game_export_printheader( $title, $showbody=true)
@@ -142,8 +141,7 @@
 	    }
 		
 		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
-                        
-        echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filezip\">{$filezip}</a>";
+        game_send_stored_file($filezip);
     }
 
 
@@ -196,6 +194,5 @@
 	    }
 		
 		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');	
-                        
-        echo "$ret<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$filezip\">{$filezip}</a>";
+        game_send_stored_file($filezip);
     }

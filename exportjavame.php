@@ -1,9 +1,9 @@
-<?php  // $Id: exportjavame.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
+<?php  // $Id: exportjavame.php,v 1.11 2010/07/21 11:32:53 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.10 2010/07/16 21:05:22 bdaloukas Exp $
+ * @version $Id: exportjavame.php,v 1.11 2010/07/21 11:32:53 bdaloukas Exp $
  * @package game
  **/
     
@@ -67,20 +67,8 @@
         }
         
         $file = ($filejar != '' ? $filejar : $filezip);
-        if( $javame->name == '')
-            $javame->name = $file;
-?>        
-<HTML><HEAD>
-<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<META HTTP-EQUIV="Expires" CONTENT="-1">
-</HEAD><BODY>
-<?php
-    echo "<a href=\"{$CFG->wwwroot}/file.php/$courseid/export/$file\">{$javame->name}</a>";
-?>
-</BODY>
-</HTML>
-<?php
-        
+        $fullfile = "{$CFG->dataroot}/$courseid/export/$file";
+        game_send_stored_file( $fullfile);
     }
     
     function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $maxwidth, $maxheight){

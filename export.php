@@ -1,15 +1,16 @@
-<?php  // $Id: export.php,v 1.13 2010/07/21 10:37:09 bdaloukas Exp $
+<?php  // $Id: export.php,v 1.14 2010/07/21 11:32:53 bdaloukas Exp $
 /**
  * This page exports a game to a html or jar file
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.13 2010/07/21 10:37:09 bdaloukas Exp $
+ * @version $Id: export.php,v 1.14 2010/07/21 11:32:53 bdaloukas Exp $
  * @package game
  **/
 
 require( '../../config.php');
 require_once ($CFG->dirroot.'/lib/formslib.php');
 require( 'locallib.php');
+ob_start();
 require( 'header.php');
 
 if( !isteacher( $game->course, $USER->id)){
@@ -76,7 +77,7 @@ class mod_game_exporthtml_form extends moodleform {
     }
 
     function validation($data, $files) {
-        global $CFG, $USER, $DB;
+        global $CFG, $USER;
         $errors = parent::validation($data, $files);
 
 
@@ -112,7 +113,7 @@ class mod_game_exporthtml_form extends moodleform {
 class mod_game_exportjavame_form extends moodleform {
 
     function definition() {
-        global $CFG, $DB, $game;
+        global $CFG, $game;
 
         $mform = $this->_form;
         $javame = $this->_customdata['javame'];
@@ -158,7 +159,7 @@ class mod_game_exportjavame_form extends moodleform {
     }
 
     function validation($data, $files) {
-        global $CFG, $USER, $DB;
+        global $CFG, $USER;
         $errors = parent::validation($data, $files);
 
 
@@ -195,7 +196,7 @@ class mod_game_exportjavame_form extends moodleform {
 
 
 // create form and set initial data
-if( $target == 'html'){
+if( $target == 'html'){    
     $html = get_record_select( 'game_export_html', 'id='.$game->id);
     if( $html == false){
         unset( $html);
@@ -220,6 +221,7 @@ if( $target == 'html'){
 
 
 if ($mform->is_cancelled()){
+    ob_end_flush();
     if ($id){
         redirect("view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
     } else {
@@ -229,6 +231,7 @@ if ($mform->is_cancelled()){
 } else if ($entry = $mform->get_data()) {
     $mform->export();
 }else{
+    ob_end_flush();
     $mform->display();
 }
 
@@ -260,7 +263,7 @@ print_footer();
                 
         zip_files( $fullsrcfiles, $filezip);
             
-        return (file_exists( $filezip) ? $filename : '');
+        return (file_exists( $filezip) ? $filezip : '');
     }
 
     function game_export_createtempdir(){
@@ -285,3 +288,21 @@ print_footer();
             $i++;
         }
     }
+
+function game_send_stored_file($file) {
+    if (file_exists($file)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        ob_clean();
+        flush();
+        readfile($file);
+        exit;
+    }else
+        die("file does not exists");
+}

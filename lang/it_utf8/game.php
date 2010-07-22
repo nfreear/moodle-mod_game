@@ -1,6 +1,6 @@
- <?PHP // $Id: game.php,v 1.3 2010/07/21 21:17:11 bdaloukas Exp $
-       // game.php - created with Moodle 1.9.5
-       // translated by Aristogeiton Ferentinos and Myrto Papakonstantinoy
+<?php // $Id: game.php,v 1.4 2010/07/22 18:23:25 bdaloukas Exp $
+      // game.php - created with Moodle 1.9.5
+      // translated by Aristogeiton Ferentinos and Myrto Papakonstantinoy
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'inseriozine da un archivio OpenOffice(odt)';

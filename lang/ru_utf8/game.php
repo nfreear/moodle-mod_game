@@ -1,4 +1,4 @@
-<?PHP // $Id: game.php,v 1.4 2010/07/21 21:17:11 bdaloukas Exp $ 
+<?php // $Id: game.php,v 1.5 2010/07/22 18:23:25 bdaloukas Exp $ 
       // game.php - created with Moodle 1.6.3
       // translated by Ивченко Анатолий
 

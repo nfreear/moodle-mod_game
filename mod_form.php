@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.3 2010/07/21 20:56:54 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.4 2010/07/22 18:45:17 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -191,7 +191,7 @@ class mod_game_mod_form extends moodleform_mod {
 // Crossword options
 
         if($gamekind == 'cross'){ 
-            $mform->addElement('header', 'cross', 'Crossword Options');
+            $mform->addElement('header', 'cross', get_string( 'cross_options', 'game'));
             $mform->addElement('text', 'param1', get_string('cross_maxcols', 'game'));
             $mform->setType('param1', PARAM_INT);
             $mform->addElement('text', 'param2', get_string('cross_maxwords', 'game'));
@@ -207,7 +207,7 @@ class mod_game_mod_form extends moodleform_mod {
 // Cryptex options
 
         if($gamekind == 'cryptex'){
-            $mform->addElement('header', 'cryptex', 'Cryptex Options');
+            $mform->addElement('header', 'cryptex', get_string( 'cryptex_options', 'game'));
             $mform->addElement('text', 'param1', get_string('cryptex_maxcols', 'game'));
             $mform->setType('param1', PARAM_INT);
             $mform->addElement('text', 'param2', get_string('cryptex_maxwords', 'game'));
@@ -221,7 +221,7 @@ class mod_game_mod_form extends moodleform_mod {
 // Millionaire options
 
         if($gamekind == 'millionaire'){
-            $mform->addElement('header', 'millionaire', 'Millionare Options');
+            $mform->addElement('header', 'millionaire', get_string( 'millionaire_options', 'game'));
             $mform->addElement('text', 'param8', get_string('millionaire_background', 'game'));
             $mform->setDefault('param8', 0x408080);
             $mform->addElement('selectyesno', 'shuffle', get_string('millionaire_shuffle','game'));
@@ -231,7 +231,7 @@ class mod_game_mod_form extends moodleform_mod {
 // Sudoku options
 
         if($gamekind == 'sudoku'){
-            $mform->addElement('header', 'sudoku', 'Sudoku Options');
+            $mform->addElement('header', 'sudoku', get_string( 'sudoku_options', 'game'));
             $mform->addElement('text', 'param2', get_string('sudoku_maxquestions', 'game'));
         }
 
@@ -239,7 +239,7 @@ class mod_game_mod_form extends moodleform_mod {
 // Snakes and Ladders options
 
         if($gamekind == 'snakes'){
-            $mform->addElement('header', 'snakes', 'Snakes and Ladders Options');
+            $mform->addElement('header', 'snakes', get_string( 'snakes_options', 'game'));
             $snakesandladdersbackground = array();
             if($recs = get_records_select( 'game_snakes_database', "", 'id,name')){
                 foreach( $recs as $rec){
@@ -262,7 +262,7 @@ class mod_game_mod_form extends moodleform_mod {
 // Hidden Picture options
 
         if($gamekind == 'hiddenpicture'){
-            $mform->addElement('header', 'hiddenpicture', 'Hidden Picture Options');
+            $mform->addElement('header', 'hiddenpicture', get_string( 'hiddenpicture_options', 'game'));
             $mform->addElement('text', 'param1', get_string('hiddenpicture_across', 'game'));
             $mform->setType('param1', PARAM_INT);
             $mform->addElement('text', 'param2', get_string('hiddenpicture_down', 'game'));
@@ -276,7 +276,7 @@ class mod_game_mod_form extends moodleform_mod {
             }
             $mform->addElement('select', 'glossaryid2', get_string('hiddenpicture_pictureglossary', 'game'), $a);
 
-if( count( $a) == 0)
+            if( count( $a) == 0)
                 $select = 'glossaryid=-1';
             else if( count( $a) == 1)
                 $select = 'glossaryid='.$rec->id;
@@ -316,9 +316,6 @@ if( count( $a) == 0)
 
 //---------------------------------------------------------------------------
         $features = new stdClass;
-//        $features->groups = true;
-//        $features->groupings = true;
-//        $features->groupmembersonly = true;
         $this->standard_coursemodule_elements($features);
 
 //---------------------------------------------------------------------------

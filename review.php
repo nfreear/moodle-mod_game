@@ -1,8 +1,8 @@
-<?php  // $Id: review.php,v 1.6 2010/07/21 21:32:01 bdaloukas Exp $
+<?php  // $Id: review.php,v 1.7 2010/07/22 18:45:17 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.6 2010/07/21 21:32:01 bdaloukas Exp $
+* @version $Id: review.php,v 1.7 2010/07/22 18:45:17 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
@@ -48,7 +48,7 @@
     $strreview  = get_string('review', 'game');
     $strscore  = get_string('score', 'game');
     $strgrade  = get_string('grade');
-    $strbestgrade  = get_string('bestgrade', 'quizre');
+    $strbestgrade  = get_string('bestgrade', 'quiz');
     $strtimetaken     = get_string('timetaken', 'game');
     $strtimecompleted = get_string('completedon', 'game');
 

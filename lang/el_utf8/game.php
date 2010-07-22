@@ -1,4 +1,4 @@
-<?php // $Id: game.php,v 1.15 2010/07/21 21:03:06 bdaloukas Exp $
+<?php // $Id: game.php,v 1.16 2010/07/22 18:45:17 bdaloukas Exp $
       // translated by Vasilis Daloukas
 
 //bookquiz/importodt.php
@@ -182,6 +182,7 @@ $string[ 'cross_layout0'] = 'Οι ορισμοί κάτω από το σταυρ
 $string[ 'cross_layout1'] = 'Οι ορισμοί στα δεξιά του σταυρολέξου';
 $string[ 'cross_maxcols'] = 'Μέγιστος αριθμός γραμμών/στηλών στο σταυρόλεξο';
 $string[ 'cross_maxwords'] = 'Μέγιστος αριθμός λέξεων στο σταυρόλεξο';
+$string[ 'cross_options'] = 'Παράμετροι Σταυρολέξου';
 $string[ 'cryptex_maxcols'] = 'Μέγιστος αριθμός γραμμών/στηλών στο κρυπτόλεξο';
 $string[ 'cryptex_maxtries'] = 'Μέγιστος αριθμός προσπαθειών';
 $string[ 'cryptex_maxwords'] = 'Μέγιστος αριθμός λέξεων στο κρυπτόλεξο';
@@ -202,12 +203,15 @@ $string[ 'headerfooter_options'] = 'Παράμετροι κεφαλίδας/υπ
 $string[ 'hiddenpicture_across'] = "Αριθμός κελιών οριζόντια";
 $string[ 'hiddenpicture_down'] = "Αριθμός κελιών κατακόρυφα";
 $string[ 'hiddenpicture_height'] = 'Ορισμός ύψους εικόνας';
+$string[ 'hiddenpicture_options'] = 'Παράμετροι Κρυμμένης Εικόνας';
 $string[ 'hiddenpicture_pictureglossary'] = 'Το λεξικό για την κυρίως ερώτηση';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'Η κατηγορία λεξικού για την κυρίως ερώτηση';
 $string[ 'hiddenpicture_width'] = 'Ορισμός πλάτους εικόνας';
 $string[ 'millionaire_background'] = 'Χρώμα φόντου';
+$string[ 'millionaire_options'] = 'Παράμετροι Εκατομμυριούχου';
 $string[ 'millionaire_shuffle'] = 'Ανακάτεμα ερωτήσεων';
 $string[ 'snakes_background'] = 'Πίστα';
+$string[ 'snakes_options'] = 'Παράμετροι για το Φιδάκι';
 $string[ 'sourcemodule'] = 'Πηγή ερωτήσεων';
 $string[ 'sourcemodule_book'] = 'Διαλέξτε βιβλίο';
 $string[ 'sourcemodule_glossary'] = 'Διαλέξτε λεξικό';
@@ -217,6 +221,7 @@ $string[ 'sourcemodule_question'] = 'Ερωτήσεις';
 $string[ 'sourcemodule_questioncategory'] = 'Διαλέξτε κατηγορία ερωτήσεων';
 $string[ 'sourcemodule_quiz'] = 'Διαλέξτε κουίζ';
 $string[ 'sudoku_maxquestions'] = 'Μέγιστος αριθμός ερωτήσεων';
+$string[ 'sudoku_options'] = 'Παράμετροι Sudoku';
 $string[ 'toptext'] = 'Κείμενο στο πάνω μέρος της σελίδας';
 
 //preview.php
@@ -258,4 +263,3 @@ $string[ 'marks'] = 'Βαθμοί';
 $string[ 'nomoreattempts'] = 'Δεν επιτρέπονται άλλες προσπάθειες';
 $string[ 'reattemptgame'] = 'Προσπάθεια παιχνιδιού ξανά';
 $string[ 'yourfinalgradeis'] = 'Ο τελικός σου βαθμός γι\' αυτό το παιχνίδι είναι $a';
-

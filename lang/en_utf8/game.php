@@ -1,4 +1,4 @@
-<?php // $Id: game.php,v 1.22 2010/07/21 21:03:06 bdaloukas Exp $
+<?php // $Id: game.php,v 1.23 2010/07/22 18:45:17 bdaloukas Exp $
       // translated by Vasilis Daloukas
 
 //bookquiz/importodt.php
@@ -119,6 +119,7 @@ $string[ 'sudoku_creating'] = 'Creating <b>$a</b> sudoku';
 
 //sudoku/play.php
 $string[ 'cross_new'] = 'New game';
+$string[ 'noglossaryentriesfound'] = 'No glossary entries found';
 $string[ 'sudoku_emptydatabase'] = 'The database with sudokus is empty. Please run $a to create it';
 $string[ 'sudoku_finishattemptbutton'] = 'End of sudoku game';
 $string[ 'sudoku_guessnumber'] = 'Guess the correct number';
@@ -180,9 +181,11 @@ $string[ 'cross_layout0'] = 'Phrases on the bottom of cross';
 $string[ 'cross_layout1'] = 'Phrases on the right of cross';
 $string[ 'cross_maxcols'] = 'Maximum number of cols of crossword';
 $string[ 'cross_maxwords'] = 'Maximum number of words of crossword';
+$string[ 'cross_options'] = 'Crossword options';
 $string[ 'cryptex_maxcols'] = 'Maximum number of cols/rows in cryptex';
 $string[ 'cryptex_maxtries'] = 'Max tries';
 $string[ 'cryptex_maxwords'] = 'Maximum number of words in cryptex';
+$string[ 'cryptex_options'] = 'Cryptex options';
 $string[ 'gradeaverage'] = 'Average grade';
 $string[ 'gradehighest'] = 'Highest grade';
 $string[ 'grademethod'] = 'Grading method';
@@ -191,19 +194,25 @@ $string[ 'hangman_allowsub'] = 'Allow the symbol - in words';
 $string[ 'hangman_imageset'] = 'Select the images of hangman';
 $string[ 'hangman_language'] = 'Language of words';
 $string[ 'hangman_maxtries'] = 'Number of words per game';
+$string[ 'hangman_options'] = 'Hangman options';
 $string[ 'hangman_showcorrectanswer'] = 'Show the correct answer after the end';
 $string[ 'hangman_showfirst'] = 'Show first letter of hangman';
 $string[ 'hangman_showlast'] = 'Show last letter of hangman';
 $string[ 'hangman_showquestion'] = 'Show the questions ?';
+$string[ 'headerfooter_options'] = 'Header/Footer options';
 $string[ 'hiddenpicture_across'] = 'Cells horizontal';
 $string[ 'hiddenpicture_down'] = 'Cells down';
 $string[ 'hiddenpicture_height'] = 'Set height of picture to';
+$string[ 'hiddenpicture_options'] = '\'Hidden Picture\' options';
 $string[ 'hiddenpicture_pictureglossary'] = 'The glossary for main question and picture';
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'The category of glossary for main question';
 $string[ 'hiddenpicture_width'] = 'Set width of picture to';
 $string[ 'millionaire_background'] = 'Background color';
+$string[ 'millionaire_options'] = 'Millioanaire' options;
 $string[ 'millionaire_shuffle'] = 'Randomize questions';
 $string[ 'snakes_background'] = 'Background';
+$string[ 'snakes_options'] = '\'Snakes and Ladders\' options';
+
 $string[ 'sourcemodule'] = 'Source of questions';
 $string[ 'sourcemodule_book'] = 'Select a book';
 $string[ 'sourcemodule_glossary'] = 'Select glossary';
@@ -213,6 +222,7 @@ $string[ 'sourcemodule_question'] = 'Questions';
 $string[ 'sourcemodule_questioncategory'] = 'Select question category';
 $string[ 'sourcemodule_quiz'] = 'Select quiz';
 $string[ 'sudoku_maxquestions'] = 'Maximum number of questions';
+$string[ 'sudoku_options'] = 'Sudoku options';
 $string[ 'toptext'] = 'Text at the top';
 
 //preview.php
@@ -254,4 +264,3 @@ $string[ 'marks'] = 'Marks';
 $string[ 'nomoreattempts'] = 'No more attempts are allowed';
 $string[ 'reattemptgame'] = 'Reattempt game';
 $string[ 'yourfinalgradeis'] = 'Your final grade for this game is $a.';
-

@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.7 2010/07/21 10:57:37 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.8 2010/07/22 05:50:53 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.7 2010/07/21 10:57:37 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.8 2010/07/22 05:50:53 bdaloukas Exp $
  * @package game
  **/
 
@@ -149,7 +149,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 		}		
 	}
 	
-	$done = ( $restletters = 0 ? true : false);
+	$done = ( $restletters == 0 ? true : false);
 
 	if( $finishattempt == false){
 		if( $onlyshow or $showsolution){

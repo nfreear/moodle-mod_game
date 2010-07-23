@@ -27,15 +27,15 @@
 	    <FIELD NAME="shuffle" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" DEFAULT="1" PREVIOUS="param8" NEXT="timemodified" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="shuffle" NEXT="gameinputid" />
             <FIELD NAME="gameinputid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="timemodified" NEXT="toptext" />
-            <FIELD NAME="toptext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="gameinputid" NEXT="bottomtext" />
-            <FIELD NAME="bottomtext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="toptext" NEXT="grademethod" />
+            <FIELD NAME="toptext" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameinputid" NEXT="bottomtext" />
+            <FIELD NAME="bottomtext" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="toptext" NEXT="grademethod" />
             <FIELD NAME="grademethod" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="bottomtext" NEXT="grade" />
             <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grademethod" NEXT="decimalpoints" />
             <FIELD NAME="decimalpoints" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="grade" NEXT="review" />
-            <FIELD NAME="review" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="decimalpoints" NEXT="attempts" />
-            <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="review" NEXT="glossaryid2"/>
-            <FIELD NAME="glossaryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="attempts" NEXT="glossarycategoryid2"/>
-            <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="glossaryid2" NEXT="language" />
+            <FIELD NAME="review" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="decimalpoints" NEXT="attempts" />
+            <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="review" NEXT="glossaryid2"/>
+            <FIELD NAME="glossaryid2" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="attempts" NEXT="glossarycategoryid2"/>
+            <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossaryid2" NEXT="language" />
             <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossarycategoryid2" NEXT="subcategories" />
             <FIELD NAME="subcategories" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="language"  />
         </FIELDS>
@@ -51,14 +51,14 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="gameid"/>
         <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="userid" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="timestart" />
-        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" ENUM="false" PREVIOUS="userid" NEXT="timefinish"/>
-        <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" ENUM="false" PREVIOUS="timestart" NEXT="timelastattempt"/>
-        <FIELD NAME="timelastattempt" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="timefinish" NEXT="lastip"/>
-        <FIELD NAME="lastip" TYPE="char" LENGTH="30" NOTNULL="false" ENUM="false" PREVIOUS="timelastattempt" NEXT="lastremotehost" />
-        <FIELD NAME="lastremotehost" TYPE="char" LENGTH="50" NOTNULL="false" ENUM="false" PREVIOUS="lastip" NEXT="preview"/>
-        <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="false" ENUM="false" PREVIOUS="lastremotehost" NEXT="attempt" />
-        <FIELD NAME="attempt" TYPE="int" LENGTH="10" NOTNULL="false" ENUM="false" PREVIOUS="preview"  NEXT="score" />
-        <FIELD NAME="score" TYPE="float" NOTNULL="false" ENUM="false" PREVIOUS="attempt" NEXT="attempts" />
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="timefinish"/>
+        <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="timestart" NEXT="timelastattempt"/>
+        <FIELD NAME="timelastattempt" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="timefinish" NEXT="lastip"/>
+        <FIELD NAME="lastip" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="timelastattempt" NEXT="lastremotehost" />
+        <FIELD NAME="lastremotehost" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastip" NEXT="preview"/>
+        <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastremotehost" NEXT="attempt" />
+        <FIELD NAME="attempt" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="preview"  NEXT="score" />
+        <FIELD NAME="score" TYPE="float" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="attempt" NEXT="attempts" />
         <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="score" />
       </FIELDS>
       <KEYS>
@@ -75,8 +75,8 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="gameid"/>
         <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="userid" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="gameid" NEXT="score" />
-        <FIELD NAME="score" TYPE="float" NOTNULL="true" ENUM="false" PREVIOUS="userid" NEXT="timemodified"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" ENUM="false" PREVIOUS="score" />
+        <FIELD NAME="score" TYPE="float" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="score" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -99,14 +99,14 @@
         <FIELD NAME="sourcemodule" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="questionid" />
         <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="sourcemodule" NEXT="glossaryentryid"/>
         <FIELD NAME="glossaryentryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="questionid" NEXT="questiontext"/>
-        <FIELD NAME="questiontext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="glossaryentryid" NEXT="score" />
+        <FIELD NAME="questiontext" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="glossaryentryid" NEXT="score" />
         <FIELD NAME="score" TYPE="float" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="questiontext" NEXT="timelastattempt"/>
         <FIELD NAME="timelastattempt" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="score" NEXT="studentanswer" />
-        <FIELD NAME="studentanswer" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="timelastattempt" NEXT="col" />
+        <FIELD NAME="studentanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="timelastattempt" NEXT="col" />
         <FIELD NAME="col" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="studentanswer" NEXT="row"/>
         <FIELD NAME="row" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="col" NEXT="horizontal"/>
         <FIELD NAME="horizontal" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="row" NEXT="answertext"/>
-        <FIELD NAME="answertext" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="horizontal" NEXT="correct" />
+        <FIELD NAME="answertext" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="horizontal" NEXT="correct" />
         <FIELD NAME="correct" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="answertext" NEXT="attachment"/>
         <FIELD NAME="attachment" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="correct" NEXT="answerid"/>
         <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="attachment" NEXT="tries"/>
@@ -126,14 +126,14 @@
     <TABLE NAME="game_hangman" PREVIOUS="game_queries" NEXT="game_cross" COMMENT="game_hangman">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" NEXT="queryid"/>
-        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" ENUM="false" PREVIOUS="id" NEXT="letters"/>
-        <FIELD NAME="letters" TYPE="char" LENGTH="100" NOTNULL="false" ENUM="false" PREVIOUS="queryid" NEXT="allletters"/>
-        <FIELD NAME="allletters" TYPE="char" LENGTH="100" NOTNULL="false" ENUM="false" PREVIOUS="letters" NEXT="try"/>
-        <FIELD NAME="try" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="allletters" NEXT="maxtries" />
-        <FIELD NAME="maxtries" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="try" NEXT="finishedword" />
-        <FIELD NAME="finishedword" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="maxtries" NEXT="corrects" />
-        <FIELD NAME="corrects" TYPE="int" LENGTH="4" NOTNULL="false" ENUM="false" PREVIOUS="finishedword" NEXT="iscorrect" />
-        <FIELD NAME="iscorrect" TYPE="int" LENGTH="2" NOTNULL="false" ENUM="false" PREVIOUS="corrects" />
+        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="letters"/>
+        <FIELD NAME="letters" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="queryid" NEXT="allletters"/>
+        <FIELD NAME="allletters" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="letters" NEXT="try"/>
+        <FIELD NAME="try" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="allletters" NEXT="maxtries" />
+        <FIELD NAME="maxtries" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="try" NEXT="finishedword" />
+        <FIELD NAME="finishedword" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="maxtries" NEXT="corrects" />
+        <FIELD NAME="corrects" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="finishedword" NEXT="iscorrect" />
+        <FIELD NAME="iscorrect" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="corrects" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -179,8 +179,8 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" NEXT="queryid"/>
         <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="state" />
-        <FIELD NAME="state" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" UNSIGNED="true" ENUM="false" PREVIOUS="queryid" NEXT="level" />
-        <FIELD NAME="level" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" UNSIGNED="true" ENUM="false" PREVIOUS="state"  />
+        <FIELD NAME="state" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="queryid" NEXT="level" />
+        <FIELD NAME="level" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="state"  />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -317,7 +317,7 @@
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="cols"/>
         <FIELD NAME="cols" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="rows" />
         <FIELD NAME="rows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="cols" NEXT="data" />
-        <FIELD NAME="data" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="rows" NEXT="fileboard"/>
+        <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="rows" NEXT="fileboard"/>
         <FIELD NAME="fileboard" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="data" NEXT="direction"/>
         <FIELD NAME="direction" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="fileboard" NEXT="headerx" />
         <FIELD NAME="headerx" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="direction" NEXT="headery" />
@@ -337,8 +337,8 @@
     <TABLE NAME="game_course" PREVIOUS="game_snakes_database" NEXT="game_course_inputs" COMMENT="game_course" >
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="messagewin"/>
-        <FIELD NAME="messagewin" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="id" NEXT="messageloose"/>
-        <FIELD NAME="messageloose" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="messagewin" />
+        <FIELD NAME="messagewin" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="messageloose"/>
+        <FIELD NAME="messageloose" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="messagewin" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -352,7 +352,7 @@
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="course" />
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="sourcemodule" />
         <FIELD NAME="sourcemodule" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="course" NEXT="ids" />
-        <FIELD NAME="ids" TYPE="text" NOTNULL="false" ENUM="false" PREVIOUS="sourcemodule" />
+        <FIELD NAME="ids" TYPE="text" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="sourcemodule" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

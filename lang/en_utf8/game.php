@@ -1,4 +1,4 @@
-<?php // $Id: game.php,v 1.23 2010/07/22 18:45:17 bdaloukas Exp $
+<?php // $Id: game.php,v 1.24 2010/07/23 14:39:32 bdaloukas Exp $
       // translated by Vasilis Daloukas
 
 //bookquiz/importodt.php
@@ -208,7 +208,7 @@ $string[ 'hiddenpicture_pictureglossary'] = 'The glossary for main question and 
 $string[ 'hiddenpicture_pictureglossarycategories'] = 'The category of glossary for main question';
 $string[ 'hiddenpicture_width'] = 'Set width of picture to';
 $string[ 'millionaire_background'] = 'Background color';
-$string[ 'millionaire_options'] = 'Millioanaire' options;
+$string[ 'millionaire_options'] = 'Millioanaire options';
 $string[ 'millionaire_shuffle'] = 'Randomize questions';
 $string[ 'snakes_background'] = 'Background';
 $string[ 'snakes_options'] = '\'Snakes and Ladders\' options';

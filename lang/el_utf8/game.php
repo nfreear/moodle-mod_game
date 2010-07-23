@@ -1,4 +1,4 @@
-<?php // $Id: game.php,v 1.16 2010/07/22 18:45:17 bdaloukas Exp $
+<?php // $Id: game.php,v 1.17 2010/07/23 16:22:51 bdaloukas Exp $
       // translated by Vasilis Daloukas
 
 //bookquiz/importodt.php
@@ -186,6 +186,7 @@ $string[ 'cross_options'] = 'Παράμετροι Σταυρολέξου';
 $string[ 'cryptex_maxcols'] = 'Μέγιστος αριθμός γραμμών/στηλών στο κρυπτόλεξο';
 $string[ 'cryptex_maxtries'] = 'Μέγιστος αριθμός προσπαθειών';
 $string[ 'cryptex_maxwords'] = 'Μέγιστος αριθμός λέξεων στο κρυπτόλεξο';
+$string[ 'cryptex_options'] = 'Παράμετροι κρυπτόλεξου';
 $string[ 'gradeaverage'] = 'Μέσος βαθμός';
 $string[ 'gradehighest'] = 'Ο υψηλότερος βαθμός';
 $string[ 'grademethod'] = 'Μέθοδος βαθμολόγησης';

@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.12 2010/07/21 20:56:54 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.13 2010/07/23 22:59:23 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.12 2010/07/21 20:56:54 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.13 2010/07/23 22:59:23 bdaloukas Exp $
  * @package game
  **/
 
@@ -55,7 +55,9 @@ function game_add_instance($game) {
 	
     # May have to add extra stuff in here #
     
-    $id = insert_record("game", $game);
+    game_before_add_or_update( $game);
+
+    $id = insert_record('game', $game);
     
     $game = get_record_select( 'game', "id=$id");
     
@@ -105,15 +107,9 @@ function game_update_instance($game) {
         $game->param2 = 0;
     }
     
-    if( $game->gamekind == 'millionaire')
-    {
-        if( $game->param8 != '')
-        {
-            $game->param8 = base_convert($game->param8, 16, 10);
-        }
-    }
-        	
-    if( !update_record("game", $game)){
+    game_before_add_or_update( $game);
+
+    if( !update_record('game', $game)){
         return false;
     }
     
@@ -161,7 +157,7 @@ function game_delete_instance($gameid) {
 	        $tables = array( 'game_hangman', 'game_cross', 'game_cryptex', 'game_millionaire', 'game_bookquiz', 'game_sudoku', 'game_snakes');
 	        foreach( $tables as $t){
 	            $sql = "DELETE FROM {$CFG->prefix}$t WHERE id IN (".substr( $ids, 1).')';
-		        if (! execute_sql( $sql, false)) {
+		        if (!execute_sql( $sql, false)) {
 			        $result = false;
 			        break;
                 }
@@ -169,13 +165,24 @@ function game_delete_instance($gameid) {
 		}
 	}
 		    
-    $tables = array( 'game_attempts', 'game_grades', 'game_export_javame', 'game_bookquiz_questions', 'game_queries');
+    $tables = array( 'game_attempts', 'game_grades', 'game_bookquiz_questions', 'game_queries');
     foreach( $tables as $t){
         if( $result == false){
             break;
         }
 		    
-        if (! delete_records( $t, "gameid", $gameid)) {
+        if (!delete_records( $t, 'gameid', $gameid)) {
+            $result = false;
+		}
+	}
+
+    $tables = array( 'game_export_javame', 'game_export_html');
+    foreach( $tables as $t){
+        if( $result == false){
+            break;
+        }
+		    
+        if (!delete_records( $t, 'id', $gameid)) {
             $result = false;
 		}
 	}
@@ -586,6 +593,17 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     echo "</td></tr></table>";
 
     return;
+}
+
+function game_before_add_or_update(&$game) {
+    if( $game->gamekind == 'millionaire')
+    {
+        if( substr( $game->param8, 0, 1) == '#')
+        {
+            $game->param8 = hexdec(substr( $game->param8, 1));
+        }
+    }
+
 }
 
 /**

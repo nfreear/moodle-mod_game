@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.4 2010/07/22 18:45:17 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.5 2010/07/23 22:59:23 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -12,6 +12,14 @@ require( 'locallib.php');
 
 class mod_game_mod_form extends moodleform_mod {
     
+    function set_data($default_values) {
+        if( $default_values->gamekind == 'millionaire'){        
+            $default_values->param8 = '#'.strtoupper( dechex( $default_values->param8));
+        }
+
+        parent::set_data($default_values);
+    }
+
     function definition() {
         global $CFG, $COURSE;
 
@@ -33,7 +41,7 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'gamekind', $gamekind);
         $mform->setDefault('gamekind',$gamekind);
         $mform->addElement('hidden', 'type', $gamekind);
-        $mform->setDefault('type', $gamekind);
+        $mform->setDefault('type',$gamekind);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -222,8 +230,10 @@ class mod_game_mod_form extends moodleform_mod {
 
         if($gamekind == 'millionaire'){
             $mform->addElement('header', 'millionaire', get_string( 'millionaire_options', 'game'));
+
             $mform->addElement('text', 'param8', get_string('millionaire_background', 'game'));
-            $mform->setDefault('param8', 0x408080);
+            $mform->setDefault('param8', '#408080');
+
             $mform->addElement('selectyesno', 'shuffle', get_string('millionaire_shuffle','game'));
         }
 
@@ -323,7 +333,8 @@ class mod_game_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
-    function data_preprocessing(&$deault_values){
+    function data_preprocessing(&$default_values){
+
     }
 
     function validation($data, $files){

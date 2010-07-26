@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.11 2010/07/26 00:13:32 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2010/07/26 00:41:16 bdaloukas Exp $
 
 // This file plays the game Hidden Picture
 
@@ -323,6 +323,8 @@ function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpict
     }    
 
     game_sudoku_check_last( $id, $game, $attempt, $hiddenpicture, $finishattempt);
+
+    return true;
 }
 
 function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenpicture, $finishattempt)

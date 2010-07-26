@@ -1,9 +1,9 @@
-<?php  // $Id: showattempts.php,v 1.1 2010/07/26 00:16:35 bdaloukas Exp $
+<?php  // $Id: showattempts.php,v 1.2 2010/07/26 00:41:16 bdaloukas Exp $
 /**
  * This page shows the answers of the current game
  * 
  * @author  bdaloukas
- * @version $Id: showattempts.php,v 1.1 2010/07/26 00:16:35 bdaloukas Exp $
+ * @version $Id: showattempts.php,v 1.2 2010/07/26 00:41:16 bdaloukas Exp $
  * @package game
  **/
  
@@ -63,15 +63,15 @@
         $sql = "SELECT $fields FROM $table WHERE $select ORDER BY timelastattempt DESC,timestart DESC";
         if( ($recs = $DB->get_records_sql( $sql, null, $recslimitfrom, $recslimitnum)) != false){
             echo '<table border="1">';
-            echo '<tr><td>'.get_string( 'delete').'</td><td>'.get_string('user').'</td>';
-            echo '<td>'.get_string('lastip', 'game').'</td>';
-            echo '<td>'.get_string('timestart', 'game').'</td>';
-            echo '<td>'.get_string('timelastattempt', 'game').'</td>';
-            echo '<td>'.get_string('timefinish', 'game').'</td>';
-            echo '<td>'.get_string('score', 'game').'</td>';
-            echo '<td>'.get_string('attempts', 'game').'</td>';
-            echo '<td>'.get_string('preview', 'game').'</td>';
-            echo '<td>'.get_string('showsolution', 'game').'</td>';
+            echo '<tr><td><b>'.get_string( 'delete').'</td><td><b>'.get_string('user').'</td>';
+            echo '<td><b>'.get_string('lastip', 'game').'</b></td>';
+            echo '<td><b>'.get_string('timestart', 'game').'</b></td>';
+            echo '<td><b>'.get_string('timelastattempt', 'game').'</b></td>';
+            echo '<td><b>'.get_string('timefinish', 'game').'</b></td>';
+            echo '<td><b>'.get_string('score', 'game').'</b></td>';
+            echo '<td><b>'.get_string('attempts', 'game').'</b></td>';
+            echo '<td><b>'.get_string('preview', 'game').'</b></td>';
+            echo '<td><b>'.get_string('showsolution', 'game').'</b></td>';
             echo "</tr>\r\n";
 
             foreach( $recs as $rec){

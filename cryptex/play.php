@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.8 2010/07/26 00:13:31 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.9 2010/07/26 00:41:16 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.8 2010/07/26 00:13:31 bdaloukas Exp $
+ * @version $Id: play.php,v 1.9 2010/07/26 00:41:16 bdaloukas Exp $
  * @package game
  **/
 
@@ -95,7 +95,7 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer)
     global $DB;
 
 	if( $attempt === false){
-		game_cryptex_continue( $id, $game, $attempt, $cryptexrec);
+		game_cryptex_continue( $id, $game, $attempt, $cryptexrec, false);
 		return;
 	}
 
@@ -292,7 +292,7 @@ width:	240pt;
 
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec)
 {
-	global $DB;
+	global $CFG, $DB;
 
 	if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
 		print_error( "Course Module ID was incorrect id=$id");

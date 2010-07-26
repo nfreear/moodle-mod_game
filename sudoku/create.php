@@ -1,4 +1,4 @@
-<?php  // $Id: create.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $
+<?php
 
 require( "../../../config.php");
 include_once("class.Sudoku.php");
@@ -41,6 +41,8 @@ function showform()
 
 function AppendSudokuB()
 {
+    global $DB;
+
 	$level1 = required_param('level1', PARAM_NUMBER);   // action
 	$level2 = required_param('level2', PARAM_NUMBER);   // action
 	$count = required_param('count', PARAM_NUMBER);   // action
@@ -59,7 +61,7 @@ function AppendSudokuB()
 		$newrec->level = $level;
 		$newrec->opened = GetOpened( $si);
   
-		insert_record( "game_sudoku_database", $newrec, true);
+		$DB->insert_record( 'game_sudoku_database', $newrec, true);
     
 		$level++;
 		if( $level > $level2){
@@ -87,7 +89,7 @@ function PackSudoku( $si, $sp)
  		   $theSolvedState = $c->solvedState() ;
  		    		
 			if( $theSolvedState == 1) {  //hint
-				$solution = substr( "ABCDEFGHI", $c->asString( false) - 1, 1);	
+				$solution = substr( 'ABCDEFGHI', $c->asString( false) - 1, 1);	
 			}
 	
 			$data .= $solution;
@@ -116,9 +118,6 @@ function create( &$si, &$sp, $level=1)
 	$si = new Sudoku() ;
 
 	$si->initializePuzzleFromArray($theInitialPosition);
-	
-	//$si->printSolution();	
-	//$sp->printSolution();
   
 	return true;
 }

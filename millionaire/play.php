@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.18 2010/07/21 20:56:55 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.19 2010/07/26 00:41:17 bdaloukas Exp $
 /**
- * This files plays the game millionaire
+ * This file plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.18 2010/07/21 20:56:55 bdaloukas Exp $
+ * @version $Id: play.php,v 1.19 2010/07/26 00:41:17 bdaloukas Exp $
  * @package game
  **/
 
@@ -12,9 +12,9 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire)
 	//User must select quiz or question as a source module
 	if( ($game->quizid == 0) and ($game->questioncategoryid == 0)){
         if( $game->sourcemodule == 'quiz')
-    		error( get_string('millionaire_must_select_quiz', 'game'));
+		    print_error( get_string( 'millionaire_must_select_quiz', 'game'));
         else
-            error( get_string('millionaire_must_select_questioncategory','game'));
+            print_error( get_string( 'millionaire_must_select_questioncategory', 'game'));
 	}
 	
 	if( $attempt != false and $millionaire != false){
@@ -41,50 +41,47 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire)
 
 function game_millionaire_play( $id, $game, $attempt, $millionaire)
 {
-	global $CFG;
-    $help5050 = optional_param('Help5050_x', 0, PARAM_INT);
-    $helptelephone = optional_param('HelpTelephone_x', 0, PARAM_INT);
-    $helppeople = optional_param('HelpPeople_x', 0, PARAM_INT);
-    $quit =  optional_param('Quit_x', 0, PARAM_INT);
+	global $DB;
 	
 	if( $millionaire->queryid){
-		$query = get_record( 'game_queries', 'id', $millionaire->queryid);
+		$query = $DB->get_record( 'game_queries', array( 'id' => $millionaire->queryid));
 	}else
 	{
 		$query = new StdClass;
 	}
     
-    $buttons = optional_param('buttons', 0, PARAM_INT);
-
+    if( array_key_exists( 'buttons', $_POST))
+        $buttons = $_POST[ 'buttons'];
+    else
+        $buttons = 0;
+        
     $found = 0;
     for($i=1; $i <= $buttons; $i++){
         $letter = substr( 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', $i-1, 1);
-        $bt = optional_param('btAnswer'.$letter, 0, PARAM_BOOL);
-        $bt1 = optional_param("btAnswer{$letter}1", 0, PARAM_BOOL);
-        if( !empty($bt) or !empty($bt1)){
+    	if( array_key_exists( 'btAnswer'.$letter, $_POST) or array_key_exists( "btAnswer{$letter}1", $_POST)){
 	    	game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, $i);
 	    	$found = 1;
 	    }
 	}
 		
-	if($found != 1){
-        if( !empty($help5050))
-            game_millionaire_OnHelp5050( $game, $id,  $millionaire, $game, $query);
-        else if( !empty($helptelephone))
-            game_millionaire_OnHelpTelephone( $game, $id, $millionaire, $query);
-        else if( !empty($helppeople))
-            game_millionaire_OnHelpPeople( $game, $id, $millionaire, $query);
-        else if( !empty($quit))
-            game_millionaire_OnQuit( $id,  $game, $attempt, $query);
-        else
-        {
-            $millionaire->state = 0;
-            $millionaire->grade = 1;
-
-            game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire);
-        }
+	if( $found == 1)
+	    ;//nothing
+	else if( array_key_exists( "Help5050_x", $_POST))
+		game_millionaire_OnHelp5050( $game, $id,  $millionaire, $game, $query);
+	else if( array_key_exists( "HelpTelephone_x", $_POST))
+		game_millionaire_OnHelpTelephone( $game, $id, $millionaire, $query);
+	else if( array_key_exists( "HelpPeople_x", $_POST))
+		game_millionaire_OnHelpPeople( $game, $id, $millionaire, $query);
+	else if( array_key_exists( "Quit_x", $_POST))
+		game_millionaire_OnQuit( $id,  $game, $attempt, $query);
+    else
+    {
+      $millionaire->state = 0;
+      $millionaire->grade = 1;
+      
+      game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire);
     }
-}
+  }
   
 
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aAnswer, $info)
@@ -274,10 +271,10 @@ function game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire)
 //updates tables: games_millionaire, game_attempts, game_questions
 function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$millionaire, &$query)
 {
-	global $CFG, $USER;
+	global $DB, $USER;
 	
 	if( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')){
-		error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $attempt->sourcemodule));
+		print_error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $attempt->sourcemodule));
 	}
 	
 	if( $millionaire->queryid != 0){
@@ -290,12 +287,12 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 			error( get_string( 'must_select_quiz', 'game'));
 		}		
 		$select = "qtype='multichoice' AND quiz='$game->quizid' ".
-						" AND {$CFG->prefix}quiz_question_instances.question={$CFG->prefix}question.id";
-		$table = "question,{$CFG->prefix}quiz_question_instances";
+						" AND qqi.question=q.id";
+		$table = "{question} q,{quiz_question_instances} qqi";
 	}else
 	{
 		if( $game->questioncategoryid == 0){
-			error( get_string( 'must_select_questioncategory', 'game'));
+			print_error( get_string( 'must_select_questioncategory', 'game'));
 		}	
 		
 		//include subcategories				
@@ -308,24 +305,24 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
         }  						
 		$select .= " AND qtype='multichoice'";
 		
-		$table = "question";
+		$table = 'question';
 	}
-	$select .= " AND {$CFG->prefix}question.hidden=0";
+	$select .= ' AND {question}.hidden=0';
 	if( $game->shuffle or $game->quizid == 0)
-		$questionid = game_question_selectrandom( $game, $table, $select, "{$CFG->prefix}question.id as id");
+		$questionid = game_question_selectrandom( $game, $table, $select, '{question}.id as id');
 	else
-		$questionid = game_millionaire_select_serial_question( $game, $table, $select, "{$CFG->prefix}question.id as id", $millionaire->level);
+		$questionid = game_millionaire_select_serial_question( $game, $table, $select, '{question}.id as id', $millionaire->level);
 	
 	if( $questionid == 0){
-		error( get_string( 'millionaire_nowords', 'game'));
+		print_error( get_string( 'millionaire_nowords', 'game'));
 	}
 	
-	$q = get_record_select( 'question', "id=$questionid",'id,questiontext');
+	$q = $DB->get_record( 'question', array( 'id' => $questionid), 'id,questiontext');
 
-	$recs = get_records_select( 'question_answers', "question=$questionid");
+	$recs = $DB->get_records( 'question_answers', array( 'question' => $questionid));
 	
 	if( $recs === false){
-		error( get_string( 'no_questions', 'game'));
+		print_error( get_string( 'no_questions', 'game'));
 	}
 	
 	$correct = 0;
@@ -359,16 +356,16 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	$query->questiontext = addslashes( $q->questiontext);
 	$query->answertext = implode( ',', $ids);
 	$query->correct = array_search( $correct, $ids) + 1;
-	if( !$query->id = insert_record(  'game_queries', $query)){
+	if( !$query->id = $DB->insert_record(  'game_queries', $query)){
 	    print_object( $query);
-		error( 'error inserting to game_queries');
+		print_error( 'error inserting to game_queries');
 	}
 	
 	$updrec->id = $millionaire->id;
 	$updrec->queryid = $query->id;	
 	
-	if( !$newid = update_record(  'game_millionaire', $updrec)){
-		error( 'error updating in game_millionaire');
+	if( !$newid = $DB->update_record(  'game_millionaire', $updrec)){
+		print_error( 'error updating in game_millionaire');
 	}
 	
 	$score = $millionaire->level / 15;
@@ -378,11 +375,12 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 
 function game_millionaire_select_serial_question( $game, $table, $select, $id_fields="id", $level)
 {
-    global $CFG, $USER; 
+    global $DB, $USER; 
     
-    $rec = get_record_select( 'quiz', "id=$game->quizid");
+    $rec = $DB->get_record( 'quiz', array( 'id' => $game->quizid));
     if( $rec === false)
         return false;
+
     $questions = $rec->questions;
     $questions = explode( ',', $rec->questions);
     array_pop( $questions);
@@ -397,26 +395,30 @@ function game_millionaire_select_serial_question( $game, $table, $select, $id_fi
 
 function game_millionaire_loadquestions( $millionaire, &$query, &$aAnswer)
 {
-	$query = get_record_select( 'game_queries', "id=$millionaire->queryid",'id,questiontext,answertext,correct');
+    global $DB;
+
+	$query = $DB->get_record( 'game_queries', array( 'id' => $millionaire->queryid), 'id,questiontext,answertext,correct');
 
 	$aids = explode( ',', $query->answertext);
 	$aAnswer = array();
 	foreach( $aids as $id)
 	{
-		$rec = get_record_select( 'question_answers', "id=$id",'id,answer');
+		$rec = $DB->get_record( 'question_answers', array( 'id' => $id), 'id,answer');
 		$aAnswer[] = $rec->answer;
 	}
 }
 
 //flag 1:5050, 2:telephone 4:people
 function game_millionaire_setstate( &$millionaire, $mask)
-{	
+{
+    global $DB;
+
 	$millionaire->state |= $mask;
-	
+
 	$updrec->id = $millionaire->id;
 	$updrec->state = $millionaire->state;
-	if( !update_record(  'game_millionaire', $updrec)){
-		error( 'error updating in game_millionaire');
+	if( !$DB->update_record(  'game_millionaire', $updrec)){
+		print_error( 'error updating in game_millionaire');
 	}	
 }
 
@@ -537,7 +539,7 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query)
 
     function game_millionaire_OnAnswer( $id, $game, $attempt, &$millionaire, $query, $answer)
     {
-		global $CFG;
+		global $DB;
 
 		game_millionaire_loadquestions( $millionaire, $query, $aAnswer);
 		if( $answer == $query->correct)
@@ -561,8 +563,8 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query)
 		$updrec->id = $millionaire->id;
 		$updrec->level = $millionaire->level;
 		$updrec->queryid = 0;
-		if( !update_record(  'game_millionaire', $updrec)){
-			error( 'error updating in game_millionaire');
+		if( !$DB->update_record(  'game_millionaire', $updrec)){
+			print_error( 'error updating in game_millionaire');
 		}
 		
 		if( $answer == $query->correct)
@@ -590,12 +592,12 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query)
 
 	function game_millionaire_onquit( $id, $game, $attempt, $query)
 	{
-		global $CFG;
+		global $CFG, $DB;
 
 		game_updateattempts( $game, $attempt, -1, true);
 
-		if (! $cm = get_record("course_modules", "id", $id)) {
-			error("Course Module ID was incorrect id=$id");
+		if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
+			print_error( "Course Module ID was incorrect id=$id");
 		}
 		
 		echo '<br>';	

@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.8 2010/07/26 00:07:13 bdaloukas Exp $
+<?php  // $Id: exporthtml_millionaire.php,v 1.9 2010/07/26 00:43:58 bdaloukas Exp $
 /**
  * This page export the game millionaire to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.8 2010/07/26 00:07:13 bdaloukas Exp $
+ * @version $Id: exporthtml_millionaire.php,v 1.9 2010/07/26 00:43:58 bdaloukas Exp $
  * @package game
  **/
 function game_millionaire_html_getquestions( $game, &$max)
@@ -13,7 +13,7 @@ function game_millionaire_html_getquestions( $game, &$max)
 	$max = 0;
 	
 	if( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')){
-		error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $attempt->sourcemodule));
+		print_error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $attempt->sourcemodule));
 	}
 	
 	if( $game->sourcemodule == 'quiz'){
@@ -39,7 +39,7 @@ function game_millionaire_html_getquestions( $game, &$max)
         }  						
 		$select .= " AND qtype='multichoice'";
 		
-		$table = "question q";
+		$table = "{question} q";
 	}
 	$select .= " AND q.hidden=0";
 	$sql = "SELECT q.id as id, q.questiontext FROM $table WHERE $select";

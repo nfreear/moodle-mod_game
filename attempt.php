@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.11 2010/07/26 00:07:12 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.12 2010/07/26 00:41:15 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.11 2010/07/26 00:07:12 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.12 2010/07/26 00:41:15 bdaloukas Exp $
  * @package game
  **/
     require_once( "../../config.php");
@@ -130,7 +130,7 @@
         case 'sudokucheckg':		//the student tries to guess a glossaryenry
     		$attempt = game_getattempt( $game, $detail);
     		$endofgame = array_key_exists( 'endofgame', $_GET);
-    		game_sudoku_check_glossaryentries( $id, $game, $attempt, $detail, $endofgame, $course);
+    		$continue = game_sudoku_check_glossaryentries( $id, $game, $attempt, $detail, $endofgame, $course);
             break;
         case 'sudokucheckn':	//the user tries to guess a number
     		$attempt = game_getattempt( $game, $detail);

@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.8 2010/07/26 00:07:13 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.9 2010/07/26 22:43:25 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -119,7 +119,7 @@ class mod_game_mod_form extends moodleform_mod {
 
         if($gamekind == 'hangman' || $gamekind == 'cross' || $gamekind == 'cryptex' || $gamekind == 'sudoku' || $gamekind == 'hiddenpicture' || $gamekind == 'snakes'){
             $a = array();
-            $sql = "SELECT DISTINCT cat.id, cat.name FROM {question_categories} cat LEFT JOIN mdl_question qst ON cat.id=qst.category WHERE cat.contextid=8 AND qst.qtype='shortanswer'";
+            $sql = "SELECT DISTINCT cat.id, cat.name FROM {question_categories} cat LEFT JOIN {question} qst ON cat.id=qst.category WHERE cat.contextid=8 AND qst.qtype='shortanswer'";
             if($recs = $DB->get_records_sql($sql)){
                 foreach($recs as $rec){
                     $s = $rec->name;
@@ -190,6 +190,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('select', 'param', get_string('hangman_imageset','game'), $a);
 
             $mform->addElement('selectyesno', 'param5', get_string('hangman_showquestion', 'game'));
+            $mform->setDefault('param5', 1);
             $mform->addElement('selectyesno', 'param6', get_string('hangman_showcorrectanswer', 'game'));
 
             $a = array();

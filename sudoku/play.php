@@ -461,7 +461,7 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
         if( array_key_exists( $ofs, $correctentries)){
             continue;   //I don't show the correct answers
         }
-				
+
 		$s = 'A'.$ofs.'. '.game_filtertext( $entry->definition, 0).'<BR>';
 		if( $showsolution){
 			$s .= get_string( 'answer').': ';

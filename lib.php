@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.16 2010/07/26 00:07:13 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.17 2010/07/26 22:43:25 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.16 2010/07/26 00:07:13 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.17 2010/07/26 22:43:25 bdaloukas Exp $
  * @package game
  **/
 
@@ -169,7 +169,7 @@ function game_delete_instance($gameid) {
 	        $tables = array( 'game_hangman', 'game_cross', 'game_cryptex', 'game_millionaire', 'game_bookquiz', 'game_sudoku', 'game_snakes');
 	        foreach( $tables as $t){
 	            $sql = "DELETE FROM {".$t."} WHERE id IN (".substr( $ids, 1).')';
-		        if (! $DB->execute( $sql, false)) {
+		        if (! $DB->execute( $sql)) {
 			        $result = false;
 			        break;
                 }

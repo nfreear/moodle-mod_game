@@ -1,11 +1,11 @@
-<?php // $Id: importodt.php,v 1.3 2010/07/26 00:13:30 bdaloukas Exp $
+<?php // $Id: importodt.php,v 1.4 2010/07/26 22:43:26 bdaloukas Exp $
 /**
  * This is a very rough importer for odt
  * 
  * The script supports book
  * Is based on class  office  from http://www.phpclasses.org/browse/package/2586.html
  *
- * @version $Id: importodt.php,v 1.3 2010/07/26 00:13:30 bdaloukas Exp $
+ * @version $Id: importodt.php,v 1.4 2010/07/26 22:43:26 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
  **/
@@ -693,7 +693,7 @@ function game_bookquiz_splitsections($data, &$positions, &$inputs, &$titles, &$t
 		global $CFG;
 		
 		if( !delete_records( 'book_chapters', 'bookid', $bookid)){
-			print_error( "Can't delete records from mdl_book_chapters bookid=$bookid");
+			print_error( "Can't delete records from book_chapters bookid=$bookid");
 		}
 		
 		game_full_rmdir( "$CFG->dataroot/$courseid/moddata/book/$bookid");

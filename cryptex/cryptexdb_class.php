@@ -1,4 +1,4 @@
-<?php  // $Id: cryptexdb_class.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
+<?PHP
 
 class CryptexDB extends CrossDB
 {
@@ -17,8 +17,8 @@ class CryptexDB extends CrossDB
         $newrec->id = $id;
 		$newrec->letters = $letters;
 		
-		if (!($cryptexid = game_insert_record( 'game_cryptex', $newrec))){
-			error("Insert page: new page game_cryptex not inserted");
+		if (!($cryptexid = game_insert_record( "game_cryptex", $newrec))){
+			print_error( 'Insert page: new page game_cryptex not inserted');
 		}		
 				
 		return $newrec;
@@ -170,6 +170,8 @@ class CryptexDB extends CrossDB
 
 	function load( $crossm, &$mask, &$corrects)
 	{
+        global $DB;
+
 		$textlib = textlib_get_instance();
 		
 		$questions = array();
@@ -177,7 +179,7 @@ class CryptexDB extends CrossDB
 		
 		$mask = str_repeat( '0', $crossm->cols * $crossm->rows);
 		
-		if ($recs = get_records_select('game_queries', "attemptid=$crossm->id"))
+		if ($recs = $DB->get_records( 'game_queries', array( 'attemptid' => $crossm->id)))
 		{
 			foreach ($recs as $rec)
 			{

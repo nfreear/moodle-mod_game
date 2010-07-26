@@ -1,7 +1,6 @@
-<?php  //$Id: upgrade.php,v 1.21 2010/07/21 21:32:01 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.22 2010/07/26 00:13:31 bdaloukas Exp $
 
-// This file keeps track of upgrades to 
-// the lesson module
+// This file keeps track of upgrades to the game module
 //
 // Sometimes, changes between versions involve
 // alterations to database structures and other
@@ -9,1429 +8,1401 @@
 //
 // The upgrade function in this file will attempt
 // to perform all the necessary actions to upgrade
-// your older installtion to the current version.
+// your older installation to the current version.
 //
 // If there's something it cannot do itself, it
 // will tell you what you need to do.
 //
 // The commands in here will all be database-neutral,
-// using the functions defined in lib/ddllib.php
+// using the methods of database_manager class
+//
+// Please do not forget to use upgrade_set_timeout()
+// before any action that may take longer time to finish.
 
-function xmldb_game_upgrade($oldversion=0) {
+function xmldb_game_upgrade($oldversion) {
 
-    global $CFG, $THEME, $db;
+    global $CFG, $DB;
 
-    $result = true;
+    $dbman = $DB->get_manager();
 
-	//game.questioncategoryid
-    if ($result && $oldversion < 2007082802) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('questioncategoryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'glossarycategoryid');
+    if ($oldversion < 2007082802) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'glossarycategoryid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('quizid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'questionid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007082802, 'game');    }
+
+    if ($oldversion < 2007082803) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossaryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'quizid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossarycategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'glossaryid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'glossarycategoryid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007082803, 'game');
     }
 
-	//game_hangman.quizid
-    if ($result && $oldversion < 2007082802) {
+    if ($oldversion < 2007082804) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'quizid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Define field format to be added to data_comments
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('quizid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'questionid');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-
+        upgrade_mod_savepoint(true, 2007082804, 'game');
     }
 
-	//game_hangman.glossaryid
-    if ($result && $oldversion < 2007082803) {
-    /// Define field format to be added to data_comments
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossaryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'quizid');
+    if ($oldversion < 2007082805) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('try', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'answer');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('maxtries', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'try');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007082805, 'game');
 	}
 
-	//game_hangman.glossarycategoryid
-    if ($result && $oldversion < 2007082803) {
-    /// Define field format to be added to data_comments
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossarycategoryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'glossaryid');
+    if ($oldversion < 2007082807) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('finishedword', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'maxtries');
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('corrects', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'finishedword');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007082807, 'game');
+	}
+
+    if ($oldversion < 2007082808) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('param7', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'param6');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007082808, 'game');
+	}
+
+
+    if ($oldversion < 2007082809) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('letters', XMLDB_TYPE_CHAR, '30');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007082809, 'game');
     }
 
-	//game_hangman.questioncategoryid
-    if ($result && $oldversion < 2007082803) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('questioncategoryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'glossarycategoryid');
+    if ($oldversion < 2007082901) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossaryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'quizid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007082901, 'game');
     }
 
-	//game_millionaire.questioncategoryid
-    if ($result && $oldversion < 2007082804) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('questioncategoryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'quizid');
+    if ($oldversion < 2007083002) {
+        $table = new xmldb_table('game_instances');
+        $field = new xmldb_field('lastip', XMLDB_TYPE_CHAR, '30', null, null, '', 'grade');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-
-	//game_hangman.try
-    if ($result && $oldversion < 2007082805) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('try');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'answer');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007082901, 'game');
     }
 	
-	//game_hangman.maxtries
-    if ($result && $oldversion < 2007082805) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('maxtries');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'try');
+    if ($oldversion < 2007091001) {
+        $table = new xmldb_table('game_bookquiz_questions');
+        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-	}
-
-	//game_hangman.finishedword
-    if ($result && $oldversion < 2007082807) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('finishedword');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'maxtries');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-	}
-
-
-	//game_hangman.corrects
-    if ($result && $oldversion < 2007082807) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('corrects');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'finishedword');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-	}
-
-
-	//game.param7
-    if ($result && $oldversion < 2007082808) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('param7');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'param6');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-	}
-
-
-	//game_hangman.letters : change to char( 30)
-    if ($result && $oldversion < 2007082809) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('letters');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '30', null, null, null, null, null, null);
-
-    /// Launch change of precision for field lang
-        $result = $result && change_field_precision($table, $field);
-    }
-
-
-    //gamg_hangman.glossaryid
-    if ($result && $oldversion < 2007082901) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossaryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'quizid');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-
-	//game_instances.lastip : change to char( 30)
-    if ($result && $oldversion < 2007083002) {
-        $table = new XMLDBTable('game_instances');
-        $field = new XMLDBField('lastip');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '30', null, null, null, null, null, null, '', 'grade');
-
-    /// Launch change of precision for field lang
-        $result = $result && add_field($table, $field);
-    }
-	
-	//game_bookquiz_questions.glossarycategoryid
-    if ($result && $oldversion < 2007091001) {
-        $table = new XMLDBTable('game_bookquiz_questions');
-        $field = new XMLDBField('questioncategoryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007091001, 'game');
 	}
 	
-	//new table game_bookquiz_chapters
-    if ($result && $oldversion < 2007091701) {
-        /// Define table scorm_scoes_data to be created
-        $table = new XMLDBTable( 'game_bookquiz_chapters');
+    if ($oldversion < 2007091701) {
+        $table = new xmldb_table( 'game_bookquiz_chapters');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('gameinstanceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('chapterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('gameinstanceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('chapterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         
-        /// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('gameinstanceidchapterid', XMLDB_KEY_NOTUNIQUE, array('gameinstanceid', 'chapterid'));
 
-        /// Adding indexes to table scorm_scoes_data
-        $table->addIndexInfo('gameinstanceidchapterid', XMLDB_INDEX_NOTUNIQUE, array('gameinstanceid', 'chapterid'));
-
-        /// Launch create table for scorm_scoes_data
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2007091701, 'game');
 	}
 
-	//new table game_snakes_database
-    if ($result && $oldversion < 2007092207) {
-        /// Define table scorm_scoes_data to be created
-        $table = new XMLDBTable( 'game_snakes_database');
+    if ($oldversion < 2007092207) {
+        $table = new xmldb_table( 'game_snakes_database');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, null, '');
-        $table->addFieldInfo('cols', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('rows', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('data', XMLDB_TYPE_TEXT, '0', null, XMLDB_NOTNULL, null, null, null, '');
-        $table->addFieldInfo('file', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, null, '');
-        $table->addFieldInfo('direction', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('headerx', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('headery', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('footerx', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('footery', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, '');
+        $table->add_field('cols', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('rows', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('data', XMLDB_TYPE_TEXT, '0', null, XMLDB_NOTNULL, null, '');
+        $table->add_field('file', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, '');
+        $table->add_field('direction', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('headerx', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('headery', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('footerx', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('footery', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, array('id'));
 
-        /// Launch create table for scorm_scoes_data
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2007092207, 'game');
 	}
 	
-    if ($result && $oldversion < 2007092208) {
-        /// Define table scorm_scoes_data to be created
-        $table = new XMLDBTable( 'game_snakes');
+    if ($oldversion < 2007092208) {
+        $table = new xmldb_table( 'game_snakes');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('snakesdatabaseid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('position', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('snakesdatabaseid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('position', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, array('id'));
 
-        /// Launch create table for scorm_scoes_data
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2007092208, 'game');
 	}
 	
-	//game_snakes_database.width
-    if ($result && $oldversion < 2007092301) {
-        $table = new XMLDBTable('game_snakes_database');
-        $field = new XMLDBField('width');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007092301) {
+        $table = new xmldb_table('game_snakes_database');
+        $field = new xmldb_field('width', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007092301, 'game');
     }
 
-	//game_snakes_database.height
-    if ($result && $oldversion < 2007092302) {
-        $table = new XMLDBTable('game_snakes_database');
-        $field = new XMLDBField('height');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007092302) {
+        $table = new xmldb_table('game_snakes_database');
+        $field = new xmldb_field('height', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007092302, 'game');
     }
 
-	//game_snakes.sourcemodule
-    if ($result && $oldversion < 2007092306) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('sourcemodule');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '20', null, null, null, null, null, '');
+    if ($oldversion < 2007092306) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('sourcemodule', XMLDB_TYPE_CHAR, '20', null, null, null, '');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-	
-	//game_snakes.questionid
-    if ($result && $oldversion < 2007092307) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('questionid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', null, null, null, null, null, null);
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-
-	//game_snakes.glossaryentryid
-    if ($result && $oldversion < 2007092308) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('glossaryentryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', null, null, null, null, null, null);
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-
-
-	//game_snakes.dice
-    if ($result && $oldversion < 2007092309) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('dice');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '1', null, null, null, null, null, null);
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-
-	//game_instances.lastremotehost
-    if ($result && $oldversion < 2007100601) {
-        $table = new XMLDBTable('game_instances');
-        $field = new XMLDBField('lastremotehost');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '50', null, null, null, null, null, '');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-
-	//game_questions.timelastattempt
-    if ($result && $oldversion < 2007100605) {
-        $table = new XMLDBTable('game_questions');
-        $field = new XMLDBField('timelastattempt');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', null, null, null, null, null, null);
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007092306, 'game');
     }
 	
-	//game_instances.tries
-    if ($result && $oldversion < 2007101301) {
-        $table = new XMLDBTable('game_instances');
-        $field = new XMLDBField('tries');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', null, null, null, null, null, null);
+    if ($oldversion < 2007092307) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('questionid', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007092307, 'game');
+    }
+
+    if ($oldversion < 2007092308) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('glossaryentryid', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007092308, 'game');
+    }
+
+    if ($oldversion < 2007092309) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('dice', XMLDB_TYPE_INTEGER, '1');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007092309, 'game');
+    }
+
+    if ($oldversion < 2007100601) {
+        $table = new xmldb_table('game_instances');
+        $field = new xmldb_field('lastremotehost', XMLDB_TYPE_CHAR, '50', null, null, null, '');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007100601, 'game');
+    }
+
+    if ($oldversion < 2007100605) {
+        $table = new xmldb_table('game_questions');
+        $field = new xmldb_field('timelastattempt', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007100605, 'game');
     }
 	
-	//1.4
-	//drop game_bookquiz_questions.bookid
-    if ($result && $oldversion < 2007110801) {
-        $table = new XMLDBTable('game_bookquiz_questions');
-        $field = new XMLDBField('bookid');
+    if ($oldversion < 2007101301) {
+        $table = new xmldb_table('game_instances');
+        $field = new xmldb_field('tries', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        upgrade_mod_savepoint(true, 2007101301, 'game');
+    }
+	
+    if ($oldversion < 2007110801) {
+        $table = new xmldb_table('game_bookquiz_questions');
+        $field = new xmldb_field('bookid');
+
+      if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110801, 'game');
     }
 	
 
-	//new table game_grades
-    if ($result && $oldversion < 2007110802) {
-        /// Define table scorm_scoes_data to be created
-        $table = new XMLDBTable( 'game_grades');
+    if ($oldversion < 2007110802) {
+        $table = new xmldb_table( 'game_grades');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('score', XMLDB_TYPE_FLOAT, null, null, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('score', XMLDB_TYPE_FLOAT, null, null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('userid', XMLDB_KEY_NOTUNIQUE, array('userid'));
+        $table->add_key('gameid', XMLDB_KEY_NOTUNIQUE, array('gameid'));
 
-        /// Adding indexes
-        $table->addIndexInfo('userid', XMLDB_INDEX_NOTUNIQUE, array('userid'));
-        $table->addIndexInfo('gameid', XMLDB_INDEX_NOTUNIQUE, array('gameid'));
-
-        /// Launch create table for scorm_scoes_data
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }        
+        upgrade_mod_savepoint(true, 2007110802, 'game');
 	}
 	
-	//drop game_hangman.sourcemodule
-    if ($result && $oldversion < 2007110811) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('sourcemodule');
+    if ($oldversion < 2007110811) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('sourcemodule');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+      if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110811, 'game');
     }	
 	
-	//drop game_hangman.questionid
-    if ($result && $oldversion < 2007110812) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('questionsid');
+    if ($oldversion < 2007110812) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('questionsid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+      if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110812, 'game');
     }	
 	
-	//drop game_hangman.sourcemodule
-    if ($result && $oldversion < 2007110813) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('quizid');
+    if ($oldversion < 2007110813) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('quizid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+      if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110813, 'game');
     }	
 	
-	//drop game_hangman.glossaryid
-    if ($result && $oldversion < 2007110814) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossaryid');
+    if ($oldversion < 2007110814) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossaryid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+      if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110814, 'game');
     }	
 	
-	//drop game_hangman.glossarycategoryid
-    if ($result && $oldversion < 2007110815) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossarycategoryid');
+    if ($oldversion < 2007110815) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossarycategoryid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110815, 'game');
     }	
 	
-	//drop game_hangman.glossaryentryid
-    if ($result && $oldversion < 2007110816) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossaryentryid');
+    if ($oldversion < 2007110816) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossaryentryid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110816, 'game');
     }	
 
-	//drop game_hangman.question
-    if ($result && $oldversion < 2007110818) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('question');
+    if ($oldversion < 2007110818) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('question');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }	
-	
-	//drop game_hangman.answer
-    if ($result && $oldversion < 2007110819) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('answer');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110818, 'game');
     }	
 	
-	//drop game_millionaire.sourcemodule
-    if ($result && $oldversion < 2007110820) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('sourcemodule');
+    if ($oldversion < 2007110819) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('answer');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110819, 'game');
     }	
 	
-	//drop game_millionaire.quizid
-    if ($result && $oldversion < 2007110821) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('quizid');
+    if ($oldversion < 2007110820) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('sourcemodule');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110820, 'game');
     }	
 	
-	//drop game_millionaire.questionid
-    if ($result && $oldversion < 2007110822) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('questionid');
+    if ($oldversion < 2007110821) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('quizid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110821, 'game');
     }	
 	
-	//game_millionaire.queryid
-    if ($result && $oldversion < 2007110823) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('queryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'id');
+    if ($oldversion < 2007110822) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('questionid');
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110822, 'game');
     }	
 	
-	//drop game_bookquiz.bookid
-    if ($result && $oldversion < 2007110824) {
-        $table = new XMLDBTable('game_bookquiz');
-        $field = new XMLDBField('bookid');
+    if ($oldversion < 2007110823) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('queryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        upgrade_mod_savepoint(true, 2007110823, 'game');
+    }	
+	
+    if ($oldversion < 2007110824) {
+        $table = new xmldb_table('game_bookquiz');
+        $field = new xmldb_field('bookid');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110824, 'game');
     }
 
-	//drop game_sudoku.sourcemodule
-    if ($result && $oldversion < 2007110825) {
-        $table = new XMLDBTable('game_sudoku');
-        $field = new XMLDBField('sourcemodule');
+    if ($oldversion < 2007110825) {
+        $table = new xmldb_table('game_sudoku');
+        $field = new xmldb_field('sourcemodule');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110825, 'game');
     }
 
-	//game_sudoku.level
-    if ($result && $oldversion < 2007110826) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('queryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0', 'id');
+    if ($oldversion < 2007110826) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('queryid', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007110826, 'game');
     }	
 
-	//drop game_sudoku.quizid
-    if ($result && $oldversion < 2007110827) {
-        $table = new XMLDBTable('game_sudoku');
-        $field = new XMLDBField('quizid');
+    if ($oldversion < 2007110827) {
+        $table = new xmldb_table('game_sudoku');
+        $field = new xmldb_field('quizid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110825, 'game');
     }
 
-	//drop game_sudoku.glossaryid
-    if ($result && $oldversion < 2007110828) {
-        $table = new XMLDBTable('game_sudoku');
-        $field = new XMLDBField('glossaryid');
+    if ($oldversion < 2007110828) {
+        $table = new xmldb_table('game_sudoku');
+        $field = new xmldb_field('glossaryid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110828, 'game');
     }
 
-	//drop game_sudoku.glossarycategoryid
-    if ($result && $oldversion < 2007110829) {
-        $table = new XMLDBTable('game_sudoku');
-        $field = new XMLDBField('glossarycategoryid');
+    if ($oldversion < 2007110829) {
+        $table = new xmldb_table('game_sudoku');
+        $field = new xmldb_field('glossarycategoryid');
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110829, 'game');
     }
 
-	//drop game_sudoku.glossarycategoryid
-    if ($result && $oldversion < 2007110830) {
+    if ($oldversion < 2007110830) {
+        $table = new xmldb_table('game_sudoku_questions');
 
-        $result = $result && drop_table(new XMLDBTable('game_sudoku_questions'));
-    }
-	
-	//drop game_cross.sourcemodule
-    if ($result && $oldversion < 2007110832) {
-        $table = new XMLDBTable('game_cross');
-        $field = new XMLDBField('sourcemodule');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+        upgrade_mod_savepoint(true, 2007110830, 'game');
     }
 	
-	//game_cross.createscore
-    if ($result && $oldversion < 2007110833) {
-        $table = new XMLDBTable('game_cross');
-        $field = new XMLDBField('createscore');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'wordsall');
+    if ($oldversion < 2007110832) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('sourcemodule');
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110832, 'game');
+    }
+	
+    if ($oldversion < 2007110833) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('createscore', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'wordsall');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007110826, 'game');
     }	
 
-	//rename field game_cross.
-    if ($result && $oldversion < 2007110834) {
-        $table = new XMLDBTable( 'game_bookquiz');
-		$field = new XMLDBField( 'attemptid');
-        $field->setAttributes(XMLDB_TYPE_FLOAT, null, null, null, null, null, null, '0');
+    if ($oldversion < 2007110834) {
+        $table = new xmldb_table( 'game_bookquiz');
+		$field = new xmldb_field( 'attemptid', XMLDB_TYPE_FLOAT, null, null, null, null, '0');
+
+        $dbman->rename_field($table, $field, 'score');
+
+        upgrade_mod_savepoint(true, 2009042200, 'game');
+    }
+
+    if ($oldversion < 2007110835) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('tries');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110835, 'game');
+    }
+
+    if ($oldversion < 2007110836) {
+        $table = new xmldb_table( 'game_cross');
+		$field = new xmldb_field( 'timelimit', XMLDB_TYPE_FLOAT, null, null, null, null, '0');
+
+        $dbman->rename_field($table, $field, 'createtimelimit');
+        upgrade_mod_savepoint(true, 2007110836, 'game');
+    }
+	
+    if ($oldversion < 2007110837) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('createconnectors', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007110837, 'game');
+    }		
+	
+    if ($oldversion < 2007110838) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('createfilleds', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007110838, 'game');
+    }		
+
+    if ($oldversion < 2007110839) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('createspaces', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007110839, 'game');
+    }		
+	
+    if ($oldversion < 2007110840) {
+        $table = new xmldb_table('game_cross_questions');
+
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+        upgrade_mod_savepoint(true, 2007110840, 'game');
+
+    }	
+
+    if ($oldversion < 2007110841) {
+        $table = new xmldb_table( 'game_questions');
+        $dbman->rename_table( $table, 'game_queries');
+
+        upgrade_mod_savepoint(true, 2007110841, 'game');
+    }
+
+    if ($oldversion < 2007110853) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('sourcemodule');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110853, 'game');
+    }	
+	
+    if ($oldversion < 2007110854) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('questionid');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110854, 'game');
+    }	
+	
+    if ($oldversion < 2007110855) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('glossaryentryid');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110855, 'game');
+    }
+
+    if ($oldversion < 2007110856) {
+        $table = new xmldb_table( 'game_instances');
+        $dbman->rename_table( $table, 'game_attempts');
+
+        upgrade_mod_savepoint(true, 2007110856, 'game');
+    }
+
+    if ($oldversion < 2007110857) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('gamekind');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110857, 'game');
+    }	
+
+    if ($oldversion < 2007110858) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field( 'finished');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110858, 'game');
+    }	
+	
+    if ($oldversion < 2007110859) {
+        $table = new xmldb_table( 'game_attempts');
+		$field = new xmldb_field( 'timestarted', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+
+        $dbman->rename_field($table, $field, 'timestart');
+        upgrade_mod_savepoint(true, 2007110859, 'game');
+    }
+
+    if ($oldversion < 2007110860) {
+        $table = new xmldb_table( 'game_attempts');
+		$field = new xmldb_field( 'timefinished', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
 		
-        $result = $result && rename_field( $table, $field, 'score');
-    }
+        $dbman->rename_field( $table, $field, 'timefinish');
+        upgrade_mod_savepoint(true, 2007110860, 'game');
+    }		
+	
+    if ($oldversion < 2007110861) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('grade');
 
-	//drop game_cross.tries
-    if ($result && $oldversion < 2007110835) {
-        $table = new XMLDBTable('game_cross');
-        $field = new XMLDBField('tries');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }
-
-	//rename field game_cross.createtimelimit
-    if ($result && $oldversion < 2007110836) {
-        $table = new XMLDBTable( 'game_cross');
-		$field = new XMLDBField( 'timelimit');
-        $field->setAttributes(XMLDB_TYPE_FLOAT, null, null, null, null, null, null, '0');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007110861, 'game');
+    }		
+	
+    if ($oldversion < 2007110862) {
+        $table = new xmldb_table( 'game_attempts');
+		$field = new xmldb_field( 'tries', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
 		
-        $result = $result && rename_field( $table, $field, 'createtimelimit');
-    }
-	
-	//game_cross.createconnectors
-    if ($result && $oldversion < 2007110837) {
-        $table = new XMLDBTable('game_cross');
-        $field = new XMLDBField('createconnectors');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        $dbman->rename_field( $table, $field, 'attempts');
+        upgrade_mod_savepoint(true, 2007110862, 'game');
     }		
 	
-	//game_cross.createfilleds
-    if ($result && $oldversion < 2007110838) {
-        $table = new XMLDBTable('game_cross');
-        $field = new XMLDBField('createfilleds');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007110863) {
+        $table = new xmldb_table( 'game_attempts');
+		$field = new xmldb_field( 'preview', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0', 'lastremotehost');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }		
-
-	//game_cross.createspaces
-    if ($result && $oldversion < 2007110839) {
-        $table = new XMLDBTable('game_cross');
-        $field = new XMLDBField('createspaces');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007110863, 'game');
     }		
 	
-	//drop game_cross_questions
-    if ($result && $oldversion < 2007110840) {
-        $result = $result && drop_table(new XMLDBTable('game_cross_questions'));
-    }	
+    if ($oldversion < 2007110864) {
+        $table = new xmldb_table( 'game_attempts');
+		$field = new xmldb_field( 'attempt', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'preview');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-	//rename table game_instances to game_attempts
-    if ($result && $oldversion < 2007110841) {
-        $table = new XMLDBTable( 'game_questions');
-        $result = $result && rename_table( $table, 'game_queries');
-    }
-
-
-	//drop game_snakes.sourcemodule
-    if ($result && $oldversion < 2007110853) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('sourcemodule');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }	
-	
-	//drop game_snakes.questionid
-    if ($result && $oldversion < 2007110854) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('questionid');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }	
-	
-	//drop game_snakes.glossaryentryid
-    if ($result && $oldversion < 2007110855) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('glossaryentryid');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }	
-
-	//rename table game_instances to game_attempts
-    if ($result && $oldversion < 2007110856) {
-        $table = new XMLDBTable( 'game_instances');
-        $result = $result && rename_table( $table, 'game_attempts');
-    }
-
-	//drop game_attempts.gamekind
-    if ($result && $oldversion < 2007110857) {
-        $table = new XMLDBTable('game_attempts');
-        $field = new XMLDBField('gamekind');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }	
-
-	//drop game_attempts.finished
-    if ($result && $oldversion < 2007110858) {
-        $table = new XMLDBTable('game_attempts');
-        $field = new XMLDBField( 'finished');
-
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }	
-	
-	//game_attempts.timestart
-    if ($result && $oldversion < 2007110859) {
-        $table = new XMLDBTable( 'game_attempts');
-		$field = new XMLDBField( 'timestarted');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && rename_field( $table, $field, 'timestart');
-    }		
-
-	//game_attempts.timefinished
-    if ($result && $oldversion < 2007110860) {
-        $table = new XMLDBTable( 'game_attempts');
-		$field = new XMLDBField( 'timefinished');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && rename_field( $table, $field, 'timefinish');
+        upgrade_mod_savepoint(true, 2007110864, 'game');
     }		
 	
-	//drop game_attempts.grade
-    if ($result && $oldversion < 2007110861) {
-        $table = new XMLDBTable('game_attempts');
-        $field = new XMLDBField( 'grade');
+    if ($oldversion < 2007110865) {
+        $table = new xmldb_table( 'game_attempts');
+		$field = new xmldb_field( 'score', XMLDB_TYPE_FLOAT, null, XMLDB_UNSIGNED, null, null, '0', 'attempt');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
-    }		
-	
-	//drop game_attempts.attempts
-    if ($result && $oldversion < 2007110862) {
-        $table = new XMLDBTable( 'game_attempts');
-		$field = new XMLDBField( 'tries');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && rename_field( $table, $field, 'attempts');
-    }		
-	
-	//game_attempts.preview
-    if ($result && $oldversion < 2007110863) {
-        $table = new XMLDBTable( 'game_attempts');
-		$field = new XMLDBField( 'preview');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0', 'lastremotehost');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }		
-	
-	//game_attempts.attempt
-    if ($result && $oldversion < 2007110864) {
-        $table = new XMLDBTable( 'game_attempts');
-		$field = new XMLDBField( 'attempt');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'preview');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }		
-	
-	//game_attempts.score
-    if ($result && $oldversion < 2007110865) {
-        $table = new XMLDBTable( 'game_attempts');
-		$field = new XMLDBField( 'score');
-        $field->setAttributes(XMLDB_TYPE_FLOAT, null, XMLDB_UNSIGNED, null, null, null, null, '0', 'attempt');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007110865, 'game');
     }		
 
 
-	//new table game_grades
-    if ($result && $oldversion < 2007110866) {
-        /// Define table scorm_scoes_data to be created
-        $table = new XMLDBTable( 'game_course_input');
+    if ($oldversion < 2007110866) {
+        $table = new xmldb_table( 'game_course_input');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, null, '');
-        $table->addFieldInfo('course', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('sourcemodule', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null, null, '');
-        $table->addFieldInfo('ids', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, null, '');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, '');
+        $table->add_field('course', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('sourcemodule', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null,  '');
+        $table->add_field('ids', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, '');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        /// Launch create table for scorm_scoes_data
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }        
+        upgrade_mod_savepoint(true, 2007110866, 'game');
 	}
 
-	//1.4-repair
-	//game.gameinputid
-    if ($result && $oldversion < 2007111302) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('gameinputid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'bookid');
+    if ($oldversion < 2007111302) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('gameinputid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'bookid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-		
-	//game.bottomtext
-    if ($result && $oldversion < 2007111303) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('bottomtext');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null);
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
-    }
-	
-	//game.grademethod
-    if ($result && $oldversion < 2007111304) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('grademethod');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007110865, 'game');
     }
 
-	//game.grade
-    if ($result && $oldversion < 2007111305) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('grade');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'bottomtext');
+    if ($oldversion < 2007111303) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('bottomtext', XMLDB_TYPE_TEXT);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111303, 'game');
     }
 
-	//game.decimalpoints
-    if ($result && $oldversion < 2007111306) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('decimalpoints');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007111304) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('grademethod', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111304, 'game');
     }
 
-	//game.popup
-    if ($result && $oldversion < 2007111307) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('popup');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007111305) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'bottomtext');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111305, 'game');
     }
 
-	//game.review
-    if ($result && $oldversion < 2007111308) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('review');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007111306) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('decimalpoints', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111306, 'game');
     }
-	
-	//game.attempts
-    if ($result && $oldversion < 2007111309) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('attempts');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+    if ($oldversion < 2007111307) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('popup', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111307, 'game');
+    }
+
+    if ($oldversion < 2007111308) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('review', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111307, 'game');
     }
 	
-    if ($result && $oldversion < 2007111310) {
-		execute_sql("UPDATE {$CFG->prefix}game SET grade=0 WHERE grade IS NULL", true);
+    if ($oldversion < 2007111309) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('attempts', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111309, 'game');
+    }
+	
+    if ($oldversion < 2007111310) {
+		$DB->execute('UPDATE {game} SET grade=0 WHERE grade IS NULL', true);
+
+        upgrade_mod_savepoint(true, 2007111310, 'game');
 	}
 	
-	//ver 1.4 repair2
-	//game_queries.attemptid
-    if ($result && $oldversion < 2007111842) {
-        $table = new XMLDBTable( 'game_queries');
-		$field = new XMLDBField( 'gameinstanceid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2007111842) {
+        $table = new xmldb_table( 'game_queries');
+		$field = new xmldb_field( 'gameinstanceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
 		
-        $result = $result && rename_field( $table, $field, 'attemptid');
+        $dbman->rename_field( $table, $field, 'attemptid');
+
+        upgrade_mod_savepoint(true, 2007111842, 'game');
     }		
 
-	//drop game_cross.tries
-    if ($result && $oldversion < 2007111843) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('grade');
-	//game.bottomtext
-    if ($result && $oldversion < 2007111303) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('bottomtext');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null);
+    if ($oldversion < 2007111843) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('grade');
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2007111843, 'game');
     }
 
-    /// Launch add field format
-        $result = $result && drop_field($table, $field);
+    if ($oldversion < 2007111303) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('bottomtext', XMLDB_TYPE_TEXT);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111303, 'game');
     }
 
-	//game_queries.questiontext
-    if ($result && $oldversion < 2007111844) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('questiontext');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null, '','glossaryentryid');
+    if ($oldversion < 2007111844) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('questiontext', XMLDB_TYPE_TEXT, null, null, null, null, '','glossaryentryid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111844, 'game');
     }
 
-	//game_queries.score
-    if ($result && $oldversion < 2007111845) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('score');
-        $field->setAttributes(XMLDB_TYPE_FLOAT, null, null, null, null, null, null, '0','questiontext');
+    if ($oldversion < 2007111845) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('score', XMLDB_TYPE_FLOAT, null, null, null, null, '0','questiontext');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111845, 'game');
     }
 	
-	//game_queries.studentanswer
-    if ($result && $oldversion < 2007111846) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('studentanswer');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null, '','glossaryentryid');
+    if ($oldversion < 2007111846) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('studentanswer', XMLDB_TYPE_TEXT, null, null, null, null, '','glossaryentryid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111846, 'game');
     }	
 
-	//game_queries.col
-    if ($result && $oldversion < 2007111847) {
-        $table = new XMLDBTable( 'game_queries');
-		$field = new XMLDBField( 'col');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && add_field($table, $field);
+    if ($oldversion < 2007111847) {
+        $table = new xmldb_table( 'game_queries');
+		$field = new xmldb_field( 'col', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111847, 'game');
     }		
 
-	//game_queries.row
-    if ($result && $oldversion < 2007111848) {
-        $table = new XMLDBTable( 'game_queries');
-		$field = new XMLDBField( 'row');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && add_field($table, $field);
+    if ($oldversion < 2007111848) {
+        $table = new xmldb_table( 'game_queries');
+		$field = new xmldb_field( 'row', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111848, 'game');
     }		
 	
-	//game_queries.horizontal
-    if ($result && $oldversion < 2007111849) {
-        $table = new XMLDBTable( 'game_queries');
-		$field = new XMLDBField( 'horizontal');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && add_field($table, $field);
+    if ($oldversion < 2007111849) {
+        $table = new xmldb_table( 'game_queries');
+		$field = new xmldb_field( 'horizontal', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111849, 'game');
     }		
 
-	//game_queries.answertext
-    if ($result && $oldversion < 2007111850) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('answertext');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null);
+    if ($oldversion < 2007111850) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('answertext', XMLDB_TYPE_TEXT);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111850, 'game');
     }	
 
-	//game_queries.correct
-    if ($result && $oldversion < 2007111851) {
-        $table = new XMLDBTable( 'game_queries');
-		$field = new XMLDBField( 'correct');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
-		
-        $result = $result && add_field($table, $field);
+    if ($oldversion < 2007111851) {
+        $table = new xmldb_table( 'game_queries');
+		$field = new xmldb_field( 'correct', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111851, 'game');
     }		
 	
-    if ($result && $oldversion < 2007111853) {
-		execute_sql("UPDATE {$CFG->prefix}game SET grademethod=1 WHERE grademethod=0 OR grademethod IS NULL", true);
+    if ($oldversion < 2007111853) {
+		execute_sql('UPDATE {game} SET grademethod=1 WHERE grademethod=0 OR grademethod IS NULL', true);
+
+        upgrade_mod_savepoint(true, 2007111853, 'game');
 	}
 
-	//game_hangman.queryid
-    if ($result && $oldversion < 2007111854) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('queryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'id');
+    if ($oldversion < 2007111854) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('queryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111854, 'game');
     }	
 
-	//game_snakes.queryid
-    if ($result && $oldversion < 2007111855) {
-        $table = new XMLDBTable('game_snakes');
-        $field = new XMLDBField('queryid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'snakesdatabaseid');
+    if ($oldversion < 2007111855) {
+        $table = new xmldb_table('game_snakes');
+        $field = new xmldb_field('queryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'snakesdatabaseid');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111855, 'game');
     }	
 
-	//game_bookquiz_chapters.attemptid
-    if ($result && $oldversion < 2007111856) {
-        $table = new XMLDBTable( 'game_bookquiz_chapters');
-		$field = new XMLDBField( 'attemptid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'id');
+    if ($oldversion < 2007111856) {
+        $table = new xmldb_table( 'game_bookquiz_chapters');
+		$field = new xmldb_field( 'attemptid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'id');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007111856, 'game');
     }
 
-	//game_hangman.letters : change to char( 100)
-    if ($result && $oldversion < 2007120103) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('letters');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '100', null, null, null, null, null, null);
+    if ($oldversion < 2007120103) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('letters', XMLDB_TYPE_CHAR, '100');
 
-    /// Launch change of precision for field lang
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2007120103, 'game');
     }
 
-	//game_hangman.allletters : change to char( 100)
-    if ($result && $oldversion < 2007120104) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('allletters');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '100', null, null, null, null, null, null);
+    if ($oldversion < 2007120104) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('allletters', XMLDB_TYPE_CHAR, '100');
 
-    /// Launch change of precision for field lang
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2007120104, 'game');
     }
 
-    //1.4.c
-	//game_queries.attachment
-    if ($result && $oldversion < 2007120106) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('attachment');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '100', null, null, null, null, null, null);
+    if ($oldversion < 2007120106) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('attachment', XMLDB_TYPE_CHAR, '100');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2007120106, 'game');
     }
  
-    //1.6  
+    //2008
     
-	//game.glossaryid2
-    if ($result && $oldversion < 2008011301) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('glossaryid2');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008011301) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('glossaryid2', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008011301, 'game');
     }
     
-	//game.glossarycategoryid2
-    if ($result && $oldversion < 2008011302) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('glossarycategoryid2');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008011302) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('glossarycategoryid2', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008011302, 'game');
     }    
     
-	//game_queries.attachment
-    if ($result && $oldversion < 2008011308) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('attachment');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '200', null, null, null, null, null, '');
+    if ($oldversion < 2008011308) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('attachment', XMLDB_TYPE_CHAR, '200', null, null, null, '');
+       if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008011308, 'game');
     }    
     
-	//new table game_hiddenpicture
-    if ($result && $oldversion < 2008011504) {
-        /// Define table game_hiddenpicture to be created
-        $table = new XMLDBTable( 'game_hiddenpicture');
+    if ($oldversion < 2008011504) {
+        $table = new xmldb_table( 'game_hiddenpicture');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('correct', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('wrong', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('found', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('correct', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('wrong', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('found', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        /// Launch create table
-        $result = $result && create_table($table);
-	}    
-	
-	
-	//game.param8
-    if ($result && $oldversion < 2008012701) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('param8');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0', 'param7');
-
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2008011504, 'game');
 	}
 	
-	//game_queries.language
-    if ($result && $oldversion < 2008071101) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('language');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '10', null, null, null, null, null, '');
+    if ($oldversion < 2008012701) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('param8', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, '0', 'param7');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008012701, 'game');
+	}
+	
+    if ($oldversion < 2008071101) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('language', XMLDB_TYPE_CHAR, '10', null, null, null, '');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2008071101, 'game');
     }
 
-	//new table game_export_javame
-    if ($result && $oldversion < 2008072204) {
-        /// Define table game_export_javame to be created
-        $table = new XMLDBTable( 'game_export_javame');
+    if ($oldversion < 2008072204) {
+        $table = new xmldb_table( 'game_export_javame');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('filename', XMLDB_TYPE_CHAR, '20');
-        $table->addFieldInfo('icon', XMLDB_TYPE_CHAR, '100');
-        $table->addFieldInfo('createdby', XMLDB_TYPE_CHAR, '50');
-        $table->addFieldInfo('vendor', XMLDB_TYPE_CHAR, '50');
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, '20');
-        $table->addFieldInfo('description', XMLDB_TYPE_CHAR, '100');
-        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, '10');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('filename', XMLDB_TYPE_CHAR, '20');
+        $table->add_field('icon', XMLDB_TYPE_CHAR, '100');
+        $table->add_field('createdby', XMLDB_TYPE_CHAR, '50');
+        $table->add_field('vendor', XMLDB_TYPE_CHAR, '50');
+        $table->add_field('name', XMLDB_TYPE_CHAR, '20');
+        $table->add_field('description', XMLDB_TYPE_CHAR, '100');
+        $table->add_field('version', XMLDB_TYPE_CHAR, '10');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-        
-        $table->addIndexInfo('gameid', XMLDB_INDEX_UNIQUE, array('gameid'));        
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('gameid', XMLDB_KEY_UNIQUE, array('gameid'));        
 
-        /// Launch create table
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2008072204, 'game');
 	} 
 	
-	//Delete field game_hangman.quizid
-    if ($result && $oldversion < 2008072501) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('quizid');
+    if ($oldversion < 2008072501) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('quizid');
 
-    /// Launch drop field grade_high
-        $result = $result && drop_field($table, $field);
+      if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2008072501, 'game');
     }
 
-	//Delete field game_hangman.glossaryid
-    if ($result && $oldversion < 2008072502) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('glossaryid');
+    if ($oldversion < 2008072502) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('glossaryid');
 
-    /// Launch drop field grade_high
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2008072502, 'game');
     }
     
-	//Delete field game_hangman.questioncategoryid
-    if ($result && $oldversion < 2008072503) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('questioncategoryid');
+    if ($oldversion < 2008072503) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('questioncategoryid');
 
-    /// Launch drop field grade_high
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2008072503, 'game');
     }
 
-	//Delete field game_hangman.gameinputid
-    if ($result && $oldversion < 2008072504) {
-        $table = new XMLDBTable('game_hangman');
-        $field = new XMLDBField('gameinputid');
+    if ($oldversion < 2008072504) {
+        $table = new xmldb_table('game_hangman');
+        $field = new xmldb_field('gameinputid');
 
-    /// Launch drop field grade_high
-        $result = $result && drop_field($table, $field);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2008072504, 'game');
     }
   
-	//game.subcategories
-    if ($result && $oldversion < 2008090101) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('subcategories');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '1');
+    if ($oldversion < 2008090101) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('subcategories', XMLDB_TYPE_INTEGER, '1');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008090101, 'game');
 	}
     
+    if ($oldversion < 2008101103) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('state', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0');
 
-	//game.state
-    if ($result && $oldversion < 2008101103) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('state');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
-
-    /// Launch change_field_precision
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2008101103, 'game');
 	}
 	
-	//game_millionaire.level
-    if ($result && $oldversion < 2008101104) {
-        $table = new XMLDBTable('game_millionaire');
-        $field = new XMLDBField('level');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008101104) {
+        $table = new xmldb_table('game_millionaire');
+        $field = new xmldb_field('level', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0');
 
-    /// Launch change_field_precision
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2008101104, 'game');
 	}
 
-	//game_sudoku.level
-    if ($result && $oldversion < 2008101106) {
-        $table = new XMLDBTable('game_sudoku');
-        $field = new XMLDBField('level');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008101106) {
+        $table = new xmldb_table('game_sudoku');
+        $field = new xmldb_field('level', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0');
 
-    /// Launch change_field_precision
-        $result = $result && change_field_precision($table, $field);
+        $dbman->cchange_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2008101106, 'game');
 	}
 	
-	//game_hiddenpicture.correct
-    if ($result && $oldversion < 2008101107) {
-        $table = new XMLDBTable('game_hiddenpicture');
-        $field = new XMLDBField('correct');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008101107) {
+        $table = new xmldb_table('game_hiddenpicture');
+        $field = new xmldb_field('correct', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0');
 
-    /// Launch change_field_precision
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2008101107, 'game');
 	}		
 	
-	//game_hiddenpicture.wrong
-    if ($result && $oldversion < 2008101108) {
-        $table = new XMLDBTable('game_hiddenpicture');
-        $field = new XMLDBField('wrong');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008101108) {
+        $table = new xmldb_table('game_hiddenpicture');
+        $field = new xmldb_field('wrong', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0');
 
-    /// Launch change_field_precision
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2008101108, 'game');
 	}	
 	
-	//game_hiddenpicture.found
-    if ($result && $oldversion < 2008101109) {
-        $table = new XMLDBTable('game_hiddenpicture');
-        $field = new XMLDBField('found');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008101109) {
+        $table = new xmldb_table('game_hiddenpicture');
+        $field = new xmldb_field('found', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0');
 
-    /// Launch change_field_precision
-        $result = $result && change_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
+        upgrade_mod_savepoint(true, 2008101109, 'game');
 	}	
 	
-	//game_queries.answerid
-    if ($result && $oldversion < 2008102701) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('answerid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, '0');
+    if ($oldversion < 2008102701) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('answerid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008102701, 'game');
 	}
 	
-	//new table game_export_html
-    if ($result && $oldversion < 2008110701) {
-        /// Define table game_export_html to be created
-        $table = new XMLDBTable( 'game_export_html');
+    if ($oldversion < 2008110701) {
+        $table = new xmldb_table( 'game_export_html');
 
-        /// Adding fields to table scorm_scoes_data
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('filename', XMLDB_TYPE_CHAR, '30');
-        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, '200');
-        $table->addFieldInfo('checkbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('printbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE;
+        $table->add_field('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('filename', XMLDB_TYPE_CHAR, '30');
+        $table->add_field('title', XMLDB_TYPE_CHAR, '200');
+        $table->add_field('checkbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->add_field('printbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-        
-        $table->addIndexInfo('gameid', XMLDB_INDEX_UNIQUE, array('gameid'));        
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));        
+        $table->add_key('gameid', XMLDB_INDEX_UNIQUE, array('gameid'));        
 
-        /// Launch create table
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2008110701, 'game');
 	} 
 
-	//rename field game_snakes_database.file to fileboard
-    if ($result && $oldversion < 2008111701) {
-        $table = new XMLDBTable( 'game_snakes_database');
-		$field = new XMLDBField( 'file');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, null, null, null, null, '');
+    if ($oldversion < 2008111701) {
+        $table = new xmldb_table( 'game_snakes_database');
+		$field = new xmldb_field( 'file', XMLDB_TYPE_CHAR, 100, null, null, null,  '');
 		
-        $result = $result && rename_field( $table, $field, 'fileboard');
+        $dbman->rename_field( $table, $field, 'fileboard');
+        upgrade_mod_savepoint(true, 2008111701, 'game');
     }
 
-	//game_exp	//game.bottomtext
-    if ($result && $oldversion < 2007111303) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('bottomtext');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null);
+    if ($oldversion < 2008111801) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('bottomtext', XMLDB_TYPE_TEXT);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2008111801, 'game');
     }
 
-    if ($result && $oldversion < 2009010502) {
-        $table = new XMLDBTable('game_export_javame');
-        $field = new XMLDBField('maxpicturewidth');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '7');
+    //2009
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+    if ($oldversion < 2009010502) {
+        $table = new xmldb_table('game_export_javame');
+        $field = new xmldb_field('maxpicturewidth', XMLDB_TYPE_INTEGER, '7');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2009010502, 'game');
 	}
 	
-	//new table game_repetitions
-    if ($result && $oldversion < 2009031801) {
-        /// Define table game_repetitions to be created
-        $table = new XMLDBTable( 'game_repetitions');
+    if ($oldversion < 2009031801) {
+        $table = new xmldb_table('game_repetitions');
 
-        /// Adding fields to table game_repetitions
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('questionid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('glossaryentryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
-        $table->addFieldInfo('repetitions', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('questionid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('glossaryentryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('repetitions', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-		/// Adding keys to table scorm_scoes_data
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-        
-        $table->addIndexInfo('main', XMLDB_INDEX_UNIQUE, array('gameid,userid,questionid,glossaryentryid'));        
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('main', XMLDB_KEY_UNIQUE, array('gameid,userid,questionid,glossaryentryid'));        
 
-        /// Launch create table
-        $result = $result && create_table($table);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_mod_savepoint(true, 2009031801, 'game');
 	}
 
-	//game.shuffle
-    if ($result && $oldversion < 2009071403) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('shuffle');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '1', 'param8');
+    if ($oldversion < 2009071403) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('shuffle', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '1', 'param8');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2009010502, 'game');
 	}
 
-    if ($result && $oldversion < 2009072801) {
-        $table = new XMLDBTable('game_export_html');
-        $field = new XMLDBField('inputsize');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED);
+    if ($oldversion < 2009072801) {
+        $table = new xmldb_table('game_export_html');
+        $field = new xmldb_field('inputsize', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2009072801, 'game');
 	}
     
-    //game_export_html.maxpicturewidth
-    if ($result && $oldversion < 2009072901) {
-        $table = new XMLDBTable('game_export_html');
-        $field = new XMLDBField('maxpicturewidth');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '7');
+    if ($oldversion < 2009072901) {
+        $table = new xmldb_table('game_export_html');
+        $field = new xmldb_field('maxpicturewidth', XMLDB_TYPE_INTEGER, '7');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2009072901, 'game');
 	}
 
-    //game_export_html.maxpictureheight
-    if ($result && $oldversion < 2009073101) {
-        $table = new XMLDBTable('game_export_html');
-        $field = new XMLDBField('maxpictureheight');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '7');
+    if ($oldversion < 2009073101) {
+        $table = new xmldb_table('game_export_html');
+        $field = new xmldb_field('maxpictureheight', XMLDB_TYPE_INTEGER, '7');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2009072901, 'game');
 	}
 
-	//game_export_javame.maxpictureheight
-    if ($result && $oldversion < 2009073102) {
-        $table = new XMLDBTable('game_export_javame');
-        $field = new XMLDBField('maxpictureheight');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '7');
+    if ($oldversion < 2009073102) {
+        $table = new xmldb_table('game_export_javame');
+        $field = new xmldb_field('maxpictureheight', XMLDB_TYPE_INTEGER, '7');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2009073102, 'game');
 	}
 
-	//game.toptext
-    if ($result && $oldversion < 2009083102) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('toptext');
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, null, null, null, null, null, 'gameinputid');
+    if ($oldversion < 2009083102) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('toptext', XMLDB_TYPE_TEXT, null, null, null, null, null, 'gameinputid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2009073102, 'game');
     }
 	
-	//game.toptext
-    if ($result && $oldversion < 2010031101) {
-        $table = new XMLDBTable('game_queries');
-        $field = new XMLDBField('tries');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, null, null, '0', 'answerid');
+    if ($oldversion < 2010031101) {
+        $table = new xmldb_table('game_queries');
+        $field = new xmldb_field('tries', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, null, null, '0', 'answerid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2010031101, 'game');
     }
 
-
-    if ($result && $oldversion < 2010071606) {
-        $table = new XMLDBTable('game_export_html');
-        $field = new XMLDBField('id');
-        $result = $result && drop_field($table, $field, false);
+    if ($oldversion < 2010071606) {
+        $table = new xmldb_table('game_export_html');
+        $field = new xmldb_field('id');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2010071606, 'game');
     }
 	
-	//rename field game_export_html.gameid to id
-    if ($result && $oldversion < 2010071607) {
-        $table = new XMLDBTable( 'game_export_html');
-		$field = new XMLDBField( 'gameid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, '0');
+    if ($oldversion < 2010071607) {
+        $table = new xmldb_table( 'game_export_html');
+		$field = new xmldb_field( 'gameid', XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, '0');
 		
-        $result = $result && rename_field( $table, $field, 'id', false);
+        $dbman->rename_field($table, $field, 'id');
+
+        upgrade_mod_savepoint(true, 2010071607, 'game');
     }
 
-	//game_export_html.type
-    if ($result && $oldversion < 2010071608) {
-        $table = new XMLDBTable('game_export_html');
-        $field = new XMLDBField('type');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '10');
+    if ($oldversion < 2010071608) {
+        $table = new xmldb_table('game_export_html');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2010071608, 'game');
 	}
 
-    if ($result && $oldversion < 2010071609) {
-        $table = new XMLDBTable('game_export_javame');
-        $field = new XMLDBField('id');
-        $result = $result && drop_field($table, $field, false);
+    if ($oldversion < 2010071609) {
+        $table = new xmldb_table('game_export_javame');
+        $field = new xmldb_field('id');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2010071609, 'game');
     }
 	
-	//rename field game_export_html.gameid to id
-    if ($result && $oldversion < 2010071610) {
-        $table = new XMLDBTable( 'game_export_javame');
-		$field = new XMLDBField( 'gameid');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, '0');
-		
-        $result = $result && rename_field( $table, $field, 'id', false);
+    if ($oldversion < 2010071610) {
+        $table = new xmldb_table( 'game_export_javame');
+		$field = new xmldb_field( 'gameid', XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, '0');
+
+        $dbman->rename_field($table, $field, 'id');
+
+        upgrade_mod_savepoint(true, 2010071610, 'game');
     }
 
-	//game_export_html.type
-    if ($result && $oldversion < 2010071611) {
-        $table = new XMLDBTable('game_export_javame');
-        $field = new XMLDBField('type');
-        $field->setAttributes(XMLDB_TYPE_CHAR, '10');
+    if ($oldversion < 2010071611) {
+        $table = new xmldb_table('game_export_javame');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
-    /// Launch add field format
-        $result = $result && add_field($table, $field);
+        upgrade_mod_savepoint(true, 2010071611, 'game');
 	}
-
-  if ($result && $oldversion < 2010072201) {
-        $table = new XMLDBTable('game');
-        $field = new XMLDBField('popup');
-        $result = $result && drop_field($table, $field, false);
-    }
 
 
     
-    return $result;
+    return true;
 }
-
-
-?>

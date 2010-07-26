@@ -1,8 +1,10 @@
-<?php  // $Id: play.php,v 1.10 2010/07/21 20:56:55 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.11 2010/07/26 00:13:32 bdaloukas Exp $
+
+// This file plays the game Hidden Picture
 
 function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 {
-    global $CFG, $USER;
+    global $DB, $USER;
 
 	if( $attempt != false and $hiddenpicture != false){
 	    //Continue a previous attempt
@@ -14,14 +16,13 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 		$attempt = game_addattempt( $game);
 	}
 
-
 	$cols = $game->param1;
 	$rows = $game->param2;
 	if( $cols == 0){
-		error( get_string( 'hiddenpicture_nocols', 'game'));
+		print_error( get_string( 'hiddenpicture_nocols', 'game'));
 	}
 	if( $rows == 0){
-		error( get_string( 'hiddenpicture_norows', 'game'));
+		print_error( get_string( 'hiddenpicture_norows', 'game'));
 	}
 
 	//new attempt
@@ -31,7 +32,7 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
     $newrec = game_hiddenpicture_selectglossaryentry( $game, $attempt);
 	
 	if( $recs === false){
-		error( get_string( 'no_questions', 'game'));
+		print_error( get_string( 'no_questions', 'game'));
 	}	
 
 	$positions = array();
@@ -61,7 +62,7 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 		$query->questionid = $rec->questionid;
 		$query->glossaryentryid = $rec->glossaryentryid;
 		$query->score = 0;
-		if( ($query->id = insert_record( "game_queries", $query)) == 0){
+		if( ($query->id = $DB->insert_record( 'game_queries', $query)) == 0){
 			error( 'error inserting in game_queries');
 		}
 	}
@@ -74,7 +75,7 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 
 //Create the game_hiddenpicture record
 function game_hiddenpicture_selectglossaryentry( $game, $attempt){
-    global $CFG, $USER;
+    global $CFG, $DB, $USER;
 
     srand( (double)microtime()*1000000);
 
@@ -82,9 +83,9 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
 		error( get_string( 'must_select_glossary', 'game'));
 	}
     $select = "ge.glossaryid={$game->glossaryid2}";
-	$table = 'glossary_entries ge';
+	$table = '{glossary_entries} ge';
 	if( $game->glossarycategoryid2){
-		$table .= ",{$CFG->prefix}glossary_entries_categories gec";
+		$table .= ",{glossary_entries_categories} gec";
 		$select .= " AND gec.entryid = ge.id AND gec.categoryid = {$game->glossarycategoryid2}";
 	}
 	if( $game->param7 == 0){
@@ -92,31 +93,43 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     	$select .= " AND concept NOT LIKE '% %'";
     }
     
-    $select .= " AND attachment LIKE '%.%'";
-	if( ($recs=get_records_select( $table, $select, '', 'ge.id,attachment')) == false){	    
-	    $a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
-        error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
+    //$select .= " AND attachment LIKE '%.%'";
+    $sql = "SELECT ge.id,attachment FROM $table WHERE $select";
+	if( ($recs=$DB->get_records_sql( $sql)) == false){	    
+	    $a->name = "'".$DB->get_field('glossary', 'name', array( 'id' => $game->glossaryid2))."'";
+        print_error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;
     }
     $ids = array();
+    $keys = array();
+    $fs = get_file_storage();
+    $cmg = get_coursemodule_from_instance('glossary', $game->glossaryid2, $game->course);
+    $context = get_context_instance(CONTEXT_MODULE, $cmg->id);
     foreach( $recs as $rec){
-        $s = strtoupper( $rec->attachment);
-        $s = substr( $s, -4);
-        if( $s == '.GIF' or $s == '.JPG' or $s == '.PNG'){
-            $ids[] = $rec->id;
-        } 
+        $files = $fs->get_area_files($context->id, 'mod_glossary', 'attachment', $rec->id, "timemodified", false);
+        if( $files)
+        {
+            foreach( $files as $key => $file)
+            {
+                $s = strtoupper( $file->get_filename());
+                $s = substr( $s, -4);
+                if( $s == '.GIF' or $s == '.JPG' or $s == '.PNG'){
+                    $ids[] = $rec->id;
+                    $keys[] = $file->get_pathnamehash();
+                }
+            }
+        }
     }
 	if( count( $ids) == 0){
-    	$a->name = "'".get_field_select('glossary', 'name', "id=$game->glossaryid2")."'";
-        error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
+    	$a->name = "'".$DB->get_field( 'glossary', 'name', array( 'id' => $game->glossaryid2))."'";
+        print_error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;
     }
     $sel = mt_rand(0, count( $ids)-1);
-    $id = $ids[ $sel];
                   
     $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment'.
-           " FROM {$CFG->prefix}glossary_entries WHERE id = $id";
-    if( ($rec = get_record_sql( $sql)) == false)
+           " FROM {glossary_entries} WHERE id = ".$ids[ $sel];
+    if( ($rec = $DB->get_record_sql( $sql)) == false)
         return false;
         
     $query->attemptid = $attempt->id;
@@ -128,16 +141,17 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     $query->sourcemodule = 'glossary';
     $query->questionid = 0;
     $query->glossaryentryid = $rec->glossaryentryid;
-	$query->attachment = str_replace( "\\", '/', $CFG->dataroot)."/{$game->course}/moddata/glossary/{$game->glossaryid2}/{$query->glossaryentryid}/{$rec->attachment}";
+	$query->attachment = $keys[ $sel];
 	$query->questiontext = $rec->questiontext;
 	$query->answertext = $rec->answertext;
     $query->score = 0;
-    if( ($query->id = insert_record( "game_queries", $query)) == 0){
-        error( 'error inserting in game_queries');
+    if( ($query->id = $DB->insert_record( 'game_queries', $query)) == 0){
+        print_error( 'Error inserting in game_queries');
     }
 	$newrec->id = $attempt->id;
+    $newrec->correct = 0;
 	if( !game_insert_record(  'game_hiddenpicture', $newrec)){
-		error( 'error inserting in game_hiddenpicture');
+		print_error( 'Error inserting in game_hiddenpicture');
 	}
 	
 	return $newrec;
@@ -166,13 +180,13 @@ function game_hiddenpicture_play( $id, $game, $attempt, $hiddenpicture, $showsol
 		game_sudoku_showquestions_quiz( $id, $game, $attempt, $hiddenpicture, $offsetquestions, $numbers, $correctquestions, $onlyshow, $showsolution);
 		break;
 	case 'glossary':
-		game_sudoku_showquestions_glossary( $id, $game, $attempt, $hiddenpicture, $offsetquestions, $numbers, $correctquestions, $onlyshow, $showsolution);
+	    game_sudoku_showquestions_glossary( $id, $game, $attempt, $hiddenpicture, $offsetquestions, $numbers, $correctquestions, $onlyshow, $showsolution);
 		break;
 	}
 	
 	if( $game->bottomtext != ''){
 		echo '<br><br>'.$game->bottomtext;
-	}	
+	}
 }
 
 function game_hidden_picture_computescore( $game, $hiddenpicture){
@@ -192,7 +206,7 @@ function game_hidden_picture_computescore( $game, $hiddenpicture){
 }
 
 function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpicture, $showsolution, $offsetquestions, $correctquestions){
-	global $CFG;
+	global $DB;
 
     $foundcells='';
     foreach( $correctquestions as $key => $val){
@@ -205,7 +219,7 @@ function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpict
         }
     }
     
-    $query = get_record_select( 'game_queries', "attemptid=$hiddenpicture->id AND col=0", 'id,glossaryentryid,attachment,questiontext');
+    $query = $DB->get_record_select( 'game_queries', "attemptid=$hiddenpicture->id AND col=0", null, 'id,glossaryentryid,attachment,questiontext');
 
     //Grade
 	echo "<br/>".get_string( 'hiddenpicture_grade', 'game').' : '.round( $attempt->score * 100).' %';
@@ -219,9 +233,9 @@ function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpict
 
 function game_hiddenpicture_showquestion_glossary( $id, $query)
 {
-	global $CFG;
+	global $CFG, $DB;
 	
-	$entry = get_record( 'glossary_entries', 'id', $query->glossaryentryid);
+	$entry = $DB->get_record( 'glossary_entries', array( 'id' => $query->glossaryentryid));
 
 	/// Start the form
 	echo '<br>';
@@ -246,7 +260,7 @@ function game_hiddenpicture_showquestion_glossary( $id, $query)
 
 function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpicture, $finishattempt)
 {
-    global $QTYPES, $CFG;
+    global $QTYPES, $DB;
 
     $responses = data_submitted();
     
@@ -277,9 +291,8 @@ function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpict
 
         $select = "attemptid=$attempt->id";
         $select .= " AND questionid=$question->id";
-        if( ($query->id = get_field_select( 'game_queries', 'id', $select)) == 0){
-			die("problem game_hiddenpicture_check_questions (select=$select)");
-            continue;
+        if( ($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0){
+			print_error("problem game_hiddenpicture_check_questions (select=$select)");
         }
 
 		$answertext = $state->responses[ ''];
@@ -300,13 +313,13 @@ function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpict
     $hiddenpicture->correct += $correct;
     $hiddenpicture->wrong += $wrong;
     
-    if( !update_record(  'game_hiddenpicture', $hiddenpicture)){
-        error( 'game_hiddenpicture_check_questions: error updating in game_hiddenpicture');
+    if( !$DB->update_record(  'game_hiddenpicture', $hiddenpicture)){
+        print_error( 'game_hiddenpicture_check_questions: error updating in game_hiddenpicture');
     }
     
     $attempt->score = game_hidden_picture_computescore( $game, $hiddenpicture);
-    if( !update_record(  'game_attempts', $attempt)){
-        error( 'game_hiddenpicture_check_questions: error updating in game_attempt');
+    if( !$DB->update_record(  'game_attempts', $attempt)){
+        print_error( 'game_hiddenpicture_check_questions: error updating in game_attempt');
     }    
 
     game_sudoku_check_last( $id, $game, $attempt, $hiddenpicture, $finishattempt);
@@ -314,7 +327,7 @@ function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpict
 
 function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenpicture, $finishattempt)
 {
-    global $QTYPES, $CFG;
+    global $QTYPES, $CFG, $DB;
 
     $responses = data_submitted();
 
@@ -322,8 +335,8 @@ function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenp
 	$queryid = $responses->queryid;
 
     // Load the glossary entry
-    if (!($entry = get_record_select( 'glossary_entries', "id=$glossaryentryid"))) {
-        error(get_string('noglossaryentriesfound', 'game'));
+    if (!($entry = $DB->get_record( 'glossary_entries', array( 'id' => $glossaryentryid)))) {
+        print_error( get_string( 'noglossaryentriesfound', 'game'));
     }	
     $answer = $responses->answer;
     $correct = false;
@@ -334,8 +347,8 @@ function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenp
     }
     
     // Load the query
-    if (!($query = get_record_select( 'game_queries', "id=$queryid"))) {
-        error("The query $queryid not found");
+    if (!($query = $DB->get_record( 'game_queries', array( 'id' => $queryid)))) {
+        print_error( "The query $queryid not found");
     }	
         
     game_update_queries( $game, $attempt, $query, $correct, $answer);
@@ -345,8 +358,8 @@ function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenp
     }else{
         $hiddenpicture->wrong++;
     }
-    if( !update_record(  'game_hiddenpicture', $hiddenpicture)){
-        error( 'game_hiddenpicture_check_mainquestion: error updating in game_hiddenpicture');
+    if( !$DB->update_record( 'game_hiddenpicture', $hiddenpicture)){
+        print_error( 'game_hiddenpicture_check_mainquestion: error updating in game_hiddenpicture');
     }
  
     $score = game_hidden_picture_computescore( $game, $hiddenpicture);   
@@ -354,11 +367,11 @@ function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenp
 
     if( $correct == false){
         game_hiddenpicture_play( $id, $game, $attempt, $hiddenpicture);
-        return;
+        return true;
     }
     
     //Finish the game
-    $query = get_record_select( 'game_queries', "attemptid=$hiddenpicture->id AND col=0", 'id,glossaryentryid,attachment,questiontext');
+    $query = $DB->get_record_select( 'game_queries', "attemptid=$hiddenpicture->id AND col=0", null, 'id,glossaryentryid,attachment,questiontext');
     game_showpicture( $id, $game, $attempt, $query, '', '', false);
 	echo '<p><BR/><font size="5" color="green">'.get_string( 'hiddenpicture_win', 'game').'</font><BR/><BR/></p>';
 	global $CFG;
@@ -368,18 +381,19 @@ function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenp
     echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id\">";
     echo get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
 
-	if (! $cm = get_record("course_modules", "id", $id)) {
-		error("Course Module ID was incorrect id=$id");
+	if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
+		print_error( "Course Module ID was incorrect id=$id");
 	}
 
 	echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
+    
+    return false;
 }
 
 function game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, $usemap)
 {
     global $CFG;
     
-	$filename = $query->attachment;
     $filenamenumbers = str_replace( "\\", '/', $CFG->dirroot)."/mod/game/hiddenpicture/numbers.png";
     if( $usemap){
         $cols = $game->param1;
@@ -387,20 +401,22 @@ function game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, $u
     }else{
         $cols = $rows = 0;
     }    
-    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p=$filename&n=$filenamenumbers";
+    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p={$query->attachment}&n=$filenamenumbers";
     $imagesrc = "hiddenpicture/picture.php?$params";  
 
-    $size = getimagesize ($filename);
+    $fs = get_file_storage();
+    $file = get_file_storage()->get_file_by_hash( $query->attachment);
+    $image = $file->get_imageinfo();
     if( $game->param4 > 10){
         $width = $game->param4;
-        $height = $size[ 1] * $width / $size[ 0];        
+        $height = $image[ 'height'] * $width / $image[ 'width'];
     }else if( $game->param5 > 10){
         $height = $game->param5;
-        $width = $size[ 0] * $height / $size[ 1];
+        $width = $image[ 'width'] * $height / $image[ 'height'];
     }else
     {
-        $width = $size[ 0];
-        $height = $size[ 1];
+        $width = $image[ 'width'];
+        $height = $image[ 'height'];
     }
     
     echo "<IMG SRC=\"$imagesrc\" width=$width ";

@@ -1,4 +1,4 @@
-<?PHP // $Id: view.php,v 1.3 2008/03/26 23:05:48 arborrow Exp $
+<?PHP // $Id: view.php,v 1.4 2010/07/26 00:13:31 bdaloukas Exp $
 
 require_once('../../config.php');
 require_once('lib.php');
@@ -11,15 +11,15 @@ $edit      = optional_param('edit', -1, PARAM_BOOL);     // Edit mode
 // security checks START - teachers edit; students view
 // =========================================================================
 if (!$cm = get_coursemodule_from_id('book', $id)) {
-    error('Course Module ID was incorrect');
+    print_error('Course Module ID was incorrect');
 }
 
-if (!$course = get_record('course', 'id', $cm->course)) {
-    error('Course is misconfigured');
+if (!$course = $DB->get_record('course', array( 'id'=> $cm->course))) {
+    print_error('Course is misconfigured');
 }
 
-if (!$book = get_record('book', 'id', $cm->instance)) {
-    error('Course module is incorrect');
+if (!$book = $DB->get_record('book', array( 'id' => $cm->instance))) {
+    print_error('Course module is incorrect');
 }
 
 require_course_login($course, true, $cm);
@@ -28,7 +28,7 @@ $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
 /// read chapters
 $select = $allowedit ? "bookid = $book->id" : "bookid = $book->id AND hidden = 0";
-$chapters = get_records_select('book_chapters', $select, 'pagenum', 'id, pagenum, subchapter, title, hidden');
+$chapters = $DB->get_records_select('book_chapters', $select, null, 'pagenum', 'id, pagenum, subchapter, title, hidden');
 
 /// check chapterid and read chapter data
 if ($chapterid == '0') { // go to first chapter if no given
@@ -45,8 +45,8 @@ if ($chapterid == '0') { // go to first chapter if no given
 }
 
 
-if (!$chapter = get_record('book_chapters', 'id', $chapterid)) {
-    error('Error reading book chapters.');
+if (!$chapter = $DB->get_record('book_chapters', array('id' => $chapterid))) {
+    print_error('Error reading book chapters.');
 }
 
 //check all variables
@@ -118,7 +118,7 @@ if ($nextid) {
     $chnavigation .= '<a title="'.get_string('navnext', 'book').'" href="view.php?id='.$cm->id.'&amp;chapterid='.$nextid.'"><img src="pix/nav_next.gif" class="bigicon" alt="'.get_string('navnext', 'book').'" /></a>';
 } else {
     $sec = '';
-    if ($section = get_record('course_sections', 'id', $cm->section)) {
+    if ($section = $DB->get_record('course_sections', array( 'id' => $cm->section))) {
         $sec = $section->section;
     }
     $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="../../course/view.php?id='.$course->id.'#section-'.$sec.'"><img src="pix/nav_exit.gif" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';

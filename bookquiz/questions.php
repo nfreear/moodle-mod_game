@@ -1,8 +1,8 @@
-<?php // $Id: questions.php,v 1.2 2008/05/13 22:52:10 bdaloukas Exp $
+<?php // $Id: questions.php,v 1.3 2010/07/26 00:13:31 bdaloukas Exp $
 /**
  * The script supports book
  *
- * @version $Id: questions.php,v 1.2 2008/05/13 22:52:10 bdaloukas Exp $
+ * @version $Id: questions.php,v 1.3 2010/07/26 00:13:31 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
  **/
@@ -26,37 +26,27 @@
 
     /// Print upload form
 
-    print_heading_with_help( get_string( "bookquiz_questions", "game"), "questions", "game");
+    print_heading_with_help( get_string( 'bookquiz_questions', 'game'), 'questions', 'game');
 	
-    print_simple_box_start( "center");
+    print_simple_box_start( 'center');
 	
 	$select = "gameid={$game->id}";
 	$categories = array();
-	if( ($recs = get_records_select( 'game_bookquiz_questions', $select, '', 'chapterid,questioncategoryid')) != false){
+	if( ($recs = $DB->get_records_select( 'game_bookquiz_questions', $select, null, '', 'chapterid,questioncategoryid')) != false){
 		foreach( $recs as $rec){
 			$categories[ $rec->chapterid] = $rec->questioncategoryid;
 		}
 	}
 	
-	$a = array();
-	$a[ 0] = '';
-	$select = '';
-	$recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
-	foreach( $recs as $rec){
-		if( array_key_exists( 'course', $rec)){
-			$select = "course=$cm->course";
-		}else{
-			$context = get_context_instance(50, $cm->course);
-	    		$select = " contextid in ($context->id)";
-		}
-		break;
-	}
+	$recs = $DB->get_records( 'question_categories', null, '*', 0, 1);
+    $context = get_context_instance(50, $COURSE->id);
+    $select = " contextid in ($context->id)";
 
 	$a = array();
-        if( $recs = get_records_select( 'question_categories', $select, 'id,name')){
+        if( $recs = $DB->get_records_select( 'question_categories', $select, null, 'id,name')){
             foreach( $recs as $rec){
                 $s = $rec->name;
-                if( ($count = count_records_select( 'question', "category={$rec->id}")) != 0){
+                if( ($count = $DB->count_records( 'question', array( 'category' => $rec->id))) != 0){
                     $s .= " ($count)";
                 }
                 $a[ $rec->id] = $s;
@@ -64,12 +54,12 @@
         }
 	
 	$sql = "SELECT chapterid, COUNT(*) as c ".
-				"FROM {$CFG->prefix}game_bookquiz_questions,{$CFG->prefix}question ".
-				"WHERE {$CFG->prefix}game_bookquiz_questions.questioncategoryid={$CFG->prefix}question.category ".
+				"FROM {game_bookquiz_questions} gbq,{question} q ".
+				"WHERE gbq.questioncategoryid=q.category ".
 				"AND gameid=$game->id ".
 				"GROUP BY chapterid";
 	$numbers = array();
-	if( ($recs = get_records_sql( $sql)) != false){
+	if( ($recs = $DB->get_records_sql( $sql)) != false){
 		foreach( $recs as $rec){
 			$numbers[ $rec->chapterid] = $rec->c;
 		}
@@ -83,7 +73,7 @@
 	echo '<td><center>'.get_string( 'bookquiz_numquestions', 'game').'</td>';
 	echo "</tr>\r\n";
 	$ids = '';
-	if( ($recs = get_records_select( 'book_chapters', 'bookid='.$game->bookid, 'pagenum', 'id,title')) != false)
+	if( ($recs =$DB->get_records( 'book_chapters', array('bookid' => $game->bookid), 'pagenum', 'id,title')) != false)
 	{
 		foreach( $recs as $rec){
 			echo '<tr>';
@@ -127,10 +117,11 @@
 
 function game_bookquiz_save( $gameid, $bookid, $ids, $form)
 {
-	$select = "gameid=$gameid";
+    global $DB;
+
 	$questions = array();
 	$recids = array();
-	if( ($recs = get_records_select( 'game_bookquiz_questions', $select, '', 'id,chapterid,questioncategoryid')) != false){
+	if( ($recs = $DB->get_records( 'game_bookquiz_questions', array( 'gameid' => $gameid), '', 'id,chapterid,questioncategoryid')) != false){
 		foreach( $recs as $rec){
 			$questions[ $rec->chapterid] = $rec->questioncategoryid;
 			$recids[ $rec->chapterid]  = $rec->id;
@@ -152,9 +143,9 @@ function game_bookquiz_save( $gameid, $bookid, $ids, $form)
 			$rec->chapterid = $chapterid;
 			$rec->questioncategoryid = $categoryid;
 			
-			if (($newid=insert_record('game_bookquiz_questions', $rec)) == false) {
+			if (($newid=$DB->insert_record('game_bookquiz_questions', $rec)) == false) {
 				print_object( $rec);
-				error( "Can't insert to game_bookquiz_questions");
+				print_error( "Can't insert to game_bookquiz_questions");
 			}
 			continue;
 		}
@@ -174,9 +165,9 @@ function game_bookquiz_save( $gameid, $bookid, $ids, $form)
 			unset( $updrec);
 			$updrec->id = $recids[ $chapterid];
 			$updrec->questioncategoryid = $categoryid;
-			if ((update_record( 'game_bookquiz_questions', $updrec)) == false) {
+			if (($DB->update_record( 'game_bookquiz_questions', $updrec)) == false) {
 				print_object( $rec);
-				error( "Can't update game_bookquiz_questions");
+				print_error( "Can't update game_bookquiz_questions");
 			}
 		}
 		

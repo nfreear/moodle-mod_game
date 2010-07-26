@@ -1,4 +1,4 @@
-<?php // $Id: importppt.php,v 1.1 2008/03/26 17:40:39 arborrow Exp $
+<?php // $Id: importppt.php,v 1.2 2010/07/26 00:13:30 bdaloukas Exp $
 /**
  * This is a very rough importer for powerpoint slides
  * Export a powerpoint presentation with powerpoint as html pages
@@ -8,7 +8,7 @@
  * 
  * The script supports book and lesson.
  *
- * @version $Id: importppt.php,v 1.1 2008/03/26 17:40:39 arborrow Exp $
+ * @version $Id: importppt.php,v 1.2 2010/07/26 00:13:30 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package lesson
  **/
@@ -21,20 +21,20 @@
     global $matches;
     
     if (! $cm = get_coursemodule_from_id('lesson', $id)) {
-        error("Course Module ID was incorrect");
+        print_error('Course Module ID was incorrect');
     }
 
-    if (! $course = get_record("course", "id", $cm->course)) {
-        error("Course is misconfigured");
+    if (! $course = $DB->get_record('course', array( 'id' => $cm->course))) {
+        print_error('Course is misconfigured');
     }
     
     // allows for adaption for multiple modules
-    if(! $modname = get_field('modules', 'name', 'id', $cm->module)) {
-        error("Could not find module name");
+    if(! $modname = $DB->get_field('modules', 'name', array( 'id' => $cm->module))) {
+        print_error('Could not find module name');
     }
 
-    if (! $mod = get_record($modname, "id", $cm->instance)) {
-        error("Course module is incorrect");
+    if (! $mod = $DB->get_record($modname, array( "id" => $cm->instance))) {
+        print_error('Course module is incorrect');
     }
 
     require_login($course->id, false);
@@ -401,7 +401,7 @@ function book_create_objects($pageobjects, $bookid) {
     
     // same for all chapters
     $chapter->bookid = $bookid;
-    $chapter->pagenum = count_records('book_chapters', 'bookid', $bookid)+1;
+    $chapter->pagenum = $DB->count_records('book_chapters', array( 'bookid' => $bookid))+1;
     $chapter->timecreated = time();
     $chapter->timemodified = time();
     $chapter->subchapter = 0;
@@ -457,13 +457,13 @@ function prep_page($pageobject, $count) {
     Save the chapter objects to the database
 */
 function book_save_objects($chapters, $bookid, $pageid='0') {
+    global $DB;
+
     // nothing fancy, just save them all in order
     foreach ($chapters as $chapter) {
-        if (!$chapter->id = insert_record('book_chapters', $chapter)) {
-            error('Could not update your book');
+        if (!$chapter->id = $DB->insert_record('book_chapters', $chapter)) {
+            print_error('Could not update your book');
         }
     }
     return true;
 }
-
-?>

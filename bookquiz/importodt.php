@@ -1,11 +1,11 @@
-<?php // $Id: importodt.php,v 1.2 2010/07/21 10:57:37 bdaloukas Exp $
+<?php // $Id: importodt.php,v 1.3 2010/07/26 00:13:30 bdaloukas Exp $
 /**
  * This is a very rough importer for odt
  * 
  * The script supports book
  * Is based on class  office  from http://www.phpclasses.org/browse/package/2586.html
  *
- * @version $Id: importodt.php,v 1.2 2010/07/21 10:57:37 bdaloukas Exp $
+ * @version $Id: importodt.php,v 1.3 2010/07/26 00:13:30 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
  **/
@@ -17,7 +17,7 @@
 	$attempt = game_getattempt( $game, $detail);
     $bookid = $game->bookid;
     if( $bookid == 0){
-        error( get_string( 'bookquiz_not_select_book', 'game'));
+        print_error( get_string( 'bookquiz_not_select_book', 'game'));
     }
 
     if ($form = data_submitted())
@@ -35,8 +35,8 @@
 		{  // Valid file is found            
             if ( readdata( $course->id, 'game', $dirtemp, $r_levels, $r_titles, $r_texts, $dirfordelete)) 
 			{  // first try to reall all of the data in
-                $subchapter = optional_param('subchapter', 0, PARAM_BOOL);
-                $overwrite = optional_param('overwrite', 0, PARAM_BOOL);
+				$subchapter = ($_POST[ 'subchapter'] != 0);
+				$overwrite = ((int )$_POST[ 'overwrite'] != 0);
 				if( $overwrite){
 					game_bookquiz_deletebook( $course->id, $bookid);
 				}				
@@ -47,10 +47,10 @@
                
                 if( !game_bookquiz_save_objects($objects)) 
 				{  // sends it to DB
-                    error("could not save");
+                    print_error('could not save');
                 }
             }else
-                error('could not get data');
+                print_error('could not get data');
 
             print_continue("$CFG->wwwroot/mod/game/view.php?id=$cm->id");
             print_footer($course);
@@ -318,9 +318,11 @@ function clean_temp( $base)
 
 function game_bookquiz_create_objects( $pageobjects, $bookid)
 {
+    global $DB;
+
     $chapters = array();
 
-    $lastpagenum = get_field('book_chapters', 'MAX(pagenum) as num', 'bookid', $bookid);
+    $lastpagenum = $DB->get_field('book_chapters', 'MAX(pagenum) as num', array( 'bookid' => $bookid));
 
     foreach ($pageobjects as $pageobject) 
     {
@@ -358,11 +360,13 @@ function game_bookquiz_create_objects( $pageobjects, $bookid)
 */
 function game_bookquiz_save_objects($chapters) 
 {
+    global $DB;
+
     // nothing fancy, just save them all in order
     foreach ($chapters as $chapter) 
     {
-        if (!$newid=insert_record('book_chapters', $chapter)) {
-            error('Could not insert to table book_chapters');
+        if (!$newid=$DB->insert_record('book_chapters', $chapter)) {
+            print_error('Could not insert to table book_chapters');
         }
     }
 	
@@ -689,7 +693,7 @@ function game_bookquiz_splitsections($data, &$positions, &$inputs, &$titles, &$t
 		global $CFG;
 		
 		if( !delete_records( 'book_chapters', 'bookid', $bookid)){
-			error( "Can't delete records from mdl_book_chapters bookid=$bookid");
+			print_error( "Can't delete records from mdl_book_chapters bookid=$bookid");
 		}
 		
 		game_full_rmdir( "$CFG->dataroot/$courseid/moddata/book/$bookid");

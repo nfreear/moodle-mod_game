@@ -1,10 +1,12 @@
-<?php  // $Id: importsnakes.php,v 1.3 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: importsnakes.php,v 1.4 2010/07/26 00:13:31 bdaloukas Exp $
 
 game_importsnakes();
 
 function game_importsnakes()
 {
-    if( count_records( 'game_snakes_database') != 0){
+    global $DB;
+
+    if( $DB->count_records( 'game_snakes_database') != 0){
         return;
     }
     
@@ -42,10 +44,10 @@ function game_importsnakes()
 
 function game_importsnakes_do( $newrec)
 {
-	if( !insert_record( 'game_snakes_database', $newrec)){
+    global $DB;
+
+	if( !$DB->insert_record( 'game_snakes_database', $newrec)){
 		print_object( $newrec);
 		error( "Can't insert to table game_snakes_database");
 	}
 }
-
-echo 'Finished importing snakes and ladders';

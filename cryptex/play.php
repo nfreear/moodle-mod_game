@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.7 2010/07/16 21:05:23 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.8 2010/07/26 00:13:31 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.7 2010/07/16 21:05:23 bdaloukas Exp $
+ * @version $Id: play.php,v 1.8 2010/07/26 00:13:31 bdaloukas Exp $
  * @package game
  **/
 
@@ -11,13 +11,15 @@ require_once( "cryptexdb_class.php");
 
 function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame)
 {
+    global $DB;
+
 	if( $endofgame){
 		game_updateattempts( $game, $attempt, -1, true);
 		$endofgame = false;
 	}	
 	
 	if( $attempt != false and $cryptexrec != false){
-        $crossm = get_record_select( 'game_cross', "id=$attempt->id");
+        $crossm = $DB->get_record( 'game_cross', array( 'id' => $attempt->id));
 		return game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm);
 	}
 
@@ -35,7 +37,7 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame)
 	$answers = array();
 	$recs = game_questions_shortanswer( $game);
 	if( $recs == false){
-		error( get_string( 'cryptex_nowords', 'game'));
+		print_error( get_string( 'cryptex_nowords', 'game'));
 	}
 	$infos = array();
 	foreach( $recs as $rec){
@@ -90,13 +92,15 @@ function cryptex_showlegend( $legend, $title)
 //q means game_queries.id
 function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer)
 {
+    global $DB;
+
 	if( $attempt === false){
 		game_cryptex_continue( $id, $game, $attempt, $cryptexrec);
 		return;
 	}
 
-	$crossm = get_record_select( 'game_cross', "id=$attempt->id");
-	$query = get_record_select( 'game_queries', "id=$q");
+	$crossm = $DB->get_record_select( 'game_cross', "id=$attempt->id");
+	$query = $DB->get_record_select( 'game_queries', "id=$q");
 
 	$answer1 = trim( game_upper( $query->answertext));
 	$answer2 = trim( game_upper( $answer));
@@ -288,10 +292,10 @@ width:	240pt;
 
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec)
 {
-	global $CFG;
+	global $DB;
 
-	if (! $cm = get_record("course_modules", "id", $id)) {
-		error("Course Module ID was incorrect id=$id");
+	if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
+		print_error( "Course Module ID was incorrect id=$id");
 	}
 
 	echo '<B>'.get_string( 'cryptex_win', 'game').'</B><BR>';	

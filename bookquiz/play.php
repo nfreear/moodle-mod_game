@@ -1,6 +1,4 @@
-<?php  // $Id: play.php,v 1.4 2010/07/21 10:57:37 bdaloukas Exp $
-
-// This files plays the game "Book with Questions"
+<?php // $Id: play.php,v 1.5 2010/07/26 00:13:31 bdaloukas Exp $
 
 function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid=0)
 {	
@@ -12,13 +10,12 @@ function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid=0)
 		$attempt = game_addattempt( $game);
 	}
 
-    unset($bookquiz);
+	unset( $bookquiz);
 	$bookquiz->lastchapterid = 0;
 	$bookquiz->id = $attempt->id;
-    $bookquiz->bookid = $game->bookid;
-
-	if( !game_insert_record('game_bookquiz', $bookquiz)){
-		error( 'game_bookquiz_continue: error inserting in game_bookquiz');
+	
+	if( !game_insert_record(  'game_bookquiz', $bookquiz)){
+		print_error( 'game_bookquiz_continue: error inserting in game_bookquiz');
 	}	
 	
 	return game_bookquiz_play( $id, $game, $attempt, $bookquiz, 0);
@@ -26,9 +23,11 @@ function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid=0)
 
 function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid)
 {
+    global $DB;
+
 	if( $bookquiz->lastchapterid == 0){
 		game_bookquiz_play_computelastchapter( $game, $bookquiz);
-
+		
 		if( $bookquiz->lastchapterid == 0){
 			error( get_string( 'bookquiz_empty', 'game'));
 		}
@@ -37,20 +36,20 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid)
 		$chapterid = $bookquiz->lastchapterid;
 	}else
 	{
-		if( (set_field( 'game_bookquiz', 'lastchapterid', $chapterid, 'id', $bookquiz->id)) == false){
-			error( "Can't update table game_bookquiz with lastchapterid to $chapterid");
+		if( ($DB->set_field( 'game_bookquiz', 'lastchapterid', $chapterid, array( 'id' => $bookquiz->id))) == false){
+			print_error( "Can't update table game_bookquiz with lastchapterid to $chapterid");
 		}
 	}
 	
-	$book = get_record_select( 'book', 'id='.$game->bookid);
-	if( !$chapter = get_record_select( 'book_chapters', 'id='.$chapterid)){
-		error('Error reading book chapters.');
+	$book = $DB->get_record( 'book', array('id' => $game->bookid));
+	if( !$chapter = $DB->get_record( 'book_chapters', array('id' => $chapterid))){
+		print_error('Error reading book chapters.');
 	}
 	$select = "bookid = $game->bookid AND hidden = 0";
-	$chapters = get_records_select('book_chapters', $select, 'pagenum', 'id, pagenum, subchapter, title, hidden');
+	$chapters = $DB->get_records_select('book_chapters', $select, null, 'pagenum', 'id, pagenum, subchapter, title, hidden');
 	
 	$okchapters = array();
-	if( ($recs = get_records_select( 'game_bookquiz_chapters', "attemptid=$attempt->id")) != false){
+	if( ($recs = $DB->get_records( 'game_bookquiz_chapters', array( 'attemptid' => $attempt->id))) != false){
 		foreach( $recs as $rec){
 			//1 means correct answer
 			$okchapters[ $rec->chapterid] = 1;
@@ -59,16 +58,16 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid)
 	//2 means current
 	//$okchapters[ $chapterid] =  2;
 	$showquestions = false;
-	$select = "gameid=$game->id  AND chapterid=$chapterid";
-	if( ($questions = get_records_select( 'game_bookquiz_questions', $select)) === false){
+	$a = array( 'gameid' => $game->id, 'chapterid' => $chapterid);
+	if( ($questions = $DB->get_records( 'game_bookquiz_questions', $a)) === false){
 		if( !array_key_exists( $chapterid, $okchapters)){
 			$okchapters[ $chapterid] =  1;
 			unset( $newrec);
 			$newrec->attemptid = $attempt->id;
 			$newrec->chapterid = $chapterid;
 		
-			if( !insert_record( 'game_bookquiz_chapters', $newrec)){
-				error( "Can't insert to table game_bookquiz_chapters");
+			if( !$DB->insert_record( 'game_bookquiz_chapters', $newrec)){
+				print_error( "Can't insert to table game_bookquiz_chapters");
 			}
 		}
 	}else
@@ -131,12 +130,12 @@ if ($nextid) {
 } else {
 	game_updateattempts_maxgrade( $game, $attempt, 1, 0);
     $sec = '';
-    if ($section = get_record('course_sections', 'id', $cm->section)) {
+    if ($section = $DB->get_record('course_sections', array( 'id' => $cm->section))) {
         $sec = $section->section;
     }
 	
-	if (! $cm = get_record("course_modules", "id", $id)) {
-		error("Course Module ID was incorrect id=$id");
+	if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
+		print_error("Course Module ID was incorrect id=$id");
 	}	
     $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="../../course/attempt.php?id='.$cm->course.'"><img src="bookquiz/pix/nav_exit.gif" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';
 }
@@ -215,14 +214,16 @@ $tocwidth = '10%';
 
 function game_bookquiz_play_computelastchapter( $game, &$bookquiz)
 {
-	$pagenum = get_field( 'book_chapters', 'min(pagenum) as p', 'bookid', $game->bookid);
+    global $DB;
+
+	$pagenum = $DB->get_field( 'book_chapters', 'min(pagenum) as p', array('bookid' => $game->bookid));
 	if( $pagenum){
-		$bookquiz->lastchapterid = get_field( 'book_chapters', 'id', 'bookid', $game->bookid, 'pagenum', $pagenum);		
+		$bookquiz->lastchapterid = $DB->get_field( 'book_chapters', 'id', array('bookid' => $game->bookid, 'pagenum' => $pagenum));
 		
 		if( $bookquiz->lastchapterid){
 			//update the data in table game_bookquiz
-			if( (set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid, 'id', $bookquiz->id)) == false){
-				error( "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
+			if( ($DB->set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid, array('id' => $bookquiz->id))) == false){
+				print_error( "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
 			}
 		}
 	}
@@ -305,6 +306,8 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
 
 function game_bookquiz_selectrandomquestion( $questions)
 {
+    global $DB;
+
 	$categorylist = '';
 	if( $questions == false){
 		return 0;
@@ -314,7 +317,7 @@ function game_bookquiz_selectrandomquestion( $questions)
 		$categorylist  .= ',' . $rec->questioncategoryid;
 	}
 	$select = 'category in ('.substr( $categorylist, 1). ") AND qtype in ('shortanswer', 'truefalse', 'multichoice')";
-	if( ($recs = get_records_select( 'question', $select, '', 'id,id')) == false){
+	if( ($recs = $DB->get_records_select( 'question', $select, null, '', 'id,id')) == false){
 		return 0;
 	}
 	$a = array();
@@ -332,7 +335,7 @@ function game_bookquiz_selectrandomquestion( $questions)
 
 function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz)
 {
-    global $QTYPES, $CFG, $USER;
+    global $QTYPES, $CFG, $USER, $DB;
 
     $responses = data_submitted();
 
@@ -363,23 +366,23 @@ function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz)
 
         //found one correct answer
 		$chapterid = $responses->chapterid;
-		if( !get_field( 'game_bookquiz_chapters', 'id', 'attemptid', $attempt->id, 'chapterid', $chapterid))
+		if( !$DB->get_field( 'game_bookquiz_chapters', 'id', array( 'attemptid' => $attempt->id, 'chapterid' => $chapterid)))
 		{
 			unset( $newrec);
 			$newrec->attemptid = $attempt->id;
 			$newrec->chapterid = $chapterid;
-			if( !insert_record( 'game_bookquiz_chapters', $newrec, false)){
+			if( !$DB->insert_record( 'game_bookquiz_chapters', $newrec, false)){
 				print_object( $newrec);
-				error( "Can't insert to table game_bookquiz_chapters");
+				print_error( "Can't insert to table game_bookquiz_chapters");
 			}
 		}
 		//Have to go to next page.
 		$bookquiz->lastchapterid = $responses->nextchapterid;
-		if( !set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid, 'id', $bookquiz->id)){
-			error( "Can't compute next chapter");
+		if( !$DB->set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid, array('id' => $bookquiz->id))){
+			print_error( "Can't compute next chapter");
 		}
 		$scorequestion = 1;
-        $scoreattempt = required_param('scoreattempt', PARAM_INT);
+		$scoreattempt = $_POST[ 'scoreattempt'];
 		
 		break;
     }
@@ -399,5 +402,3 @@ function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz)
 
 	game_bookquiz_continue( $id, $game, $attempt, $bookquiz);
 }
-
-?>

@@ -1,22 +1,22 @@
-<?php  // $Id: access.php,v 1.1 2010/07/21 21:44:03 bdaloukas Exp $
+<?php
 /**
  * Capability definitions for the game module.
  *
  * For naming conventions, see lib/db/access.php.
  */
-$mod_game_capabilities = array(
+$capabilities = array(
 
     // Ability to see that the game exists, and the basic information
     // about it, for example the start date and time limit.
     'mod/game:view' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'guest' => CAP_ALLOW,
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -25,7 +25,7 @@ $mod_game_capabilities = array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'student' => CAP_ALLOW
         )
     ),
@@ -35,7 +35,7 @@ $mod_game_capabilities = array(
     'mod/game:reviewmyattempts' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'student' => CAP_ALLOW
         ),
         'clonepermissionsfrom' => 'moodle/game:attempt'
@@ -46,9 +46,19 @@ $mod_game_capabilities = array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
+        )
+    ),
+
+    // Edit the game overrides
+    'mod/game:manageoverrides' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -56,23 +66,36 @@ $mod_game_capabilities = array(
     'mod/game:preview' => array(
         'captype' => 'write', // Only just a write.
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
-    // Manually grade and comment on student attempts at a question, and regrade games.
+    // Manually grade and comment on student attempts at a question.
     'mod/game:grade' => array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
+    ),
+
+    // Regrade gamezes.
+    'mod/game:regrade' => array(
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' =>  'mod/game:grade'
     ),
 
     // View the game reports.
@@ -80,10 +103,10 @@ $mod_game_capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -92,10 +115,10 @@ $mod_game_capabilities = array(
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     )
 );
-?>
+

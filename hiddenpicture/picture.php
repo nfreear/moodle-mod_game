@@ -1,20 +1,19 @@
-<?php  // $Id: picture.php,v 1.2 2010/07/16 21:05:24 bdaloukas Exp $
+<?php  // $Id: picture.php,v 1.3 2010/07/26 00:13:32 bdaloukas Exp $
 
 require( '../../../config.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID
-$attemptid = optional_param('id2', 0, PARAM_INT); // Course Module ID
+$id = required_param('id', PARAM_INT); // Course Module ID
+$attemptid = required_param('id2', PARAM_INT); // Course Module ID
 
-$foundcells = optional_param('f', PARAM_SEQUENCE); //CSV
-$cells = optional_param('cells', PARAM_SEQUENCE); //CSV
-$filename = optional_param('p', PARAM_PATH);
-$cols = optional_param('cols', PARAM_INT);
-$rows = optional_param('rows', PARAM_INT);
-$filenamenumbers = optional_param('n', PARAM_PATH); //Path to numbers picture
+$foundcells = required_param('f', PARAM_SEQUENCE); //CSV
+$cells = required_param('cells', PARAM_SEQUENCE); //CSV
+$filehash = required_param('p', PARAM_PATH);
+$cols = required_param('cols', PARAM_INT);
+$rows = required_param('rows', PARAM_INT);
+$filenamenumbers = required_param('n', PARAM_PATH); //Path to numbers picture
+create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
 
-create_image( $id, $attemptid, $foundcells, $cells, $filename, $cols, $rows, $filenamenumbers);
-
-function create_image( $id, $attemptid, $foundcells, $cells, $filename, $cols, $rows, $filenamenumbers)
+function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers)
 {
     global $CFG;
             
@@ -30,27 +29,16 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filename, $cols, $
         $cells[ $s] = 1;
     }
 
-    $size = getimagesize ($filename);
-    if( $size == false){
-        die("Aknown filename $filename");
-        return false;
-    }
+    $file = get_file_storage()->get_file_by_hash( $filehash);
+    $image = $file->get_imageinfo();
 
-    $mime = $size[ 'mime'];
-    switch( $mime){
-    case 'image/png':
-        $img_handle = imageCreateFromPNG( $filename);
-        break;
-    case 'image/jpeg':
-        $img_handle = imageCreateFromJPEG( $filename);
-        break;
-    case 'image/gif':
-        $img_handle = imageCreateFromGIF( $filename);
-        break;
-    default:
-        die('Aknown mime type $mime');
+    if( $image === false){
+        die("Aknown filehash $filehash");
         return false;
     }
+    $img_handle = imagecreatefromstring($file->get_content());
+
+    $mime = $image[ 'mimetype'];
     
     $img_numbers = imageCreateFromPNG( $filenamenumbers);
     $size_numbers = getimagesize ($filenamenumbers);
@@ -58,13 +46,9 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filename, $cols, $
     Header ("Content-type: $mime");
     
     $color = ImageColorAllocate ($img_handle, 100, 100, 100);
-    $s = $CFG->wwwroot;
-    ImageString ($img_handle, 3, 10, 9,  $id.' '.$attemptid, $color);
 
-    $colortext = imagecolorallocate( $img_handle, 100, 100, 100); //Text
-
-    $width = $size[ 0];
-    $height = $size[ 1];
+    $width = $image[ 'width'];
+    $height = $image[ 'height'];
     $pos = 0;
     
     $font = 1;
@@ -121,7 +105,3 @@ function shownumber( $img_handle, $img_numbers, $number, $x1 , $y1, $width, $hei
         shownumber( $img_handle, $img_numbers, $number2, $x1+$width/20, $y1, $width, $height, $size_numbers);
     }
 }
-    
-
-
-?>

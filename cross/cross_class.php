@@ -9,8 +9,8 @@ Author Àngel Fenoy from Arenys de Mar, Barcelona.
 */ 
 class Cross
 {
-	var $m_input_answers; 	//contains the words and the answers
-	var $m_words;				//the words that will be used
+    var $m_input_answers; 	//contains the words and the answers
+    var $m_words;				//the words that will be used
 
 	var $m_time_limit = 30;
   
@@ -23,18 +23,17 @@ class Cross
 	var $m_bests;             		//best score as a phrase
 	var $m_best_score;        		//the best score
 
-  var $m_best_connectors;  
-  var $m_best_filleds;    
-  var $m_best_spaces;     
-  var $m_best_N20;      
+    var $m_best_connectors;  
+    var $m_best_filleds;    
+    var $m_best_spaces;     
+    var $m_best_N20;      
   
-  //computepuzzleinfo
-  var $m_mincol;    //computed by ComputePuzzleInfo
-  var $m_maxcol;    //computed by ComputePuzzleInfo
-  var $m_minrow;    //computed by ComputePuzzleInfo
-  var $m_maxrow;    //computed by ComputePuzzleInfo
-  var $m_cLetter;   //computed by ComputePuzzleInfo
-	
+    //computepuzzleinfo
+    var $m_mincol;    //computed by ComputePuzzleInfo
+    var $m_maxcol;    //computed by ComputePuzzleInfo
+    var $m_minrow;    //computed by ComputePuzzleInfo
+    var $m_maxrow;    //computed by ComputePuzzleInfo
+    var $m_cLetter;   //computed by ComputePuzzleInfo
 	
 	function setwords( $answers, $maxcols)
 	{
@@ -80,11 +79,11 @@ class Cross
 		$this->randomize();
 		    
 		return count( $this->m_words);
-	}
+    }
   
-  function randomize()
-  {
-		$n = count( $this->m_words);
+    function randomize()
+    {
+        $n = count( $this->m_words);
 		for($j=0; $j <= $n/4; $j++)
 		{
 			$i = array_rand( $this->m_words);
@@ -92,45 +91,45 @@ class Cross
 			$this->swap( $this->m_words[ $i], $this->m_words[ 0]);
 		}
 	}
-  
-  function computedata( &$crossm, &$crossd, $maxwords)
-  {
-    $t1 = time();
-    
-    $ctries = 0;
-    $m_best_score = 0;
 
-    $m_best_connectors = $m_best_filleds = $m_best_spaces = 0;
-    $m_best_N20 = 0;
-	
-	$nochange = 0;
-    for(;;)
+    function computedata( &$crossm, &$crossd, $maxwords)
     {
-		//selects the size of the cross
-		$N20 = mt_rand( $this->m_N20min, $this->m_N20max);
+        $t1 = time();
+    
+        $ctries = 0;
+        $m_best_score = 0;
+
+        $m_best_connectors = $m_best_filleds = $m_best_spaces = 0;
+        $m_best_N20 = 0;
+	
+        $nochange = 0;
+        for(;;)
+        {
+            //selects the size of the cross
+            $N20 = mt_rand( $this->m_N20min, $this->m_N20max);
       
-		if( !$this->computenextcross( $N20, $t1, $ctries, $maxwords, $nochange))
-			break;
+            if( !$this->computenextcross( $N20, $t1, $ctries, $maxwords, $nochange))
+                break;
 
-		$ctries++;
+            $ctries++;
 
-		if (time() - $t1 > $this->m_time_limit - 3){
-			break;
-		}
-		
-		if( $nochange > 10)
-			break;
+            if (time() - $t1 > $this->m_time_limit - 3){
+                break;
+            }
+
+            if( $nochange > 10)
+                break;
+        }
+        $this->computepuzzleinfo( $this->m_best_N20, $this->m_best_cross_pos, $this->m_best_cross_dir, $this->m_best_cross_word, false);
+    
+        set_time_limit( 30);
+    
+        return $this->savepuzzle( $crossm, $crossd, $ctries, time()-$t1);
     }
-    $this->computepuzzleinfo( $this->m_best_N20, $this->m_best_cross_pos, $this->m_best_cross_dir, $this->m_best_cross_word, false);
-    
-    set_time_limit( 30);
-    
-    return $this->savepuzzle( $crossm, $crossd, $ctries, time()-$t1);
-  }
   
 	function computenextcross( $N20, $t1, $ctries, $maxwords, &$nochange)
 	{
-		$MAXW = $N20;
+        $MAXW = $N20;
     
 		$N21 = $N20 + 1;
 		$N22 = $N20 + 2;
@@ -185,7 +184,7 @@ class Cross
 			}
 		}
 
-	$n_words = count( $cross_word);
+    $n_words = count( $cross_word);
 	$score = $this->computescore( $puzzle, $N20, $N22, $N2222, $n_words, $n_connectors, $n_filleds, $cSpaces);
 
 	if ($score > $this->m_best_score)
@@ -216,8 +215,8 @@ class Cross
 	return true;
 }
 
-function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$n_filleds, &$cSpaces)
-{
+    function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$n_filleds, &$cSpaces)
+    {
 		$n_connectors = $n_filleds = 0;
 		$puzzle00 = str_replace('.', '0', $puzzle);
 
@@ -227,151 +226,150 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 			if ($puzzle00[$n]){
 				$used ++;
 
-			if (($puzzle00[$n - 1] or $puzzle00[$n + 1]) and
-				($puzzle00[$n - $N22] or $puzzle00[$n + $N22])){
-				$n_connectors++;
-			} else{
-				$n_filleds++;
-			}
-		}
-    }
+			    if (($puzzle00[$n - 1] or $puzzle00[$n + 1]) and ($puzzle00[$n - $N22] or $puzzle00[$n + $N22])){
+				    $n_connectors++;
+			    } else{
+				    $n_filleds++;
+                }
+		    }
+        }
 
-    $cSpaces = substr_count( $puzzle, ".");
-    $score = ($n_words * 5) + ($n_connectors * 3) + $n_filleds;
+        $cSpaces = substr_count( $puzzle, ".");
+        $score = ($n_words * 5) + ($n_connectors * 3) + $n_filleds;
 	
-	return $score;
-}
+        return $score;
+    }
 
  
-
-  function computepuzzleinfo( $N20, $cross_pos, $cross_dir, $cross_word, $bPrint=false)
-  {
-	$textlib = textlib_get_instance();
-	
-	$bPrint=false;
-    $N22 = $N20 + 2;
-
-    $this->m_mincol = $N22;
-    $this->m_maxcol = 0;
-    $this->m_minrow = $N22;
-    $this->m_maxrow = 0;
-    $this->m_cletter = 0;
-	
-	if( count( $cross_word) == 0){
-		return;
-	}
-		
-    if( $bPrint)
-      echo "<BR><BR>PuzzleInfo N20=$N20 words=".count($cross_word)."<BR>";
-    for($i = 0; $i < count($cross_pos); $i++)
+    function computepuzzleinfo( $N20, $cross_pos, $cross_dir, $cross_word, $bPrint=false)
     {
-      $pos = $cross_pos[ $i];
-      $col = $pos % $N22;
-      $row = floor( $pos / $N22);
-      $dir = $cross_dir[ $i];
+	    $textlib = textlib_get_instance();
+	
+	    $bPrint=false;
+        $N22 = $N20 + 2;
 
-      $len =  $textlib->strlen($cross_word[ $i])-3;
+        $this->m_mincol = $N22;
+        $this->m_maxcol = 0;
+        $this->m_minrow = $N22;
+        $this->m_maxrow = 0;
+        $this->m_cletter = 0;
+	
+	    if( count( $cross_word) == 0){
+		    return;
+    	}
+		
+        if( $bPrint)
+          echo "<BR><BR>PuzzleInfo N20=$N20 words=".count($cross_word)."<BR>";
+        for($i = 0; $i < count($cross_pos); $i++)
+        {
+          $pos = $cross_pos[ $i];
+          $col = $pos % $N22;
+          $row = floor( $pos / $N22);
+          $dir = $cross_dir[ $i];
 
-      if( $bPrint)
-        echo "col=$col row=$row dir=$dir word=".$cross_word[ $i]."<br>";
+          $len =  $textlib->strlen($cross_word[ $i])-3;
 
-      $this->m_cletter += $len;
+          if( $bPrint)
+            echo "col=$col row=$row dir=$dir word=".$cross_word[ $i]."<br>";
 
-      if( $col < $this->m_mincol)
-        $this->m_mincol = $col;
+          $this->m_cletter += $len;
 
-      if( $row < $this->m_minrow)
-        $this->m_minrow = $row;
+          if( $col < $this->m_mincol)
+            $this->m_mincol = $col;
 
-      if( $dir == 'h')
-        $col += $len;
-      else
-        $row += $len;
+          if( $row < $this->m_minrow)
+            $this->m_minrow = $row;
 
-      if( $col > $this->m_maxcol)
-        $this->m_maxcol = $col;
-      if( $row > $this->m_maxrow)
-        $this->m_maxrow = $row;
-    }
+          if( $dir == 'h')
+            $col += $len;
+          else
+            $row += $len;
+
+          if( $col > $this->m_maxcol)
+            $this->m_maxcol = $col;
+          if( $row > $this->m_maxrow)
+            $this->m_maxrow = $row;
+        }
     
-    if( $bPrint)
-      echo "mincol={$this->m_mincol} maxcol={$this->m_maxcol} minrow={$this->m_minrow} maxrow={$this->m_maxrow}<br>";
+        if( $bPrint)
+          echo "mincol={$this->m_mincol} maxcol={$this->m_maxcol} minrow={$this->m_minrow} maxrow={$this->m_maxrow}<br>";
       
-    if( $this->m_mincol > $this->m_maxcol)
-      $this->m_mincol = $this->m_maxcol;
-    if( $this->m_minrow > $this->m_maxrow)
-      $this->m_minrow = $this->m_maxrow;
-  }
+        if( $this->m_mincol > $this->m_maxcol)
+          $this->m_mincol = $this->m_maxcol;
+        if( $this->m_minrow > $this->m_maxrow)
+          $this->m_minrow = $this->m_maxrow;
+      }
 
-  function savepuzzle( &$crossm, &$crossd, $ctries, $time)
-  {
-    $N22 = $this->m_best_N20 + 2;
 
-    $cols = $this->m_maxcol - $this->m_mincol + 1;
-    $rows = $this->m_maxrow - $this->m_minrow + 1;
+      function savepuzzle( &$crossm, &$crossd, $ctries, $time)
+      {
+            $N22 = $this->m_best_N20 + 2;
 
-    //if( $cols < $rows)
-    //  $bSwapColRow = 1;
-    //else
-      $bSwapColRow = 0;
+            $cols = $this->m_maxcol - $this->m_mincol + 1;
+            $rows = $this->m_maxrow - $this->m_minrow + 1;
 
-    if( $bSwapColRow)
-    {
-      Swap( $cols, $rows);
-      Swap( $this->m_mincol, $this->m_minrow);
-      Swap( $this->m_maxcol, $this->m_maxrow);
-    }
+            //if( $cols < $rows)
+            //  $bSwapColRow = 1;
+            //else
+            $bSwapColRow = 0;
+
+            if( $bSwapColRow)
+            {
+                Swap( $cols, $rows);
+                Swap( $this->m_mincol, $this->m_minrow);
+                Swap( $this->m_maxcol, $this->m_maxrow);
+            }
 	
-    $crossm->datebegin = time();
-    $crossm->time = $time;
-    $crossm->cols = $cols;
-    $crossm->rows = $rows;
-    $crossm->words = count( $this->m_best_cross_pos);
-    $crossm->wordsall = count( $this->m_input_answers);
+            $crossm->datebegin = time();
+            $crossm->time = $time;
+            $crossm->cols = $cols;
+            $crossm->rows = $rows;
+            $crossm->words = count( $this->m_best_cross_pos);
+            $crossm->wordsall = count( $this->m_input_answers);
 
-    $crossm->createscore = $this->m_best_score;
-    $crossm->createtries = $ctries;
-    $crossm->createtimelimit = $this->m_time_limit;
-    $crossm->createconnectors = $this->m_best_connectors;
-    $crossm->createfilleds = $this->m_best_filleds;
-    $crossm->createspaces = $this->m_best_spaces;
+            $crossm->createscore = $this->m_best_score;
+            $crossm->createtries = $ctries;
+            $crossm->createtimelimit = $this->m_time_limit;
+            $crossm->createconnectors = $this->m_best_connectors;
+            $crossm->createfilleds = $this->m_best_filleds;
+            $crossm->createspaces = $this->m_best_spaces;
 	
-	for($i = 0; $i < count($this->m_best_cross_pos); $i++)
-	{
-		$pos = $this->m_best_cross_pos[ $i];
+            for($i = 0; $i < count($this->m_best_cross_pos); $i++)
+            {
+                $pos = $this->m_best_cross_pos[ $i];
 
-		$col = $pos % $N22;
-		$row = floor( ($pos-$col) / $N22);
+                $col = $pos % $N22;
+                $row = floor( ($pos-$col) / $N22);
 
-		$col += - $this->m_mincol + 1;
-		$row += - $this->m_minrow + 1;
+                $col += - $this->m_mincol + 1;
+                $row += - $this->m_minrow + 1;
 
-		$dir = $this->m_best_cross_dir[ $i];
-		$word = $this->m_best_cross_word[ $i];
-		$word = substr( $word, 1, strlen( $word)-2);
+                $dir = $this->m_best_cross_dir[ $i];
+                $word = $this->m_best_cross_word[ $i];
+                $word = substr( $word, 1, strlen( $word)-2);
 
-		unset( $rec);
+                unset( $rec);
       
-		$rec->col = $col;
-		$rec->row = $row;
-		$rec->horizontal = ($dir == "h" ? 1 : 0);
+                $rec->col = $col;
+                $rec->row = $row;
+                $rec->horizontal = ($dir == "h" ? 1 : 0);
       
-		$rec->answertext = $word;
-		$rec->questiontext = $this->m_input_answers[ $word];
+                $rec->answertext = $word;
+                $rec->questiontext = $this->m_input_answers[ $word];
 		
-		if( $rec->horizontal)
-			$key = sprintf( 'h%10d %10d', $rec->row, $rec->col);
-		else
-			$key = sprintf( 'v%10d %10d', $rec->col, $rec->row);
+                if( $rec->horizontal)
+                    $key = sprintf( 'h%10d %10d', $rec->row, $rec->col);
+                else
+                    $key = sprintf( 'v%10d %10d', $rec->col, $rec->row);
 		
-		$crossd[ $key] = $rec;
-    }
-	if( count( $crossd) > 1){
-		ksort( $crossd);
-	}
+                $crossd[ $key] = $rec;
+            }
+            if( count( $crossd) > 1){
+		        ksort( $crossd);
+	        }
 	
-    return (count( $crossd) > 0);
-  }
+            return (count( $crossd) > 0);
+    }
 
 	function swap( &$a, &$b)
 	{
@@ -380,9 +378,9 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$b = $temp;
 	}
 
-	function display($puzzle, $N20) {
-
-		$textlib = textlib_get_instance();
+	function display($puzzle, $N20) 
+    {
+        $textlib = textlib_get_instance();
 
 		$N21 = $N20 + 1;
 		$N22 = $N20 + 2;
@@ -411,14 +409,14 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 				}
 			}
 
-		if ($n == $N2221) {
-			return "$ret</tr></table>";
-		} elseif ($m == $N21) {
-			$ret .= "</tr><tr>";
-		}
-   }
-   return "$ret</tr></table>";
-}
+		    if ($n == $N2221) {
+			    return "$ret</tr></table>";
+    		} elseif ($m == $N21) {
+	    		$ret .= "</tr><tr>";
+	    	}
+        }
+        return $ret.'</tr></table>';
+    }
 
 
 	function scan_pos($pos, $dir, $val_blanc, &$puzzle, &$words, &$magics, &$poss, &$cross_pos, &$cross_dir, &$cross_word, $N20)
@@ -447,107 +445,107 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 			$new_dir = 'h';
 		}
 
-	$regex  = $textlib->substr( $puzzle, $pos, 1);
-	if ( ($regex  == '0' or $regex == '.') and (! $val_blanc)){
-		return false;
-	}
+	    $regex  = $textlib->substr( $puzzle, $pos, 1);
+    	if ( ($regex  == '0' or $regex == '.') and (! $val_blanc)){
+	    	return false;
+	    }
 
-    if (($textlib->substr( $puzzle, $pos -  $inc, 1) > '0')){
-		return false;
-	}
+        if (($textlib->substr( $puzzle, $pos -  $inc, 1) > '0')){
+	    	return false;
+	    }
 
-    if (($textlib->substr( $puzzle, $pos + $inc, 1) > '0')){
-		return false;
-	}
+        if (($textlib->substr( $puzzle, $pos + $inc, 1) > '0')){
+	    	return false;
+	    }
 
-    $left = $right = 0;
-    for ($limit_a = $pos - $inc; ($w = $textlib->substr( $puzzle, $limit_a, 1)) !== '0'; $limit_a -= $inc)
-    {
-		if ($w == '.' and (($textlib->substr( $puzzle, $limit_a -  $oinc, 1) > '0') or ($textlib->substr( $puzzle, $limit_a +  $oinc, 1) > '0'))){
-			break;
-		}
+        $left = $right = 0;
+        for ($limit_a = $pos - $inc; ($w = $textlib->substr( $puzzle, $limit_a, 1)) !== '0'; $limit_a -= $inc)
+        {
+	    	if ($w == '.' and (($textlib->substr( $puzzle, $limit_a -  $oinc, 1) > '0') or ($textlib->substr( $puzzle, $limit_a +  $oinc, 1) > '0'))){
+	    		break;
+	    	}
 		
-		if (++$left == $MAXW){
-			$left --;
-			break;
-		}
+	    	if (++$left == $MAXW){
+	    		$left --;
+	    		break;
+	    	}
 		
-		$regex = $w . $regex;
-    }
+	    	$regex = $w . $regex;
+        }
 
-    for ($limit_b = $pos + $inc; ($w = $textlib->substr( $puzzle, $limit_b, 1)) !== '0'; $limit_b += $inc)
-    {
-		if ($w== '.' and (($textlib->substr( $puzzle, $limit_b -  $oinc, 1) > '0') or ($textlib->substr( $puzzle, $limit_b +  $oinc, 1) > '0'))){
-			break;
-		}
+        for ($limit_b = $pos + $inc; ($w = $textlib->substr( $puzzle, $limit_b, 1)) !== '0'; $limit_b += $inc)
+        {
+	    	if ($w== '.' and (($textlib->substr( $puzzle, $limit_b -  $oinc, 1) > '0') or ($textlib->substr( $puzzle, $limit_b +  $oinc, 1) > '0'))){
+	    		break;
+	    	}
 		
-		if (++$right == $MAXW){
-			$right--;
-			break;
-		}
+	    	if (++$right == $MAXW){
+	    		$right--;
+	    		break;
+	    	}
 		
-		$regex .= $w;
-    }
+	    	$regex .= $w;
+        }
 
-    if (($len_regex = $textlib->strlen($regex)) < 2){
-		return false;
-	}
+        if (($len_regex = $textlib->strlen($regex)) < 2){
+	    	return false;
+	    }
 
-    foreach ($magics[$len_regex] as $m => $lens)
-    {
-		$ini = max(0, ($left + 1) - $lens);
-		$fin = $left;
+        foreach ($magics[$len_regex] as $m => $lens)
+        {
+	    	$ini = max(0, ($left + 1) - $lens);
+	    	$fin = $left;
 
-		$pos_p = max($limit_a + $inc, $pos - (($lens - 1 ) * $inc));
+	    	$pos_p = max($limit_a + $inc, $pos - (($lens - 1 ) * $inc));
 
-		for($pos_c = $ini; $pos_c <= $fin; $pos_c++, $pos_p += $inc)
-		{
-			if ($textlib->substr( $puzzle, $pos_p - $inc, 1) > '0'){
-				continue;
-			}
+	    	for($pos_c = $ini; $pos_c <= $fin; $pos_c++, $pos_p += $inc)
+	    	{
+	    		if ($textlib->substr( $puzzle, $pos_p - $inc, 1) > '0'){
+	    			continue;
+	    		}
 
-			$w = $textlib->substr($regex, $pos_c, $lens);
-			
-			if( !$this->my_preg_match( $w, $words, $word))
-				continue;
+	    		$w = $textlib->substr($regex, $pos_c, $lens);
 
-			$larr0 = $pos_p + (($textlib->strlen( $word) - 2) * $inc);
-        
-			if ($larr0 >= $N2222){
-				continue;
-			}
+	    		if( !$this->my_preg_match( $w, $words, $word))
+    				continue;
 
-			if ($textlib->substr( $puzzle, $larr0, 1) > '0'){
-				continue;
-			}
+    			$larr0 = $pos_p + (($textlib->strlen( $word) - 2) * $inc);
 
-			$words = str_replace( $word, ';', $words);
+    			if ($larr0 >= $N2222){
+    				continue;
+    			}
 
-			$len = $textlib->strlen( $word) ;
-			for ($n = 1, $pp = $pos_p; $n < $len - 1; $n++, $pp += $inc)
-			{				
-				$this->setchar( $puzzle, $pp,  $textlib->substr( $word , $n, 1));
+    			if ($textlib->substr( $puzzle, $larr0, 1) > '0'){
+    				continue;
+    			}
+
+    			$words = str_replace( $word, ';', $words);
+
+    			$len = $textlib->strlen( $word) ;
+    			for ($n = 1, $pp = $pos_p; $n < $len - 1; $n++, $pp += $inc)
+    			{				
+    				$this->setchar( $puzzle, $pp,  $textlib->substr( $word , $n, 1));
 				
-				if ($pp == $pos){
-					continue;
-				}
+    				if ($pp == $pos)
+    					continue;
 				
-				$c = $textlib->substr( $puzzle, $pp, 1);
-				$poss[] = array($pp, $new_dir, ord( $c));
-			}
+				    $c = $textlib->substr( $puzzle, $pp, 1);
+				    $poss[] = array($pp, $new_dir, ord( $c));
+			    }
 
-			$cross_pos[] = $pos_p;
-			$cross_dir[] = ($new_dir == 'h' ? 'v' : 'h');
-			$cross_word[] = $word;
+			    $cross_pos[] = $pos_p;
+			    $cross_dir[] = ($new_dir == 'h' ? 'v' : 'h');
+			    $cross_word[] = $word;
 
-			$this->setchar( $puzzle, $pos_p - $inc, '0');
-			$this->setchar( $puzzle, $pp, '0');
+			    $this->setchar( $puzzle, $pos_p - $inc, '0');
+			    $this->setchar( $puzzle, $pp, '0');
 				
-			return true;
-		}
+			    return true;
+		    }
+        }
+
+        return false;
     }
-    return false;
-  }
 
 	function my_preg_match( $w, $words, &$word)
 	{
@@ -611,6 +609,7 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$i = -1;
 		$LegendV = array();
 		$LegendH = array();
+
 		foreach ($crossd as $rec)
 		{
 			if( $rec->horizontal == false and $LastHorizontalWord == -1){
@@ -706,7 +705,8 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		$sRet .= "LastHorizontalWord = $LastHorizontalWord;\n";
 
 		return $sRet;
-  }
+    }
+
 
 	function cmp($a, $b) {
 		$textlib = textlib_get_instance();
@@ -714,10 +714,10 @@ function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$
 		return $textlib->strlen($b) - $textlib->strlen($a);
 	}
 
+
 	function cmp_magic($a, $b) {
 		$textlib = textlib_get_instance();
 		
 		return ($textlib->strlen($a) + mt_rand(0, 3)) - ($textlib->strlen($b) - mt_rand(0, 1));
 	}
-
 }

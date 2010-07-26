@@ -1,4 +1,4 @@
-<?php  // $Id: locallib.php,v 1.27 2010/07/26 00:07:13 bdaloukas Exp $
+<?php  // $Id: locallib.php,v 1.28 2010/07/26 13:38:43 bdaloukas Exp $
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
@@ -1290,4 +1290,14 @@ function game_get_grading_option_name($option) {
 
     $strings = game_get_grading_options();
     return $strings[$option];
+}
+
+function game_right_to_left( $lang){
+    switch( $lang)
+    {
+    case 'he':
+        return true;
+    default:
+        return false;
+    } 
 }

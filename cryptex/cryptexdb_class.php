@@ -90,11 +90,11 @@ class CryptexDB extends CrossDB
 		return $ret_letters;
 	}
 
-    function display( $cols, $rows, $letters, $mask, $showsolution=false)
+    function display( $cols, $rows, $letters, $mask, $showsolution, $textdir)
     {
 		$textlib = textlib_get_instance();
 		
-		echo "<table border=1>";
+		echo "<table border=1 $textdir>";
 		for( $row=0; $row < $rows; $row++)
 		{
 			echo "<tr>";
@@ -168,7 +168,7 @@ class CryptexDB extends CrossDB
 		return $x;
 	}
 
-	function load( $crossm, &$mask, &$corrects)
+	function load( $crossm, &$mask, &$corrects, &$language)
 	{
         global $DB;
 
@@ -208,6 +208,10 @@ class CryptexDB extends CrossDB
 				if( $found){
 					$corrects[ $rec->id] = 1;
 				}
+
+                if( $language == ''){
+                    $language = game_detectlanguage( $rec->answertext);
+                }
 			}
 			ksort( $questions);
 		}

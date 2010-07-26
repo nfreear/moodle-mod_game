@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.9 2010/07/26 00:13:31 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.10 2010/07/26 13:38:44 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.9 2010/07/26 00:13:31 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.10 2010/07/26 13:38:44 bdaloukas Exp $
  * @package game
  **/
 
@@ -51,7 +51,7 @@ class CrossDB extends Cross
     }
 
 
-  function load( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution, &$finishattempt, $showhtmlsolutions)
+  function load( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution, &$finishattempt, $showhtmlsolutions, &$language)
   {
     global $DB;
 
@@ -101,6 +101,9 @@ class CrossDB extends Cross
 			if( ($rec->col != 0) and ($rec->row != 0)){
 				$load = true;
 			}
+            if( $language == ''){
+                $language = game_detectlanguage( $rec->answertext);
+            }
 		}
 		$info = $this->game_cross_computecheck( $correctletters,  $wrongletters, $restletters, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt);
 		$html = $this->showhtml_base( $crossrec, $b, $showsolution, $showhtmlsolutions);

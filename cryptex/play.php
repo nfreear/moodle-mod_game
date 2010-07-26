@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.9 2010/07/26 00:41:16 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.10 2010/07/26 13:38:44 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.9 2010/07/26 00:41:16 bdaloukas Exp $
+ * @version $Id: play.php,v 1.10 2010/07/26 13:38:44 bdaloukas Exp $
  * @package game
  **/
 
@@ -133,6 +133,8 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer)
 
 function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updateattempt=false, $onlyshow=false, $showsolution=false)
 {
+    global $DB;
+
 	$textlib = textlib_get_instance();
 	
 	global $CFG;
@@ -144,7 +146,24 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
 	echo '<br>';
 	
 	$cryptex = new CryptexDB();
-	$questions = $cryptex->load( $crossm, $mask, $corrects);
+    $language = $attempt->language;
+	$questions = $cryptex->load( $crossm, $mask, $corrects, $attempt->language);
+
+    if( $language != $attempt->language){
+        if( !$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))){
+            print_error( "game_cross_play: Can't set language");
+        }
+    }
+
+    if( $attempt->language != '')
+        $wordrtl = game_right_to_left( $attempt->language);
+    else
+        $wordrtl = right_to_left();
+    $reverseprint = ($wordrtl != right_to_left());
+    if( $reverseprint)
+        $textdir = 'dir="'.($wordrtl ? 'rtl' : 'ltr').'"';
+    else
+        $textdir = '';
 
 	$len = $textlib ->strlen( $mask);
 	
@@ -208,7 +227,7 @@ width:	240pt;
 
 	echo '<table border=0>';
 	echo '<tr><td>';
-	$cryptex->display( $crossm->cols, $crossm->rows, $cryptexrec->letters, $mask, $showsolution);
+	$cryptex->display( $crossm->cols, $crossm->rows, $cryptexrec->letters, $mask, $showsolution, $textdir);
 ?>
 </td>
 

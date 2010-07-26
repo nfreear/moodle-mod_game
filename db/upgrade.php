@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.22 2010/07/26 00:13:31 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.23 2010/07/26 13:38:44 bdaloukas Exp $
 
 // This file keeps track of upgrades to the game module
 //
@@ -1209,7 +1209,7 @@ function xmldb_game_upgrade($oldversion) {
     if ($oldversion < 2008110701) {
         $table = new xmldb_table( 'game_export_html');
 
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE;
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->add_field('gameid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $table->add_field('filename', XMLDB_TYPE_CHAR, '30');
         $table->add_field('title', XMLDB_TYPE_CHAR, '200');
@@ -1402,6 +1402,20 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2010071611, 'game');
 	}
 
+    if ($oldversion < 2010072605) {
+
+        // Define field language to be added to game_attempts
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('language', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'attempts');
+
+        // Conditionally launch add field language
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // game savepoint reached
+        upgrade_mod_savepoint(true, 2010072605, 'game');
+    }
 
     
     return true;

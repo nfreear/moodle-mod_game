@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.13 2010/07/26 00:13:31 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.14 2010/07/26 13:38:44 bdaloukas Exp $
 
 // This files plays the game "Crossword"
 
@@ -89,7 +89,14 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
 
 	$cross = new CrossDB();
 
-	$info = $cross->load( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow, $showsolution, $endofgame, $showhtmlsolutions);
+    $language = $attempt->language;
+	$info = $cross->load( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow, $showsolution, $endofgame, $showhtmlsolutions, $attempt->language);
+
+    if( $language != $attempt->language){
+        if( !$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))){
+            error( "game_cross_play: Can't set language");
+        }
+    }
 
 	if( $done or $endofgame){
 		if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
@@ -106,6 +113,15 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
 		echo "<br>$info<br>";
 	}
 
+    if( $attempt->language != '')
+        $wordrtl = game_right_to_left( $attempt->language);
+    else
+        $wordrtl = right_to_left();
+    $reverseprint = ($wordrtl != right_to_left());
+    if( $reverseprint)
+        $textdir = 'dir="'.($wordrtl ? 'rtl' : 'ltr').'"';
+    else
+        $textdir = '';
 
 ?>
 <style type="text/css"><!--
@@ -266,7 +282,7 @@ if( $print){
 ?>
 
 <tr>
-<td class="crosswordarea"><table id="crossword" cellpadding="3" cellspacing="0" style="display: none; border-collapse: collapse;">
+<td class="crosswordarea"><table id="crossword" cellpadding="3" cellspacing="0" style="display: none; border-collapse: collapse;" <?php echo $textdir;?>>
 
 <script language="JavaScript" type="text/javascript"><!--
 

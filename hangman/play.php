@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.17 2010/07/26 00:13:31 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.18 2010/07/26 13:38:44 bdaloukas Exp $
 
 // This file plays the game hangman
 
@@ -94,6 +94,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
             $min->questiontext = $rec->questiontext;
             $min->answerid = $rec->answerid;
             $min->answer = $answer;
+            $min->language = $game->language;
             
             if( $min_num == 0)
                 break;  //We found an unused word
@@ -115,9 +116,10 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
     if( $attempt == false){
         $attempt = game_addattempt( $game);
     }
+    if( !$DB->set_field( 'game_attempts', 'language', $min->language, array( 'id' => $attempt->id))){
+        error( "game_hangman_continue: Can't set language");
+    }
 		        
-    $_GET[ 'newletter'] = '';
-		
     $query->attemptid = $attempt->id;
 	$query->gameid = $game->id;
 	$query->userid = $USER->id;
@@ -193,6 +195,12 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow=false, $sh
 	
 	$query = $DB->get_record( 'game_queries', array( 'id' => $hangman->queryid));
 	
+    if( $attempt->language != '')
+        $wordrtl = game_right_to_left( $attempt->language);
+    else
+        $wordrtl = right_to_left();
+    $reverseprint = ($wordrtl != right_to_left());
+
 	if( $game->toptext != ''){
 		echo $game->toptext.'<br>';
 	}
@@ -223,10 +231,18 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow=false, $sh
             else        
     			echo ' '.get_string( 'hangman_restletters_one', 'game');
 
+            if( $reverseprint){
+                echo '<SPAN dir="'.($wordrtl ? 'rtl' : 'ltr').'">';
+            }
+
             echo "<br/><font size=\"5\">\n$word_line</font>\r\n";
 			if( $word_line2 != ''){
 				echo "<br/><font size=\"5\">\n$word_line2</font>\r\n";
 			}
+
+            if( $reverseprint){
+                echo "</SPAN>";
+            }
 
 			if( $hangman->finishedword == false){
 				echo "<br/><br/><BR/>".get_string( 'hangman_letters', 'game').$links."\r\n";
@@ -258,12 +274,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 	
 	$textlib = textlib_get_instance();
 	
-	if( array_key_exists( 'newletter', $_GET)){
-		$newletter = $_GET[ 'newletter'];
-	}else
-	{
-		$newletter = '';
-	}
+    $newletter  = optional_param('newletter', "", PARAM_TEXT);
 	if( $newletter == '_'){
 	    $newletter = ' ';
 	}

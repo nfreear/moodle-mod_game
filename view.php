@@ -1,438 +1,271 @@
-<?php  // $Id: view.php,v 1.7 2010/07/24 02:04:28 arborrow Exp $
+<?php  // $Id: view.php,v 1.8 2010/07/26 00:07:14 bdaloukas Exp $
 
 // This page prints a particular instance of game
 
-    require_once("../../config.php");
-    require_once("lib.php");
-    require_once("locallib.php");
-    require_once('pagelib.php');
+    require_once(dirname(__FILE__) . '/../../config.php');
+    require_once($CFG->libdir.'/gradelib.php');
+    require_once($CFG->dirroot.'/mod/game/locallib.php');
 
-    $id   = optional_param('id', 0, PARAM_INT); // Course Module ID, or
-    $q    = optional_param('q',  0, PARAM_INT);  // game ID
-    $edit = optional_param('edit', -1, PARAM_BOOL);
+    $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 
-    if ($id) {
-        if (!$cm = get_coursemodule_from_id('game', $id)){
-            error("There is no coursemodule with id $id");
-        }
-
-        if (!$course = get_record("course", "id", $cm->course)){
-            error("Course is misconfigured");
-        }
-
-        if (!$game = get_record("game", "id", $cm->instance)){
-            error("The game with id $cm->instance corresponding to this coursemodule $id is missing");
-        }
-
-    } 
-    else {
-        if (!$game = get_record('game', 'id', $q)){
-            error("There is no game with id $q");
-        }
-        if (!$course = get_record('course', 'id', $game->course)){
-            error("The course with id $game->course that the game with id $q belongs to is missing");
-        }
-        if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)){
-            error("The course module for the game with id $q is missing");
-        }
+    if (! $cm = get_coursemodule_from_id('game', $id)) {
+        print_error('invalidcoursemodule');
     }
-	
-	$game->showtimetaken = 1;	//check bdaloukas
-	$game->timelimit = 0;				//check bdaloukas
-	$game->timeclose = 0;			//check bdaloukas
+    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+        print_error('coursemisconf');
+    }
+    if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
+        print_error('invalidcoursemodule');
+    }
 
-    // Check login and get context.
+/// Check login and get context.
     require_login($course->id, false, $cm);
-    
-    if( $USER->username == 'guest'){
-        redirect( "{$CFG->wwwroot}/mod/game/attempt.php?id=$id");
-    }
-    
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    require_capability('mod/game:view', $context);
 
-    add_to_log( $course->id, "game", "view", "view.php?id=$cm->id", $game->id, $cm->id);
+/// Cache some other capabilites we use several times.
+    $canattempt = has_capability('mod/game:attempt', $context);
 
-    // Initialize $PAGE, compute blocks
-    $PAGE       = page_create_instance($game->id);
-    $pageblocks = blocks_setup($PAGE);
-    $blocks_preferred_width = bounded_number(180, blocks_preferred_width( $pageblocks[BLOCK_POS_LEFT]), 210);
+    $timenow = time();
 
-    // Print the page header
-    if ($edit != -1 and $PAGE->user_allowed_editing()) {
+/// Log this request.
+    add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
+
+/// Initialize $PAGE, compute blocks
+    $PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
+
+    $edit = optional_param('edit', -1, PARAM_BOOL);
+    if ($edit != -1 && $PAGE->user_allowed_editing()) {
         $USER->editing = $edit;
     }
 
-    if(function_exists('build_navigation')){
-        //for version 1.9
-        $navigation = build_navigation('', $cm);
-        $PAGE->print_header($course->shortname.': %fullname%','',$navigation);
-    }
-    else{
-        if ($course->category){
-            $navigation = "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\">$course->shortname</a> ->";
-        } 
-        else{
-            $navigation = '';
-        }
+    $PAGE->requires->yui2_lib('event');
 
-        $strgames = get_string("modulenameplural", "game");
-        $strgame  = get_string("modulename", "game");
+    $title = $course->shortname . ': ' . format_string($game->name);
 
-        print_header("$course->shortname: $game->name", "$course->fullname",
-                 "$navigation <a href=index.php?id=$course->id>$strgames</a> -> $game->name", 
-                  "", "", true, update_module_button($cm->id, $course->id, $strgame), 
-                  navmenu($course, $cm));        
+    if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
+        $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
+            '<input type="hidden" name="id" value="'.$cm->id.'" />'.
+            '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing()?'off':'on').'" />'.
+            '<input type="submit" value="'.get_string($PAGE->user_is_editing()?'blockseditoff':'blocksediton').'" /></div></form></td></tr></table>';
+        $PAGE->set_button($buttons);
     }
 
-    echo '<table id="layout-table"><tr>';
+    $PAGE->set_title($title);
+    $PAGE->set_heading($course->fullname);
 
-    if(!empty($CFG->showblocksonmodpages) && (blocks_have_content($pageblocks, BLOCK_POS_LEFT) || $PAGE->user_is_editing())){
-        echo '<td style="width: '.$blocks_preferred_width.'px;" id="left-column">';
-        blocks_print_group($PAGE, $pageblocks, BLOCK_POS_LEFT);
-        echo '</td>';
+    echo $OUTPUT->header();
+
+/// Print game name and description
+    echo $OUTPUT->heading(format_string($game->name));
+
+/// Display information about this game.
+
+    echo $OUTPUT->box_start('quizinfo');
+    if ($game->attempts != 1) {
+        echo get_string('gradingmethod', 'quiz', game_get_grading_option_name($game->grademethod));
+    }
+    echo $OUTPUT->box_end();
+
+/// Show number of attempts summary to those who can view reports.
+    if (has_capability('mod/game:viewreports', $context)) {
+        if ($strattemptnum = game_num_attempt_summary($game, $cm)) {
+            //echo '<div class="gameattemptcounts"><a href="report.php?mode=overview&amp;id=' .
+            //        $cm->id . '">' . $strattemptnum . "</a></div>\n";
+            echo $strattemptnum;
+        }
     }
 
-    echo '<td id="middle-column">';
-
-    // Print the main part of the page
-
-    // Print heading and tabs (if there is more than one).
-    $currenttab = 'info';
-    include('tabs.php');
-
-    // Print game name
-    print_heading(format_string($game->name));
-
-	$available = true;
-    // Show number of attempts summary to those who can view reports.
-    if( isteacher($game->course, $USER->id)){
-        if ($a->attemptnum = count_records('game_attempts', 'gameid', $game->id /*, 'preview', 0 */)) {
-            $a->studentnum = count_records_select('game_attempts', "gameid = '$game->id' ", 'COUNT(DISTINCT userid)');
-            $a->studentstring  = $course->students;
-
-            notify("<a href=\"report.php?mode=overview&amp;id=$cm->id\">".get_string('numattempts', 'game', $a).'</a>');
-        }
+/// Get this user's attempts.
+    $attempts = game_get_user_attempts($game->id, $USER->id);
+    $lastfinishedattempt = end($attempts);
+    $unfinished = false;
+    if ($unfinishedattempt = game_get_user_attempt_unfinished($game->id, $USER->id)) {
+        $attempts[] = $unfinishedattempt;
+        $unfinished = true;
     }
-    if (has_capability('mod/game:attempt', $context)) {
-        //Only if the teacher sets the parameters allow playing
-		game_view_capability_attempt($game, $context, $course, $available, $cm);
-    }
-    // Should we not be seeing if we need to print right-hand-side blocks?
+    $numattempts = count($attempts);
 
-    // Finish the page.
-    echo '</td></tr></table>';
-    print_footer($course);
+/// Work out the final grade, checking whether it was overridden in the gradebook.
+    $mygrade = game_get_best_grade($game, $USER->id);
+    $mygradeoverridden = false;
+    $gradebookfeedback = '';
 
-// Utility functions =================================================================
+    $grading_info = grade_get_grades($course->id, 'mod', 'game', $game->id, $USER->id);
+    if (!empty($grading_info->items)) {
+        $item = $grading_info->items[0];
+        if (isset($item->grades[$USER->id])) {
+            $grade = $item->grades[$USER->id];
 
-    function game_review_allowed($game) {
-        return true;
-    }
-
-    /** Make some text into a link to review the game, if that is appropriate. */
-    function make_review_link($linktext, $game, $attempt){
-        // If not even responses are to be shown in review then we don't allow any review
-        if (!($game->review & GAME_REVIEW_RESPONSES)){
-            return $linktext;
-        }
-
-        // If the game is still open, are reviews allowed?
-        if ((!$game->timeclose or time() < $game->timeclose) and !($game->review & GAME_REVIEW_OPEN)){
-            // If not, don't link.
-            return $linktext;
-        }
-
-        // If the game is closed, are reviews allowed?
-        if (($game->timeclose and time() > $game->timeclose) and !($game->review & GAME_REVIEW_CLOSED)){
-            // If not, don't link.
-            return $linktext;
-        }
-
-        // If the attempt is still open, don't link.
-        if (!$attempt->timefinish){
-            return $linktext;
-        }
-
-        $url = "review.php?q=$game->id&amp;attempt=$attempt->id";
-        return "<a href='$url'>$linktext</a>";
-    }
-
-	function game_view_capability_view($game){
-		global $GAME_GRADE_METHOD;
-		
-        // Print game description
-        if (trim(strip_tags($game->intro))) {
-            $formatoptions->noclean = true;
-            print_box(format_text($game->intro, FORMAT_MOODLE, $formatoptions), 'generalbox', 'intro');
-        }
-
-        echo '<div class="gameinfo">';
-
-        // Print information about number of attempts and grading method.
-        if ($game->attempts > 1) {
-            echo "<p>".get_string("attemptsallowed", "game").": $game->attempts</p>";
-        }
-        if ($game->attempts != 1) {
-            echo "<p>".get_string('grademethod', 'game').': '.$GAME_GRADE_METHOD[$game->grademethod]."</p>";
-        }
-
-        echo '</div>';
-		
-		return $available;
-    }
-	
-	function game_view_capability_attempt( $game, $context, $course, $available, $cm){
-		global $CFG, $USER;
-
-        $unfinished = false;
-		
-        // Get this user's attempts.
-        if($USER->username == 'guest'){
-            $attempts = array();
-            $mygrade = array();
-        }
-        else{
-            $attempts = game_get_user_attempts($game->id, $USER->id); 
-            if ($unfinishedattempt = game_get_user_attempt_unfinished($game->id, $USER->id)) {
-                $attempts[] = $unfinishedattempt;
-                $unfinished = true;
+            if ($grade->overridden) {
+                $mygrade = $grade->grade + 0; // Convert to number.
+                $mygradeoverridden = true;
             }
-            $mygrade = game_get_best_grade($game, $USER->id);
+            if (!empty($grade->str_feedback)) {
+                $gradebookfeedback = $grade->str_feedback;
+            }
         }
-        $numattempts = count($attempts);
+    }
 
-        // Get some strings.
-        $strattempt       = get_string("attempt", "game");
-        $strtimetaken     = get_string("timetaken", "game");
-        $strtimecompleted = get_string("timecompleted", "game");
-        $strgrade         = get_string("grade");
-        $strmarks         = get_string('marks', 'game');
-        $strfeedback      = get_string('feedback', 'game');
+/// Print table with existing attempts
+    if ($attempts) {
 
-        // Print table with existing attempts
-        if ($attempts){
+        echo $OUTPUT->heading(get_string('summaryofattempts', 'quiz'));
 
-            // Work out which columns we need, taking account what data is available in each attempt.
-            list($someoptions, $alloptions) = game_get_combined_reviewoptions($game, $attempts, $context);
+        // Work out which columns we need, taking account what data is available in each attempt.
+        list($someoptions, $alloptions) = game_get_combined_reviewoptions($game, $attempts, $context);
 
-            $gradecolumn = $someoptions->scores && $game->grade;
-            //$markcolumn = $gradecolumn && ($game->grade != $game->grade);
-            $overallstats = $alloptions->scores;
+        $attemptcolumn = $game->attempts != 1;
 
-            $feedbackcolumn = game_has_feedback($game->id);
-            $overallfeedback = $feedbackcolumn && $alloptions->overallfeedback;
+        $gradecolumn = $someoptions->scores && ($game->grade > 0);
+        //$markcolumn = $gradecolumn && ($game->grade != $game->sumgrades);
+        $overallstats = $alloptions->scores;
 
-            // prepare table header
-            $table->head = array($strattempt, $strtimecompleted);
-            $table->align = array("center", "left");
-            $table->size = array("", "");
-/*			
-            if ( $markcolumn) {
-                $table->head[] = "$strmarks / $game->grade";
-                $table->align[] = 'right';
-                $table->size[] = '';
-            }
-*/
-            if ($gradecolumn){
-                $table->head[] = "$strgrade / $game->grade";
-                $table->align[] = 'center';
-                $table->size[] = '';
-            }
-            if ($feedbackcolumn){
-                $table->head[] = $strfeedback;
-                $table->align[] = 'left';
-                $table->size[] = '';
-            }
-            if (isset($game->showtimetaken)){
-                $table->head[] = $strtimetaken;
-                $table->align[] = 'center';
-                $table->size[] = '';
-            }
+        // Prepare table header
+        $table = new html_table();
+        $table->attributes['class'] = 'generaltable gameattemptsummary';
+        $table->head = array();
+        $table->align = array();
+        $table->size = array();
+        if ($attemptcolumn) {
+            $table->head[] = get_string('attempt', 'game');
+            $table->align[] = 'center';
+            $table->size[] = '';
+        }
+        $table->head[] = get_string('timecompleted', 'game');
+        $table->align[] = 'left';
+        $table->size[] = '';
 
-            // One row for each attempt
-            foreach ($attempts as $attempt){
-                $attemptoptions = game_get_reviewoptions($game, $attempt, $context);
-                $row = array();
-
-                // Add the attempt number, making it a link, if appropriate.
-                $row[] = make_review_link('#' . $attempt->attempt, $game, $attempt);
-
-                // prepare strings for time taken and date completed
-                $timetaken = '';
-                $datecompleted = '';
-                if ($attempt->timefinish > 0){
-                    // attempt has finished
-                    $timetaken = format_time($attempt->timefinish - $attempt->timestart);
-                    $datecompleted = userdate($attempt->timefinish);
-                } 
-                else if ($available){
-                    // The attempt is still in progress.
-                    $timetaken = format_time(time() - $attempt->timestart);
-                    $datecompleted = '';
-                } 
-                else if ($game->timeclose){
-                    // The attempt was not completed but is also not available any more becuase the game is closed.
-                    $timetaken = format_time($game->timeclose - $attempt->timestart);
-                    $datecompleted = userdate($game->timeclose);
-                } 
-                else{
-                    // Something wheird happened.
-                    $timetaken = '';
-                    $datecompleted = '';
-                }
-                $row[] = $datecompleted;
-
-                // Ouside the if because we may be showing feedback but not grades.
-                $attemptgrade = game_score_to_grade( $attempt->score, $game);
-
-                if ($gradecolumn) {
-                    if ($attemptoptions->scores) {
-                        // highlight the highest grade if appropriate
-                        if ($overallstats && !is_null($mygrade) && $attemptgrade == $mygrade && $game->grademethod == GAME_GRADEMETHOD_HIGHEST) {
-                            $formattedgrade = "<span class='highlight'>$attemptgrade</span>";
-                        } 
-                        else{
-                            $formattedgrade = $attemptgrade;
-                        }
-
-                        $row[] = make_review_link($formattedgrade, $game, $attempt);
-                    } 
-                    else{
-                        $row[] = '';
-                    }
-                }
-
-                if ($feedbackcolumn){
-                    if ($attemptoptions->overallfeedback) {
-                        $row[] = game_feedback_for_grade($attemptgrade, $game->id);
-                    } else {
-                        $row[] = '';
-                    }
-                }
-
-                if (isset($game->showtimetaken)) {
-                    $row[] = $timetaken;
-                }
-
-                $table->data[] = $row;
-            } // End of loop over attempts.
-            print_table($table);
+        if ($gradecolumn) {
+            $table->head[] = get_string('grade') . ' / ' . game_format_grade( $game, $game->grade);
+            $table->align[] = 'center';
+            $table->size[] = '';
         }
 
-        // Print information about the student's best score for this game if possible.
-        $moreattempts = $unfinished || $numattempts < $game->attempts || $game->attempts == 0;
-        if (!$moreattempts) {
-            print_heading(get_string("nomoreattempts", "game"));
-        }
-        if ($numattempts && !is_null($mygrade)) {
-            if ($overallstats) {
-                if ($available && $moreattempts) {
+        $table->head[] = get_string('timetaken', 'game');
+        $table->align[] = 'left';
+        $table->size[] = '';
 
-                    $GAME_GRADE_METHOD = array();
-                    $GAME_GRADE_METHOD[0] = get_string("gradehighest", "game"); 
-                    $GAME_GRADE_METHOD[1] = get_string("gradeaverage", "game");
-                    $GAME_GRADE_METHOD[2] = get_string("attemptfirst", "game");
-                    $GAME_GRADE_METHOD[3] = get_string("attemptlast", "game");
+        // One row for each attempt
+        foreach ($attempts as $attempt) {
+            $attemptoptions = game_get_reviewoptions($game, $attempt, $context);
+            $row = array();
 
-                    $a = new stdClass;
-                    $a->method = $GAME_GRADE_METHOD[$game->grademethod];
-                    $a->mygrade = $mygrade;
-                    $a->gamegrade = $game->grade;
-                    print_heading(get_string('gradesofar', 'game', $a));
+            // Add the attempt number, making it a link, if appropriate.
+            if ($attemptcolumn) {
+                if ($attempt->preview) {
+                    $row[] = get_string('preview', 'game');
                 } else {
-                    print_heading(get_string('yourfinalgradeis', 'game', "$mygrade / $game->grade"));
+                    $row[] = $attempt->attempt;
                 }
             }
 
-            if ($overallfeedback) {
-                echo '<p class="gamegradefeedback">'.game_feedback_for_grade($mygrade, $game->id).'</p>';
+            // prepare strings for time taken and date completed
+            $timetaken = '';
+            $datecompleted = '';
+            if ($attempt->timefinish > 0) {
+                // attempt has finished
+                $timetaken = format_time($attempt->timefinish - $attempt->timestart);
+                $datecompleted = userdate($attempt->timefinish);
+            } else
+            {
+                // The attempt is still in progress.
+                $timetaken = format_time($timenow - $attempt->timestart);
+                $datecompleted = '';
             }
+            $row[] = $datecompleted;
+
+            // Ouside the if because we may be showing feedback but not grades. bdaloukas
+            $attemptgrade = game_score_to_grade($attempt->score, $game);
+
+            if ($gradecolumn) {
+                if ($attemptoptions->scores && $attempt->timefinish > 0) {
+                    $formattedgrade = game_format_grade($game, $attemptgrade);
+                    // highlight the highest grade if appropriate
+                    if ($overallstats && !$attempt->preview && $numattempts > 1 && !is_null($mygrade) &&
+                            $attemptgrade == $mygrade && $game->grademethod == QUIZ_GRADEHIGHEST) {
+                        $table->rowclasses[$attempt->attempt] = 'bestrow';
+                    }
+
+                    $row[] = $formattedgrade;
+                } else {
+                    $row[] = '';
+                }
+            }
+
+            $row[] = $timetaken;
+
+            if ($attempt->preview) {
+                $table->data['preview'] = $row;
+            } else {
+                $table->data[$attempt->attempt] = $row;
+            }
+        } // End of loop over attempts.
+        echo html_writer::table($table);
+    }
+
+/// Print information about the student's best score for this game if possible.
+
+
+    if ($numattempts && $gradecolumn && !is_null($mygrade)) {
+        $resultinfo = '';
+
+        if ($overallstats) {
+            $a = new stdClass;
+            $a->grade = game_format_grade($game, $mygrade);
+            $a->maxgrade = game_format_grade($game, $game->grade);
+            $a = get_string('outofshort', 'quiz', $a);
+            $resultinfo .= $OUTPUT->heading(get_string('yourfinalgradeis', 'game', $a), 2, 'main');
         }
 
-        // Print a button to start/continue an attempt, if appropriate.
+        if ($mygradeoverridden) {
+            $resultinfo .= '<p class="overriddennotice">'.get_string('overriddennotice', 'grades')."</p>\n";
+        }
+        if ($gradebookfeedback) {
+            $resultinfo .= $OUTPUT->heading(get_string('comment', 'game'), 3, 'main');
+            $resultinfo .= '<p class="gameteacherfeedback">'.$gradebookfeedback."</p>\n";
+        }
 
-		if ($available && $moreattempts) {
-			game_view_capability_attempt_showinfo( $game, $course, $cm, $unfinished, $numattempts);
-		}else {
-            print_continue($CFG->wwwroot . '/course/view.php?id=' . $course->id);
+        if ($resultinfo) {
+            echo $OUTPUT->box($resultinfo, 'generalbox', 'feedback');
         }
     }
-	
-	function game_view_capability_attempt_showinfo( $game, $course, $cm, $unfinished, $numattempts)
-	{
-		global $CFG;
-		
-		echo "<br />";
-		echo "<div class=\"gameattempt\">";
 
-		if ($unfinished) {
-			$buttontext = get_string('continueattemptgame', 'game');
-		} else {
-			// Work out the appropriate button caption.
-			if ($numattempts == 0) {
-				$buttontext = get_string('attemptgamenow', 'game');
-			} else {
-				$buttontext = get_string('reattemptgame', 'game');
-			}
+/// Determine if we should be showing a start/continue attempt button,
+/// or a button to go back to the course page.
+    echo $OUTPUT->box_start('gameattempt');
+    $buttontext = ''; // This will be set something if as start/continue attempt button should appear.
 
-			// Work out if the game is temporarily unavailable because of the delay option.
-			if (!empty($attempts)) {
-				$tempunavailable = '';
-				$lastattempt = end( $attempts);
-				$lastattempttime = $lastattempt->timefinish;
-                print_object($course);
-				// If so, display a message and prevent the start button from appearing.
-				if ($tempunavailable) {
-					print_simple_box($tempunavailable, "center");
-					print_continue($CFG->wwwroot . '/course/view.php?id=' . $course->id);
-					$buttontext = '';
-				}
-			}
-		}
+    if ($unfinished) {
+        if ($canattempt) {
+            $buttontext = get_string('continueattemptgame', 'game');
+        }
+    } else {
+        if ($canattempt) {
+            if ($numattempts == 0) {
+                $buttontext = get_string('attemptgamenow', 'game');
+            } else {
+                $buttontext = get_string('reattemptgame', 'game');
+            }
+        }
+    }
 
-		// Actually print the start button.
-		if ($buttontext) {
-			$buttontext = htmlspecialchars($buttontext, ENT_QUOTES);
+/// Now actually print the appropriate button.
+    if ($buttontext) {
 
-			// Do we need a confirm javascript alert?
-			if ($unfinished) {
-				$strconfirmstartattempt =  '';
-			} else if ($game->attempts) {
-				$strconfirmstartattempt = addslashes(get_string('confirmstartattemptlimit','quiz', $game->attempts));
-			} else {
-				$strconfirmstartattempt =  '';
-			}
+        global $OUTPUT;
 
-		    $window = '_self';
-			$windowoptions = '';
+        $strconfirmstartattempt = '';
 
-			// Determine the URL to use.
-			$attempturl = "attempt.php?id=$cm->id";
-			if (!empty($CFG->usesid) && !isset($_COOKIE[session_name()])) {
-				$attempturl = sid_process_url($attempturl);
-			}
+    /// Show the start button, in a div that is initially hidden.
+        echo '<div id="gamestartbuttondiv">';
+        $url = new moodle_url($CFG->wwwroot.'/mod/game/attempt.php', array('id' => $id));
+        $button = new single_button($url, $buttontext);
+        echo $OUTPUT->render($button);
+        echo "</div>\n";
+    } else {
+        echo $OUTPUT->continue_button($CFG->wwwroot . '/course/view.php?id=' . $course->id);
+    }
+    echo $OUTPUT->box_end();
 
-                // TODO eliminate this nasty JavaScript that prints the button.
-?>
-<script type="text/javascript">
-//<![CDATA[
-document.write('<center><input type="button" value="<?php echo $buttontext ?>" onclick="javascript: <?php
-                if ($strconfirmstartattempt) {
-                    echo "if (confirm(\\'".addslashes_js($strconfirmstartattempt)."\\'))";
-                }
-?> window.open(\'<?php echo $attempturl ?>\', \'<?php echo $window ?>\', \'<?php echo $windowoptions ?>\'); " /></center>');
-//]]>
-</script>
-<noscript>
-<div>
-    <?php print_heading(get_string('noscript', 'quiz')); ?>
-</div>
-</noscript>
-<?php
-		}
-
-		echo "</div>\n";
-	}
-
-
-?>
+    echo $OUTPUT->footer();

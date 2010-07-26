@@ -1,27 +1,24 @@
-<?php  // $Id: export.php,v 1.16 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: export.php,v 1.17 2010/07/26 00:07:13 bdaloukas Exp $
 /**
- * This page exports a game to a html or jar file
+ * This page exports a game to another platform e.g. html, jar
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.16 2010/07/24 02:04:29 arborrow Exp $
+ * @version $Id: export.php,v 1.17 2010/07/26 00:07:13 bdaloukas Exp $
  * @package game
  **/
 
 require( '../../config.php');
+ob_start();
+
 require_once ($CFG->dirroot.'/lib/formslib.php');
 require( 'locallib.php');
-ob_start();
 require( 'header.php');
 
-if( !isteacher( $game->course, $USER->id)){
-	error( get_string( 'only_teachers', 'game'));
-}
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    if (!has_capability('mod/game:viewreports', $context))
+        return;
 
-$target  = optional_param('target', "", PARAM_ALPHANUM);  // action
-
-    $currenttab = 'export'.$target;
-
-    include('tabs.php');
+    $target  = optional_param('target', "", PARAM_ALPHANUM);  // action
 
 class mod_game_exporthtml_form extends moodleform {
 
@@ -77,7 +74,7 @@ class mod_game_exporthtml_form extends moodleform {
     }
 
     function validation($data, $files) {
-        global $CFG, $USER;
+        global $CFG, $USER, $DB;
         $errors = parent::validation($data, $files);
 
 
@@ -85,23 +82,26 @@ class mod_game_exporthtml_form extends moodleform {
     }
 
     function export() {
-        global $game;
+        global $game, $DB;
 
         $mform = $this->_form;
         
-        $html = $this->_customdata['html'];
-
+        $html->id = $this->_customdata['html']->id;
     	$html->type = optional_param('type', 0, PARAM_ALPHANUM);
         $html->filename = $mform->getElementValue('filename');
         $html->title = $mform->getElementValue('title');
         $html->maxpicturewidth = optional_param('maxpicturewidth', 0, PARAM_INT);
         $html->maxpictureheight = optional_param('maxpictureheight', 0, PARAM_INT);
-        if( $mform->elementExists( 'checkbutton'))
-            $html->checkbutton = $mform->getElementValue('checkbutton');
-        if( $mform->elementExists( 'printbutton'))
-            $html->printbutton = $mform->getElementValue('printbutton');
+        if( $mform->elementExists( 'checkbutton')){
+            $checkbuttonvalue = $mform->getElementValue('checkbutton');
+            $html->checkbutton = $checkbuttonvalue[ 0];
+        }
+        if( $mform->elementExists( 'printbutton')){
+            $printbuttonvalue = $mform->getElementValue('printbutton');
+            $html->printbutton = $printbuttonvalue[ 0];
+        }
 
-        if (!(update_record( 'game_export_html', $html))){
+        if (!($DB->update_record( 'game_export_html', $html))){
             print_error("game_export_html: not updated id=$html->id");
         }
 	            
@@ -113,7 +113,7 @@ class mod_game_exporthtml_form extends moodleform {
 class mod_game_exportjavame_form extends moodleform {
 
     function definition() {
-        global $CFG, $game;
+        global $CFG, $DB, $game;
 
         $mform = $this->_form;
         $javame = $this->_customdata['javame'];
@@ -159,7 +159,7 @@ class mod_game_exportjavame_form extends moodleform {
     }
 
     function validation($data, $files) {
-        global $CFG, $USER;
+        global $CFG, $USER, $DB;
         $errors = parent::validation($data, $files);
 
 
@@ -167,7 +167,7 @@ class mod_game_exportjavame_form extends moodleform {
     }
 
     function export() {
-        global $game;
+        global $game, $DB;
 
         $mform = $this->_form;
         
@@ -184,7 +184,7 @@ class mod_game_exportjavame_form extends moodleform {
         $javame->maxpicturewidth = $mform->getElementValue('maxpicturewidth');
         $javame->maxpictureheight = $mform->getElementValue('maxpictureheight');
 
-        if (!(update_record( 'game_export_javame', $javame))){
+        if (!($DB->update_record( 'game_export_javame', $javame))){
             print_error("game_export_javame: not updated id=$javame->id");
         }
 	            
@@ -196,25 +196,26 @@ class mod_game_exportjavame_form extends moodleform {
 
 
 // create form and set initial data
-if( $target == 'html'){    
-    $html = get_record_select( 'game_export_html', 'id='.$game->id);
+if( $target == 'html'){
+    $html = $DB->get_record( 'game_export_html', array( 'id' => $game->id));
     if( $html == false){
         unset( $html);
         $html->id = $game->id;
         $html->checkbutton = 1;
         $html->printbutton = 1;
         game_insert_record( 'game_export_html', $html);
-        $html = get_record_select( 'game_export_html', 'id='.$game->id);
+        $html = $DB->get_record( 'game_export_html', array( 'id' => $game->id));
     }
     $mform = new mod_game_exporthtml_form(null, array('id'=>$id, 'html' => $html));
 }else
 {
-    $javame = get_record_select( 'game_export_javame', 'id='.$game->id);
+    $javame = $DB->get_record( 'game_export_javame', array( 'id' => $game->id));
     if( $javame == false){
         unset( $javame);
         $javame->id = $game->id;
+        $javame->filename = $game->gamekind;
         game_insert_record( 'game_export_javame', $javame);
-        $javame = get_record_select( 'game_export_javame', 'id='.$game->id);
+        $javame = $DB->get_record( 'game_export_javame', array( 'id' => $game->id));
     }
     $mform = new mod_game_exportjavame_form(null, array('id'=>$id, 'javame' => $javame));
 }
@@ -232,10 +233,17 @@ if ($mform->is_cancelled()){
     $mform->export();
 }else{
     ob_end_flush();
-    $mform->display();
+    if (!empty($id)) {
+    $PAGE->navbar->add(get_string('export', 'game'));
 }
 
-print_footer();
+$mform->display();
+
+echo $OUTPUT->footer();
+
+}
+
+$OUTPUT->footer();
 
     function game_create_zip( $srcdir, $courseid, $filename){
         global $CFG;
@@ -288,6 +296,7 @@ print_footer();
             $i++;
         }
     }
+
 
 function game_send_stored_file($file) {
     if (file_exists($file)) {

@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.15 2010/07/24 02:04:28 arborrow Exp $
+<?php  // $Id: lib.php,v 1.16 2010/07/26 00:07:13 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.15 2010/07/24 02:04:28 arborrow Exp $
+ * @version $Id: lib.php,v 1.16 2010/07/26 00:07:13 bdaloukas Exp $
  * @package game
  **/
 
@@ -50,19 +50,19 @@ define('GAME_REVIEW_GENERALFEEDBACK', 32*0x1041); // Show general feedback
  **/
 
 function game_add_instance($game) {
-    
+    global $DB;
+
     $game->timemodified = time();
+    game_before_add_or_update( $game);
 	
     # May have to add extra stuff in here #
     
-    game_before_add_or_update( $game);
-
-    $id = insert_record('game', $game);
+    $id = $DB->insert_record("game", $game);
     
-    $game = get_record_select( 'game', "id=$id");
+    $game = $DB->get_record_select( 'game', "id=$id");
     
     // Do the processing required after an add or an update.
-    game_after_add_or_update( $game);
+    game_grade_item_update( $game);
     
     return $id;
 }
@@ -76,6 +76,8 @@ function game_add_instance($game) {
  * @return boolean Success/Fail
  **/
 function game_update_instance($game) {
+    global $DB;
+
     $game->timemodified = time();
     $game->id = $game->instance;
 
@@ -108,15 +110,25 @@ function game_update_instance($game) {
     }
     
     game_before_add_or_update( $game);
-
-    if( !update_record('game', $game)){
+        	
+    if( !$DB->update_record("game", $game)){
         return false;
     }
     
     // Do the processing required after an add or an update.
-    game_after_add_or_update( $game);
+    game_grade_item_update( $game);
     
     return true;    
+}
+
+function game_before_add_or_update(&$game) {
+    if( $game->gamekind == 'millionaire')
+    {
+        if( substr( $game->param8, 0, 1) == '#')
+        {
+            $game->param8 = hexdec(substr( $game->param8, 1));
+        }
+    }
 }
 
 /**
@@ -128,13 +140,13 @@ function game_update_instance($game) {
  * @return boolean Success/Failure
  **/
 function game_delete_instance($gameid) {
-    global $CFG;
+    global $DB;
        
     $result = true;
 
     # Delete any dependent records here #
 	
-	if( ($recs = get_records_select( 'game_attempts', "gameid='$gameid'")) != false){
+	if( ($recs = $DB->get_records( 'game_attempts', array( 'gameid' => $gameid))) != false){
 	    $ids = '';
 	    $count = 0;
 	    $aids = array();
@@ -156,8 +168,8 @@ function game_delete_instance($gameid) {
 		    }
 	        $tables = array( 'game_hangman', 'game_cross', 'game_cryptex', 'game_millionaire', 'game_bookquiz', 'game_sudoku', 'game_snakes');
 	        foreach( $tables as $t){
-	            $sql = "DELETE FROM {$CFG->prefix}$t WHERE id IN (".substr( $ids, 1).')';
-		        if (!execute_sql( $sql, false)) {
+	            $sql = "DELETE FROM {".$t."} WHERE id IN (".substr( $ids, 1).')';
+		        if (! $DB->execute( $sql, false)) {
 			        $result = false;
 			        break;
                 }
@@ -165,30 +177,19 @@ function game_delete_instance($gameid) {
 		}
 	}
 		    
-    $tables = array( 'game_attempts', 'game_grades', 'game_bookquiz_questions', 'game_queries');
+    $tables = array( 'game_attempts', 'game_grades', 'game_export_javame', 'game_bookquiz_questions', 'game_queries');
     foreach( $tables as $t){
         if( $result == false){
             break;
         }
 		    
-        if (!delete_records( $t, 'gameid', $gameid)) {
-            $result = false;
-		}
-	}
-
-    $tables = array( 'game_export_javame', 'game_export_html');
-    foreach( $tables as $t){
-        if( $result == false){
-            break;
-        }
-		    
-        if (!delete_records( $t, 'id', $gameid)) {
+        if (! $DB->delete_records( $t, array( 'gameid' =>  $gameid))) {
             $result = false;
 		}
 	}
 	
 	if( $result){
-        if (!delete_records( 'game', "id", $gameid)) {
+        if (!$DB->delete_records( 'game', array( 'id' => $gameid))) {
             $result = false;
         }
     }
@@ -204,7 +205,9 @@ function game_delete_instance($gameid) {
  * $return->info = a short text description
  **/
 function game_user_outline($course, $user, $mod, $game) {
-    if ($grade = get_record_select('game_grades', "userid=$user->id AND gameid = $game->id", 'id,score,timemodified')) {
+    global $DB;
+
+    if ($grade = $DB->get_record_select('game_grades', "userid=$user->id AND gameid = $game->id", null, 'id,score,timemodified')) {
 
         $result = new stdClass;
         if ((float)$grade->score) {
@@ -222,16 +225,18 @@ function game_user_outline($course, $user, $mod, $game) {
  * a given particular instance of this module, for user activity reports.
  **/
 function game_user_complete($course, $user, $mod, $game) {
-    if ($attempts = get_records_select('game_attempts', "userid='$user->id' AND gameid='$game->id'", 'attempt ASC')) {
-        if ($game->grade && $grade = get_record('game_grades', 'userid', $user->id, 'gameid', $game->id)) {
-            echo get_string('grade').': '.round($grade->score * $game->grade, $game->decimalpoints).'/'.$game->grade.'<br />';
+    global $DB;
+
+    if ($attempts = $DB->get_records_select('game_attempts', "userid='$user->id' AND gameid='$game->id'", null, 'attempt ASC')) {
+        if ($game->grade && $grade = $DB->get_record('game_grades', array( 'userid' => $user->id, 'gameid' => $game->id))) {
+            echo get_string('grade').': '.game_format_score( $game, $grade->score).'/'.$game->grade.'<br />';
         }
         foreach ($attempts as $attempt) {
             echo get_string('attempt', 'game').' '.$attempt->attempt.': ';
             if ($attempt->timefinish == 0) {
-                print_string('unfinished');
+                print_string( 'unfinished');
             } else {
-                echo round($attempt->score * $game->grade, $game->decimalpoints).'/'.$game->grade;
+                echo game_format_score( $game, $attempt->score).'/'.$game->grade;
             }
             echo ' - '.userdate($attempt->timelastattempt).'<br />';
         }
@@ -288,13 +293,15 @@ function game_cron () {
 function game_grades($gameid) {
 /// Must return an array of grades, indexed by user, and a max grade.
 
-    $game = get_record('game', 'id', intval($gameid));
+    global $DB;
+
+    $game = $DB->get_record( 'game', array( 'id' => intval($gameid)));
     if (empty($game) || empty($game->grade)) {
         return NULL;
     }
 
     $return = new stdClass;
-    $return->grades = get_records_menu('game_grades', 'gameid', $game->id, '', "userid, score * {$game->grade}");
+    $return->grades = $DB->get_records_menu('game_grades', 'gameid', $game->id, '', "userid, score * {$game->grade}");
     $return->maxgrade = $game->grade;
 
     return $return;
@@ -308,17 +315,18 @@ function game_grades($gameid) {
  * @return array array of grades, false if none
  */
 function game_get_user_grades($game, $userid=0) {
-    global $CFG;
+    global $DB;
 
     $user = $userid ? "AND u.id = $userid" : "";
 
-    $sql = "SELECT u.id, u.id AS userid, $game->grade * g.score AS rawgrade, g.timemodified AS dategraded, MAX(a.timefinish) AS datesubmitted
-            FROM {$CFG->prefix}user u, {$CFG->prefix}game_grades g, {$CFG->prefix}game_attempts a
-            WHERE u.id = g.userid AND g.gameid = {$game->id} AND a.gameid = g.gameid AND u.id = a.userid
-                  $user
-            GROUP BY u.id, g.score, g.timemodified";
+    $sql = 'SELECT u.id, u.id AS userid, '.$game->grade.' * g.score AS rawgrade, g.timemodified AS dategraded, MAX(a.timefinish) AS datesubmitted
+            FROM {user} u, {game_grades} g, {game_attempts} a
+            WHERE u.id = g.userid AND g.gameid = '.$game->id.' AND a.gameid = g.gameid AND u.id = a.userid';
+    if( $userid != 0)
+        $sql .= ' AND u.id='.$userid;
+    $sql .= ' GROUP BY u.id, g.score, g.timemodified';
 
-    return get_records_sql($sql);
+    return $DB->get_records_sql( $sql);
 }
 
 /**
@@ -388,17 +396,17 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
 
     } else {
         $sql = "SELECT a.*, cm.idnumber as cmidnumber, a.course as courseid
-                  FROM {$CFG->prefix}game a, {$CFG->prefix}course_modules cm, {$CFG->prefix}modules m
+                  FROM {game} a, {course_modules} cm, {modules} m
                  WHERE m.name='game' AND m.id=cm.module AND cm.instance=a.id";
-        if ($rs = get_recordset_sql($sql)) {
-            while ($game = rs_fetch_next_record( $rs)) {
+        if ($rs = $DB->get_recordset_sql( $sql)) {
+            while ($game = $DB->rs_fetch_next_record( $rs)) {
                 if ($game->grade != 0) {
                     game_update_grades( $game, 0, false);
                 } else {
                     game_grade_item_update( $game);
                 }
             }
-            rs_close( $rs);
+            $DB->rs_close( $rs);
         }
     }
 }
@@ -435,6 +443,7 @@ function game_grade_item_update($game, $grades=NULL) {
         $params['gradetype'] = GRADE_TYPE_NONE;
     }
 
+
     if ($grades  === 'reset') {
         $params['reset'] = true;
         $grades = NULL;
@@ -466,12 +475,12 @@ function game_grade_item_delete( $game) {
  * Returns all game graded users since a given time for specified game
  */
 function game_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0)  {
-    global $CFG, $COURSE, $USER;
+    global $DB, $COURSE, $USER;
 
     if ($COURSE->id == $courseid) {
         $course = $COURSE;
     } else {
-        $course = get_record('course', 'id', $courseid);
+        $course = $DB->get_record('course', array( 'id' => $courseid));
     }
 
     $modinfo =& get_fast_modinfo($course);
@@ -486,17 +495,17 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
 
     if ($groupid) {
         $groupselect = "AND gm.groupid = $groupid";
-        $groupjoin   = "JOIN {$CFG->prefix}groups_members gm ON  gm.userid=u.id";
+        $groupjoin   = "JOIN {groups_members} gm ON  gm.userid=u.id";
     } else {
         $groupselect = "";
         $groupjoin   = "";
     }
     
-    if (!$attempts = get_records_sql("SELECT qa.*, q.grade,
+    if (!$attempts = $DB->get_records_sql("SELECT qa.*, q.grade,
                                              u.firstname, u.lastname, u.email, u.picture 
-                                        FROM {$CFG->prefix}game_attempts qa
-                                             JOIN {$CFG->prefix}game q ON q.id = qa.gameid
-                                             JOIN {$CFG->prefix}user u ON u.id = qa.userid
+                                        FROM {game_attempts} qa
+                                             JOIN {game} q ON q.id = qa.gameid
+                                             JOIN {user} u ON u.id = qa.userid
                                              $groupjoin
                                        WHERE qa.timefinish > $timestart AND q.id = $cm->instance
                                              $userselect $groupselect
@@ -509,8 +518,8 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
     $grader          = has_capability('moodle/grade:viewall', $cm_context);
     $accessallgroups = has_capability('moodle/site:accessallgroups', $cm_context);
     $viewfullnames   = has_capability('moodle/site:viewfullnames', $cm_context);
-    //$grader          = has_capability('mod/game:grade', $cm_context);
-    $grader          = isteacher( $courseid, $userid);
+    $grader          = has_capability('mod/game:grade', $cm_context);
+    //$grader          = isteacher( $courseid, $userid);
     $groupmode       = groups_get_activity_groupmode($cm, $course);
 
     if (is_null($modinfo->groups)) {
@@ -595,29 +604,6 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     return;
 }
 
-function game_before_add_or_update(&$game) {
-    if( $game->gamekind == 'millionaire')
-    {
-        if( substr( $game->param8, 0, 1) == '#')
-        {
-            $game->param8 = hexdec(substr( $game->param8, 1));
-        }
-    }
-
-}
-
-/**
- * This function is called at the end of game_add_instance
- * and game_update_instance, to do the common processing.
- *
- * @param object $game the game object.
- */
-function game_after_add_or_update($game) {
-
-    //update related grade item
-    game_grade_item_update( stripslashes_recursive( $game));
-}
-
 
 /**
  * Removes all grades from gradebook
@@ -625,15 +611,175 @@ function game_after_add_or_update($game) {
  * @param string optional type
  */
 function game_reset_gradebook($courseid, $type='') {
-    global $CFG;
+    global $DB;
 
     $sql = "SELECT q.*, cm.idnumber as cmidnumber, q.course as courseid
-              FROM {$CFG->prefix}game q, {$CFG->prefix}course_modules cm, {$CFG->prefix}modules m
+              FROM {game} q, {course_modules} cm, {modules} m
              WHERE m.name='game' AND m.id=cm.module AND cm.instance=q.id AND q.course=$courseid";
 
-    if ($games = get_records_sql( $sql)) {
+    if ($games = $DB->get_records_sql( $sql)) {
         foreach ($games as $game) {
             game_grade_item_update( $game, 'reset');
+        }
+    }
+}
+
+/**
+ * @uses FEATURE_GRADE_HAS_GRADE
+ * @return bool True if quiz supports feature
+ */
+function game_supports($feature) {
+    switch($feature) {
+
+        case FEATURE_GRADE_HAS_GRADE:         return true;
+
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_MOD_INTRO:               return false;
+
+        default: return null;
+    }
+}
+
+/**
+ * @global object
+ * @global stdClass
+ * @return array all other caps used in module
+ */
+function game_get_extra_capabilities() {
+    global $DB, $CFG;
+
+    require_once($CFG->libdir.'/questionlib.php');
+    $caps = question_get_all_capabilities();
+    $reportcaps = $DB->get_records_select_menu('capabilities', 'name LIKE ?', array('quizreport/%'), 'id,name');
+    $caps = array_merge($caps, $reportcaps);
+    $caps[] = 'moodle/site:accessallgroups';
+    return $caps;
+}
+
+/**
+ * Return a textual summary of the number of attemtps that have been made at a particular game,
+ * returns '' if no attemtps have been made yet, unless $returnzero is passed as true.
+ *
+ * @global stdClass
+ * @global object
+ * @global object
+ * @param object $game the game object. Only $game->id is used at the moment.
+ * @param object $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
+ * @param boolean $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
+ * @param int $currentgroup if there is a concept of current group where this method is being called
+ *         (e.g. a report) pass it in here. Default 0 which means no current group.
+ * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)" or
+ *          "Attemtps 123 (45 from this group)".
+ */
+function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup = 0) {
+    global $CFG, $USER, $DB;
+
+    $numattempts = $DB->count_records('game_attempts', array('gameid'=> $game->id, 'preview'=>0));
+    if ($numattempts || $returnzero) {
+        if (groups_get_activity_groupmode($cm)) {
+            $a->total = $numattempts;
+            if ($currentgroup) {
+                $a->group = $DB->count_records_sql('SELECT count(1) FROM ' .
+                        '{game_attempts} qa JOIN ' .
+                        '{groups_members} gm ON qa.userid = gm.userid ' .
+                        'WHERE gameid = ? AND preview = 0 AND groupid = ?', array($game->id, $currentgroup));
+                return get_string('attemptsnumthisgroup', 'quiz', $a);
+            } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) {
+                list($usql, $params) = $DB->get_in_or_equal(array_keys($groups));
+                $a->group = $DB->count_records_sql('SELECT count(1) FROM ' .
+                        '{game_attempts} qa JOIN ' .
+                        '{groups_members} gm ON qa.userid = gm.userid ' .
+                        'WHERE gameid = ? AND preview = 0 AND ' .
+                        "groupid $usql", array_merge(array($game->id), $params));
+                return get_string('attemptsnumyourgroups', 'quiz', $a);
+            }
+        }
+        return get_string('attemptsnum', 'quiz', $numattempts);
+    }
+    return '';
+}
+
+function game_format_score($game, $score) {
+    return format_float($game->grade * $score / 100, $game->decimalpoints);
+}
+
+function game_format_grade($game, $grade) {
+    return format_float($grade, $game->decimalpoints);
+}
+
+/**
+ * @return the options for calculating the quiz grade from the individual attempt grades.
+ */
+function game_get_grading_options() {
+    return array (
+            QUIZ_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
+            QUIZ_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
+            QUIZ_ATTEMPTFIRST => get_string('attemptfirst', 'quiz'),
+            QUIZ_ATTEMPTLAST  => get_string('attemptlast', 'quiz'));
+}
+
+/**
+ * This fucntion extends the global navigaiton for the site.
+ * It is important to note that you should not rely on PAGE objects within this
+ * body of code as there is no guarantee that during an AJAX request they are
+ * available
+ *
+ * @param navigation_node $gamenode The game node within the global navigation
+ * @param stdClass $course The course object returned from the DB
+ * @param stdClass $module The module object returned from the DB
+ * @param stdClass $cm The course module isntance returned from the DB
+ */
+function game_extend_navigation($gamenode, $course, $module, $cm) {
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    if (!has_capability('mod/game:viewreports', $context))
+        return;
+
+    if (has_capability('mod/game:view', $context)) {
+        $url = new moodle_url('/mod/game/view.php', array('id'=>$cm->id));
+        $gamenode->add(get_string('info', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/info', ''));
+    }
+
+    if (has_capability('mod/game:manage', $context)) {
+        $url = new moodle_url('/course/modedit.php', array('update' => $cm->id, 'return' => true, 'sesskey' => sesskey()));
+        $gamenode->add(get_string('edit', 'moodle', ''), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('t/edit', ''));
+    }
+
+    /* if (has_capability('mod/game:viewreports', $context)) {
+        $url = new moodle_url('/mod/game/report.php', array('q'=>$cm->instance));
+        $reportnode = $gamenode->add(get_string('results', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+    } */
+
+    if (has_capability('mod/game:viewreports', $context)) {
+        $url = new moodle_url('/mod/game/showanswers.php', array('q'=>$cm->instance));
+        $reportnode = $gamenode->add(get_string('showanswers', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+    }
+
+    if (has_capability('mod/game:viewreports', $context)) {
+        $url = new moodle_url('/mod/game/showattempts.php', array('q'=>$cm->instance));
+        $reportnode = $gamenode->add(get_string('showattempts', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('f/explore', ''));
+    }
+
+
+    if (has_capability('mod/game:viewreports', $context)) 
+    {
+        switch( $module->gamekind){
+        case 'hangman':
+            $url = new moodle_url('', null);
+            $exportnode = $gamenode->add( get_string('export', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+
+            $url = new moodle_url('/mod/game/export.php', array( 'id' => $cm->id,'courseid'=>$course->id, 'target' => 'html'));
+            $exportnode->add( get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+
+            $url = new moodle_url('/mod/game/export.php', array( 'id' => $cm->id,'courseid'=>$course->id, 'target' => 'javame'));
+            $exportnode->add( get_string('export_to_javame', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+            break;
+        case 'cross':
+        case 'millionaire':
+            $url = new moodle_url('/mod/game/export.php', array( 'id' => $cm->id,'courseid'=>$course->id, 'target' => 'html'));
+            $gamenode->add(get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+            break;
         }
     }
 }
@@ -644,7 +790,7 @@ function game_reset_gradebook($courseid, $type='') {
  *
  */
 function game_get_types(){
-    global $CFG;
+    global $DB;
 
     $types = array();
 
@@ -696,7 +842,7 @@ function game_get_types(){
     $type->typestr = get_string('game_hiddenpicture', 'game');
     $types[] = $type;
 
-    if(get_record_select( 'modules', "name='book'", 'id,id')){
+    if($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id')){
         $type = new object();
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=bookquiz";
@@ -712,41 +858,4 @@ function game_get_types(){
 
     return $types;
 
-}
-
-/**
- * Return a textual summary of the number of attemtps that have been made at a particular game,
- * returns '' if no attemtps have been made yet, unless $returnzero is passed as true.
- * @param object $game the game object. Only $game->id is used at the moment.
- * @param object $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
- * @param boolean $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
- * @param int $currentgroup if there is a concept of current group where this method is being called
- *         (e.g. a report) pass it in here. Default 0 which means no current group.
- * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)" or
- *          "Attemtps 123 (45 from this group)".
- */
-function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup = 0) {
-    global $CFG, $USER;
-    $numattempts = count_records('game_attempts', 'gameid', $game->id, 'preview', 0);
-    if ($numattempts || $returnzero) {
-        if (groups_get_activity_groupmode($cm)) {
-            $a->total = $numattempts;
-            if ($currentgroup) {
-                $a->group = count_records_sql('SELECT count(1) FROM ' .
-                        $CFG->prefix . 'game_attempts qa JOIN ' .
-                        $CFG->prefix . 'groups_members gm ON qa.userid = gm.userid ' .
-                        'WHERE gameid = ' . $game->id . ' AND preview = 0 AND groupid = ' . $currentgroup);
-                return get_string('attemptsnumthisgroup', 'quiz', $a);
-            } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) { 
-                $a->group = count_records_sql('SELECT count(1) FROM ' .
-                        $CFG->prefix . 'game_attempts qa JOIN ' .
-                        $CFG->prefix . 'groups_members gm ON qa.userid = gm.userid ' .
-                        'WHERE gameid = ' . $game->id . ' AND preview = 0 AND ' .
-                        'groupid IN (' . implode(',', array_keys($groups)) . ')');
-                return get_string('attemptsnumyourgroups', 'quiz', $a);
-            }
-        }
-        return get_string('attemptsnum', 'quiz', $numattempts);
-    }
-    return '';
 }

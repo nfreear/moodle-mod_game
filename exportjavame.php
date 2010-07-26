@@ -1,17 +1,17 @@
-<?php  // $Id: exportjavame.php,v 1.13 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: exportjavame.php,v 1.14 2010/07/26 00:07:13 bdaloukas Exp $
 /**
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.13 2010/07/24 02:04:29 arborrow Exp $
+ * @version $Id: exportjavame.php,v 1.14 2010/07/26 00:07:13 bdaloukas Exp $
  * @package game
  **/
     
     function game_OnExportJavaME( $game, $javame){
-        global $CFG;
+        global $CFG, $DB;
                 
         $courseid = $game->course;
-        $course = get_record_select( 'course', "id=$courseid");
+        $course = $DB->get_record( 'course', array( 'id' => $courseid));
         
         $destdir = game_export_createtempdir();
                 
@@ -172,19 +172,19 @@
         global $CFG;
 
 	    $select = "quiz='$game->quizid' ".
-			  " AND {$CFG->prefix}quiz_question_instances.question={$CFG->prefix}question.id".
-			  " AND {$CFG->prefix}question.hidden=0".
+			  " AND qzi.question=q.id".
+			  " AND q.hidden=0".
               game_showanswers_appendselect( $game);
-    	$table = "question,{$CFG->prefix}quiz_question_instances";
+    	$table = "{question} q,{quiz_question_instances} qqi";
 	
-        return game_exmportjavame_getanswers_question_select( $game, $table, $select, "{$CFG->prefix}question.*", 'category,questiontext', true, $game->course);
+        return game_exmportjavame_getanswers_question_select( $game, $table, $select, "q.*", 'category,questiontext', true, $game->course);
     }
     
     function game_exmportjavame_getanswers_question_select( $game, $table, $select, $fields='*', $courseid=0)
     {
-        global $CFG;
+        global $CFG, $DB;
     
-        if( ($questions = get_records_select( $table, $select, '', $fields)) === false){
+        if( ($questions = $DB->get_records_select( $table, $select, null, '', $fields)) === false){
             return;
         }
 	                $src = $CFG->dirroot.'/mod/game/export/javame/hangman/simple';
@@ -199,7 +199,7 @@
         
             switch( $question->qtype){
             case 'shortanswer':
-	            $rec = get_record_select( 'question_answers', "question=$question->id", "id,answer,feedback");
+	            $rec = $DB->get_record_select( 'question_answers', array( 'question' => $question->id), null, 'id,answer,feedback');
 	            $ret->answer = $rec->answer;
 	            $ret->feedback = $rec->feedback;
 	            $map[] = $ret;
@@ -214,14 +214,14 @@
     
     function game_exmportjavame_getanswers_glossary( $game, $export_attachment)
     {
-        global $CFG;
+        global $CFG, $DB;
     
-    	$table = 'glossary_entries ge';
+    	$table = '{glossary_entries} ge';
         $select = "glossaryid={$game->glossaryid}";
         if( $game->glossarycategoryid){
 	    	$select .= " AND gec.entryid = ge.id ".
 					   " AND gec.categoryid = {$game->glossarycategoryid}";
-	    	$table .= ",{$CFG->prefix}glossary_entries_categories gec";		
+	    	$table .= ",{glossary_entries_categories} gec";		
     	}
     	
     	if( $export_attachment){
@@ -232,7 +232,8 @@
         if( $export_attachment){
             $fields .= ',attachment';
         }
-        if( ($questions = get_records_select( $table, $select, 'definition', $fields)) === false){
+        $sql = "SELECT $fields FROM $table WHERE $select ORDER BY definition";
+        if( ($questions = $DB->get_records_sql( $sql)) === false){
             return false;
         }
     
@@ -316,5 +317,3 @@ function game_showanswers_appendselect( $form)
     
     return '';
 }
-
-?>

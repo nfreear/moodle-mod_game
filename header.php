@@ -1,57 +1,80 @@
 <?php
 
-	$id = optional_param('id', 0, PARAM_INT); // Course Module ID
-    $q  = optional_param('q', 0, PARAM_INT);  // game ID
-    $action  = optional_param('action', "", PARAM_ALPHANUM);  // action
+    require_once(dirname(__FILE__) . '/../../config.php');
+    require_once($CFG->libdir.'/gradelib.php');
+    require_once($CFG->dirroot.'/mod/game/locallib.php');
+    require_once($CFG->libdir . '/completionlib.php');
 
-	if ($id) {
-        if (! $cm = get_record("course_modules", "id", $id)) {
-            print_error("Course Module ID was incorrect id=$id");
+    $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
+    $q = optional_param('q',  0, PARAM_INT);  // game ID
+
+    if ($id) {
+        if (! $cm = get_coursemodule_from_id('game', $id)) {
+            print_error('invalidcoursemodule');
         }
-        if (! $course = get_record("course", "id", $cm->course)) {
-            print_error("Course is misconfigured id=$cm->course");
+        if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+            print_error('coursemisconf');
         }
-    
-        if (! $game = get_record("game", "id", $cm->instance)) {
-            print_error("Game id is incorrect (id=$cm->instance)");
+        if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
+            print_error('invalidcoursemodule');
         }
     } else {
-        if (! $game = get_record("game", "id", $q)) {
-            print_error("Game module is incorrect (id=$q)");
+        if (! $game = $DB->get_record('game', array('id' => $q))) {
+            print_error('invalidgameid', 'game');
         }
-        if (! $course = get_record("course", "id", $game->course)) {
-            print_error("Course is misconfigured (id=$game->course)");
+        if (! $course = $DB->get_record('course', array('id' => $game->course))) {
+            print_error('invalidcourseid');
         }
-        if (! $cm = get_coursemodule_from_instance("game", $game->id, $course->id)) {
-            print_error("Course Module ID was incorrect");
+        if (! $cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
+            print_error('invalidcoursemodule');
         }
     }
 
-    require_login($course->id);
+/// Check login and get context.
+    require_login($course->id, false, $cm);
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    require_capability('mod/game:view', $context);
 
-    add_to_log($course->id, "game", "view", "view.php?id=$cm->id", $game->name);
+/// Cache some other capabilites we use several times.
+    $canattempt = has_capability('mod/game:attempt', $context);
+    $canreviewmine = has_capability('mod/game:reviewmyattempts', $context);
+    $canpreview = has_capability('mod/game:preview', $context);
 
-/// Print the page header
+/// Create an object to manage all the other (non-roles) access rules.
+    $timenow = time();
+    //$accessmanager = new game_access_manager(game::create($game->id, $USER->id), $timenow);
 
-    $strgames = get_string("modulenameplural", "game");
-    $strgame  = get_string("modulename", "game");
+/// If no questions have been set up yet redirect to edit.php
+    //if (!$game->questions && has_capability('mod/game:manage', $context)) {
+    //    redirect($CFG->wwwroot . '/mod/game/edit.php?cmid=' . $cm->id);
+    //}
 
-    $cm->modname = 'game';
-    $cm->name = $game->name;
-    
-    if( function_exists( 'build_navigation')){
-        $navigation = build_navigation('', $cm);
-        print_header("$course->shortname: $game->name", "$course->shortname: $game->name", $navigation, 
-                  "", "", true, update_module_button($cm->id, $course->id, $strgame), 
-                  navmenu($course, $cm));
-    }else{
-        if ($course->category) {
-            $navigation = "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\">$course->shortname</a> ->";
-        } else {
-            $navigation = '';
-        }    
-        print_header("$course->shortname: $game->name", "$course->fullname",
-                 "$navigation <a href=index.php?id=$course->id>$strgames</a> -> $game->name", 
-                  "", "", true, update_module_button($cm->id, $course->id, $strgame), 
-                  navmenu($course, $cm));        
+/// Log this request.
+    add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
+
+/// Initialize $PAGE, compute blocks
+    $PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
+
+    $edit = optional_param('edit', -1, PARAM_BOOL);
+    if ($edit != -1 && $PAGE->user_allowed_editing()) {
+        $USER->editing = $edit;
     }
+
+    $PAGE->requires->yui2_lib('event');
+
+    // Note: MDL-19010 there will be further changes to printing header and blocks.
+    // The code will be much nicer than this eventually.
+    $title = $course->shortname . ': ' . format_string($game->name);
+
+    if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
+        $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
+            '<input type="hidden" name="id" value="'.$cm->id.'" />'.
+            '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing()?'off':'on').'" />'.
+            '<input type="submit" value="'.get_string($PAGE->user_is_editing()?'blockseditoff':'blocksediton').'" /></div></form></td></tr></table>';
+        $PAGE->set_button($buttons);
+    }
+
+    $PAGE->set_title($title);
+    $PAGE->set_heading($course->fullname);
+
+    echo $OUTPUT->header();

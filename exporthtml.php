@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml.php,v 1.12 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: exporthtml.php,v 1.13 2010/07/26 00:07:13 bdaloukas Exp $
 /**
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.12 2010/07/24 02:04:29 arborrow Exp $
+ * @version $Id: exporthtml.php,v 1.13 2010/07/26 00:07:13 bdaloukas Exp $
  * @package game
  **/
  
@@ -37,7 +37,7 @@
     
     function game_OnExportHTML_cross( $game, $html, $destdir){
   
-        global $CFG;
+        global $CFG, $DB;
     
         if( $html->filename == ''){
             $html->filename = 'cross';
@@ -64,7 +64,7 @@
         $output_string = ob_get_contents();
         ob_end_clean();
                 
-        $course = get_record_select( 'course', "id={$game->course}");
+        $course = $DB->get_record( 'course', array( 'id' => $game->course));
         
         $filename = $html->filename . '.htm';
         
@@ -89,7 +89,7 @@
     
     function game_OnExportHTML_hangman( $game, $html, $destdir){
     
-        global $CFG;
+        global $CFG, $DB;
         
         if( $html->filename == ''){
             $html->filename = 'hangman';
@@ -115,7 +115,7 @@
         ob_end_clean();
                
         $courseid = $game->course;
-        $course = get_record_select( 'course', "id=$courseid");
+        $course = $DB->get_record( 'course', array( 'id' => $courseid));
                 
         $filename = $html->filename . '.htm';
         
@@ -141,13 +141,13 @@
 	    }
 		
 		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
-        game_send_stored_file($filezip);
+        game_send_stored_file($destdir.'/'.$filezip);
     }
 
 
     function game_OnExportHTML_millionaire( $game, $html, $destdir){
     
-        global $CFG;
+        global $CFG, $DB;
         
         if( $html->filename == ''){
             $html->filename = 'millionaire';
@@ -171,7 +171,7 @@
         ob_end_clean();
                         
         $courseid = $game->course;
-        $course = get_record_select( 'course', "id=$courseid");
+        $course = $DB->get_record( 'course', array( 'id' => $courseid));
                 
         $filename = $html->filename . '.htm';
         
@@ -193,6 +193,6 @@
 	    	}
 	    }
 		
-		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');	
+		$filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
         game_send_stored_file($filezip);
     }

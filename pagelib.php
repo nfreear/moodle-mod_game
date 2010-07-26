@@ -1,4 +1,4 @@
-<?php // $Id: pagelib.php,v 1.3 2010/07/24 02:04:29 arborrow Exp $
+<?php // $Id: pagelib.php,v 1.4 2010/07/26 00:07:13 bdaloukas Exp $
 
 require_once($CFG->libdir.'/pagelib.php');
 require_once($CFG->dirroot.'/course/lib.php'); // needed for some blocks

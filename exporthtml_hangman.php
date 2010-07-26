@@ -1,9 +1,9 @@
-<?php  // $Id: exporthtml_hangman.php,v 1.5 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: exporthtml_hangman.php,v 1.6 2010/07/26 00:07:13 bdaloukas Exp $
 /**
  * This page export the game hangman to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_hangman.php,v 1.5 2010/07/24 02:04:29 arborrow Exp $
+ * @version $Id: exporthtml_hangman.php,v 1.6 2010/07/26 00:07:13 bdaloukas Exp $
  * @package game
  **/
 
@@ -15,6 +15,14 @@
 
 var can_play = true;
 <?php
+        $destdir = game_export_createtempdir();
+
+        $export_attachment = ( $html->type == 'hangmanp');
+        $map = game_exmportjavame_getanswers( $game, $export_attachment);
+        if( $map == false){
+            error( 'No Questions');
+        }
+        
         $questions = '';
         $words = '';
         $lang = '';
@@ -58,7 +66,7 @@ var can_play = true;
             
             if( $html->type == 'hangmanp'){
                 $file = $line->id.substr( $file, $pos);
-                game_export_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth, $html->maxpictureheight);
+                game_export_javame_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth, $html->maxpictureheight);
                 
                 if( $images != '')
                     $images .= ', ';
@@ -110,8 +118,7 @@ function selectLetter(l)
     {
         // correct letter guess
         pos = 0;
-        temp_mask = display_word;
-
+        temp_mask = display_word;
         while (to_guess.indexOf(l, pos) != -1)
         {
             pos = to_guess.indexOf(l, pos);			
@@ -167,8 +174,7 @@ function reset()
 {
     selectWord();
 
-    document.getElementById('usedLetters').innerHTML = "&nbsp;";
-    used_letters = "";
+    document.getElementById('usedLetters').innerHTML = "&nbsp;";    used_letters = "";
     used_letters_all = "";
     wrong_guesses = 0;
     showallletters();
@@ -209,9 +215,7 @@ function selectWord()
 {
     can_play = true;
     random_number = Math.round(Math.random() * (words.length - 1));
-    to_guess =  Base64.decode( words[random_number]);
-    to_question = questions[random_number];
-	
+    to_guess =  Base64.decode( words[random_number]);    to_question = questions[random_number];	
     // display masked word
     masked_word = createMask(to_guess);
     document.getElementById('displayWord').innerHTML=masked_word;

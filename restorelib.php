@@ -1,4 +1,4 @@
-<?php //$Id: restorelib.php,v 1.6 2010/07/24 02:04:29 arborrow Exp $
+<?php //$Id: restorelib.php,v 1.7 2010/07/26 00:07:14 bdaloukas Exp $
     //This php script contains all the stuff to restore game mods
 
 // Todo:
@@ -26,7 +26,8 @@
 
     function game_restore_mods($mod,$restore) {
 
-        global $CFG;
+        global $DB;
+
         $status = true;
 
         //Get record from backup_ids
@@ -37,7 +38,7 @@
             $info = $data->info;
             //if necessary, write to restorelog and adjust date/time fields
             if ($restore->course_startdateoffset) {
-                restore_log_date_changes('Game', $restore, $info['MOD']['#'], array('TIMEOPEN', 'TIMECLOSE'));
+                restore_log_date_changes( 'Game', $restore, $info['MOD']['#'], array('TIMEOPEN', 'TIMECLOSE'));
             }            
             //Now, build the GAME record structure
             $game = new stdClass;
@@ -47,7 +48,7 @@
 
 			$fields = array( 'name', 'sourcemodule', 'quizid', 'glossaryid', 'glossarycategoryid', 'questioncategoryid',
 					'bookid', 'gameinputid', 'gamekind', 'param1', 'param2', 'param3', 'param4', 'param5', 'param6', 'param7', 'param8',
-					'timemodified', 'bottomtext', 'grademethod', 'grade', 'decimalpoints', 'review', 'attempts',
+					'timemodified', 'bottomtext', 'grademethod', 'grade', 'decimalpoints', 'popup', 'review', 'attempts',
 					'glossaryid2', 'glossarycategoryid2', 'language');
 			game_restore_record( $mod_info, $game, $fields);
 			
@@ -64,7 +65,7 @@
 			game_recode( $restore->backup_unique_code, $game, 'bookid', 'book');
 						
             //The structure is equal to the db, so insert the game
-            $newid = insert_record ("game", $game);
+            $newid = $DB->insert_record ( 'game', $game);
 
             //Do some output
             if (!defined('RESTORE_SILENTLY')) {
@@ -113,15 +114,17 @@
 	
     function game_recode_questioncategoryid( &$game, $map_question_categories){
     
+        global $DB;
+
         $stamp = $map_question_categories[ $game->questioncategoryid];
         
-        $game->questioncategoryid = get_field_select( 'question_categories', 'id', "stamp='$stamp'");
+        $game->questioncategoryid = $DB->get_field_select( 'question_categories', 'id', "stamp='$stamp'");
     }
 	
     //This function restores the quiz_attempts
     function game_attempts_restore_mods($newgameid,$info,$restore) {
 
-        global $CFG;
+        global $DB;
 
         $status = true;
 
@@ -149,7 +152,7 @@
 			game_recode( $restore->backup_unique_code, $attempt, 'userid', 'users');
 
             //The structure is equal to the db, so insert the quiz_attempts
-            $newid = insert_record ("game_attempts", $attempt);
+            $newid = $DB->insert_record ("game_attempts", $attempt);
 
             //Do some output
             game_do_some_output( $i);
@@ -177,7 +180,7 @@
     //This function restores the game_snakes_database
     function game_restore_snakes_database( $info, $restore) {
 
-        global $CFG;
+        global $DB;
 
         $status = true;
         //Get the game_attempts array
@@ -197,13 +200,13 @@
                     'footerx', 'footery', 'width', 'height');
             game_restore_record( $att_info, $snakes_database, $fields);
             
-            if( ($recdb = get_record_select( 'game_snakes_database', "name='{$snakes_database->name}'")) != false){
+            if( ($recdb = $DB->get_record( 'game_snakes_database', array( 'name' => $snakes_database->name)) != false){
                 backup_putid($restore->backup_unique_code, 'game_snakes_database', $snakes_database->id, $recdb->id);
                 continue;
             }
         
             //The structure is equal to the db, so insert the quiz_attempts
-            $newid = insert_record ("game_snakes_database", $snakes_database);
+            $newid = $DB->insert_record ( 'game_snakes_database', $snakes_database);
 
             //Do some output
             game_do_some_output( $i);
@@ -219,7 +222,7 @@
     //This function restores the game_grades
     function game_restore_grades($newgameid,$info,$restore) {
 
-        global $CFG;
+        global $DB;
 
         $status = true;
         //Get the game_attem array
@@ -240,7 +243,7 @@
             game_restore_record( $att_info, $game_grade, $fields);
                     
             //The structure is equal to the db, so insert the quiz_attempts
-            $newid = insert_record ("game_grades", $games_grade);
+            $newid = $DB->insert_record( 'game_grades', $games_grade);
 
             //Do some output
             game_do_some_output( $i);
@@ -250,8 +253,6 @@
     }
 
     function game_restore_stamp( $info, $restore, &$map, $tags, $tag) {
-
-        global $CFG;
 
         $map = array();
         
@@ -280,7 +281,7 @@
     //This function restores the game_bookquiz_questions
     function game_restore_bookquiz_questions($newgameid,$info,$restore, $map_question_categories) {
 
-        global $CFG;
+        global $DB;
 
         $status = true;
         //Get the c array
@@ -305,7 +306,7 @@
             game_recode_questioncategoryid( $game_bookquiz_question, $map_question_categories);
                     
             //The structure is equal to the db, so insert the game_bookquiz_question
-            $newid = insert_record ("game_bookquiz_questions", $game_bookquiz_question);
+            $newid = $DB->insert_record ("game_bookquiz_questions", $game_bookquiz_question);
 
             game_do_some_output( $i);
         }        
@@ -316,7 +317,7 @@
     
     function game_restore_queries( $newgameid, $newattemptid, $info, $restore) {
 
-        global $CFG;
+        global $DB;
 
         $status = true;
         //Get the c array
@@ -345,7 +346,7 @@
             game_recode( $restore->backup_unique_code, $game_query, 'glossaryentryid', 'glossary_entries');                    
                     
             //The structure is equal to the db, so insert the game_bookquiz_question
-            $newid = insert_record ("game_queries", $game_query);
+            $newid = $DB->insert_record ("game_queries", $game_query);
         }
                       
         return $status;
@@ -372,11 +373,8 @@
     //This function restores the game_hangman
     function game_restore_hangman( $newattemptid, $info, $restore) {
 
-        global $CFG;
-
         $status = true;
         
-
         //Get the game_hangman array
         if (array_key_exists('GAME_HANGMAN', $info['#'])) {
             $info = $info['#']['GAME_HANGMAN'][ 0];
@@ -394,7 +392,7 @@
 		game_recode( $restore->backup_unique_code, $game_hangman, 'queryid', 'game_queries');
 
         //The structure is equal to the db, so insert the game_hangman
-        if( ( game_insert_record ("game_hangman", $game_hangman) == false)){
+        if( ( game_insert_record ( 'game_hangman', $game_hangman) == false)){
             $status = false;
         }
         return $status;
@@ -403,11 +401,8 @@
     //This function restores the game_hiddenpicture
     function game_restore_hiddenpicture( $newattemptid, $info, $restore) {
 
-        global $CFG;
-
         $status = true;
         
-
         //Get the game_hiddenpicture array
         if (array_key_exists('GAME_HIDDENPICTURE', $info['#'])) {
             $info = $info['#']['GAME_HIDDENPICTURE'][ 0];
@@ -422,7 +417,7 @@
         game_restore_record( $info, $game_hiddenpicture, $fields);
 
         //The structure is equal to the db, so insert the game_hiddenpicture
-        if( ( game_insert_record ("game_hiddenpicture", $game_hiddenpicture) == false)){
+        if( ( game_insert_record ( 'game_hiddenpicture', $game_hiddenpicture) == false)){
             $status = false;
         }
         return $status;
@@ -430,8 +425,6 @@
 
     //This function restores the game_cross
     function game_restore_cross( $newattemptid, $info, $restore) {
-
-        global $CFG;
 
         $status = true;
         
@@ -450,7 +443,7 @@
         game_restore_record( $info, $game_cross, $fields);
 
         //The structure is equal to the db, so insert the game_hangman
-        if( ( game_insert_record ("game_cross", $game_cross) == false)){
+        if( ( game_insert_record ( 'game_cross', $game_cross) == false)){
             $status = false;
         }
         return $status;
@@ -458,8 +451,6 @@
 
   //This function restores the game_cryptex
     function game_restore_cryptex( $newattemptid, $info, $restore) {
-
-        global $CFG;
 
         $status = true;
         
@@ -477,7 +468,7 @@
         game_restore_record( $info, $game_cryptex, $fields);
 
         //The structure is equal to the db, so insert the game_cryptex
-        if( ( game_insert_record ("game_cryptex", $game_cryptex) == false)){
+        if( ( game_insert_record ( 'game_cryptex', $game_cryptex) == false)){
             $status = false;
         }
         return $status;
@@ -485,8 +476,6 @@
 
   //This function restores the game_millionaire
     function game_restore_millionaire( $newattemptid, $info, $restore) {
-
-        global $CFG;
 
         $status = true;
         
@@ -507,7 +496,7 @@
 		game_recode( $restore->backup_unique_code, $game_millionaire, 'queryid', 'game_queries');
 
         //The structure is equal to the db, so insert the game_millionaire
-        if( ( game_insert_record ("game_millionaire", $game_millionaire) == false)){
+        if( ( game_insert_record ( 'game_millionaire', $game_millionaire) == false)){
             $status = false;
         }
         return $status;
@@ -515,8 +504,6 @@
 
     //This function restores the game_sudoku
     function game_restore_sudoku( $newattemptid, $info, $restore) {
-
-        global $CFG;
 
         $status = true;
         
@@ -534,7 +521,7 @@
         game_restore_record( $info, $game_sudoku, $fields);
 
         //The structure is equal to the db, so insert the game_sudoku
-        if( ( game_insert_record ("game_sudoku", $game_sudoku) == false)){
+        if( ( game_insert_record ( 'game_sudoku', $game_sudoku) == false)){
             $status = false;
         }
         return $status;
@@ -542,8 +529,6 @@
 
     //This function restores the game_snakes
     function game_restore_snakes( $newattemptid, $info, $restore) {
-
-        global $CFG;
 
         $status = true;
         
@@ -565,7 +550,7 @@
         game_recode( $restore->backup_unique_code, $game_snakes, 'snakesdatabaseid', 'game_snakes_database');
 
         //The structure is equal to the db, so insert the game_snakes
-        if( ( game_insert_record ("game_snakes", $game_snakes) == false)){
+        if( ( game_insert_record ( 'game_snakes', $game_snakes) == false)){
             $status = false;
         }
         return $status;

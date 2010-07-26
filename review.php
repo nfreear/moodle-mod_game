@@ -1,34 +1,34 @@
-<?php  // $Id: review.php,v 1.9 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: review.php,v 1.10 2010/07/26 00:07:14 bdaloukas Exp $
 /**
 * This page prints a review of a particular game attempt
 *
-* @version $Id: review.php,v 1.9 2010/07/24 02:04:29 arborrow Exp $
+* @version $Id: review.php,v 1.10 2010/07/26 00:07:14 bdaloukas Exp $
 * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
 * @package game
 */
 
     require_once("../../config.php");
     require_once("locallib.php");
-    require_once($CFG->libdir."questionlib.php");
+    require_once("../../lib/questionlib.php");
 
     $attempt = required_param('attempt', PARAM_INT);    // A particular attempt ID for review
     $page = optional_param('page', 0, PARAM_INT); // The required page
     $showall = optional_param('showall', 0, PARAM_BOOL);
 	
-    if (! $attempt = get_record("game_attempts", "id", $attempt)) {
-        error("No such attempt ID exists");
+    if (! $attempt = $DB->get_record('game_attempts', array( 'id' => $attempt))) {
+        print_error("No such attempt ID exists");
     }
-    if (! $game = get_record("game", "id", $attempt->gameid)) {
-        error("The game with id $attempt->gameid belonging to attempt $attempt is missing");
+    if (! $game = $DB->get_record('game', array( 'id' => $attempt->gameid))) {
+        print_error("The game with id $attempt->gameid belonging to attempt $attempt is missing");
     }
 	
 	game_compute_attempt_layout( $game, $attempt);
 	
-    if (! $course = get_record("course", "id", $game->course)) {
-        error("The course with id $game->course that the game with id $game->id belongs to is missing");
+    if (! $course = $DB->get_record('course', array( 'id' => $game->course))) {
+        print_error("The course with id $game->course that the game with id $game->id belongs to is missing");
     }
     if (! $cm = get_coursemodule_from_instance("game", $game->id, $course->id)) {
-        error("The course module for the game with id $game->id is missing");
+        print_error("The course module for the game with id $game->id is missing");
     }
 
     $grade = game_score_to_grade( $attempt->score, $game);
@@ -39,6 +39,7 @@
     $coursecontext = get_context_instance( CONTEXT_COURSE, $cm->course);
     $isteacher = isteacher( $game->course, $USER->id);
     $options = game_get_reviewoptions( $game, $attempt, $context);
+    $popup = $isteacher ? 0 : $game->popup; // Controls whether this is shown in a javascript-protected window.
 
     add_to_log($course->id, "game", "review", "review.php?id=$cm->id&amp;attempt=$attempt->id", "$game->id", "$cm->id");
 
@@ -46,19 +47,23 @@
 
     $strgames = get_string('modulenameplural', 'game');
     $strreview  = get_string('review', 'game');
-    $strscore  = get_string('score', 'game');
+    $strscore  = get_string('score', "game");
     $strgrade  = get_string('grade');
     $strbestgrade  = get_string('bestgrade', 'quiz');
     $strtimetaken     = get_string('timetaken', 'game');
     $strtimecompleted = get_string('completedon', 'game');
 
 
-    $strupdatemodule = has_capability('moodle/course:manageactivities', $coursecontext)
-            ? update_module_button($cm->id, $course->id, get_string('modulename', 'game'))
-            : "";
+        $strupdatemodule = has_capability('moodle/course:manageactivities', $coursecontext)
+                    ? update_module_button($cm->id, $course->id, get_string('modulename', 'game'))
+                    : "";
+       // print_header_simple(format_string($game->name), "",
+       //          "<a href=\"index.php?id=$course->id\">$strgames</a>
+       //           -> <a href=\"view.php?id=$cm->id\">".format_string($game->name,true)."</a> -> $strreview",
+       //          "", "", true, $strupdatemodule);
                  
-    $strgames = get_string('modulenameplural', 'game');
-    $strgame  = get_string('modulename', 'game');
+    $strgames = get_string("modulenameplural", "game");
+    $strgame  = get_string("modulename", "game");
                      
     if( function_exists( 'build_navigation')){
         $navigation = build_navigation('', $cm);
@@ -76,6 +81,7 @@
                   "", "", true, update_module_button($cm->id, $course->id, $strgame), 
                   navmenu($course, $cm));        
     }                 
+                 
                  
     echo '<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>'; // for overlib
 /// Print heading and tabs if this is part of a preview
@@ -109,12 +115,12 @@
 	if( $pagelist != ''){
 		$sql = "SELECT q.*, i.id AS instance,i.id as iid,".
 				"i.score AS score,i.studentanswer".
-			"  FROM {$CFG->prefix}question q,".
-			"       {$CFG->prefix}game_queries i".
+			"  FROM {question} q,".
+			"       {game_queries} i".
 			" WHERE i.attemptid = '$attempt->id' AND q.id = i.questionid AND (i.sourcemodule='question' or i.sourcemodule = 'quiz')".
 			"   AND q.id IN ($pagelist)";
 
-		if (!$questions = get_records_sql( $sql)) {
+		if (!$questions = $DB->get_records_sql( $sql)) {
 			error('No questions found');
 		}
 	}else
@@ -150,12 +156,12 @@
 
     $table->align  = array("right", "left");
     if ($attempt->userid <> $USER->id) {
-       $student = get_record('user', 'id', $attempt->userid);
+       $student = $DB->get_record('user', array( 'id' => $attempt->userid));
        $picture = print_user_picture($student->id, $course->id, $student->picture, false, true);
        $table->data[] = array($picture, '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$student->id.'&amp;course='.$course->id.'">'.fullname($student, true).'</a>');
     }
     //if (has_capability('mod/game:grade', $context)){
-        if( count($attempts = get_records_select('game_attempts', "gameid = '$game->id' AND userid = '$attempt->userid'", 'attempt ASC')) > 1) {
+        if( count($attempts = $DB->get_records('game_attempts', array( 'gameid' => $game->id, 'userid' => $attempt->userid), 'attempt ASC')) > 1) {
             // print list of attempts
             $attemptlist = '';
             foreach ($attempts as $at) {
@@ -214,7 +220,7 @@
     if ($numpages > 1 and !$showall) {
         print_paging_bar($numpages, $page, 1, 'review.php?attempt='.$attempt->id.'&amp;');
         echo '<div class="controls"><a href="review.php?attempt='.$attempt->id.'&amp;showall=true">';
-        print_string('showall', 'quiz');
+        print_string('showall', 'game');
         echo '</a></div>';
     }
 
@@ -233,7 +239,9 @@
         include('attempt_close_js.php');
     }
 
-    print_footer($course);
+    if (empty($popup)) {
+        print_footer($course);
+    }
 	
 	function game_compute_states( $game, $questions)
 	{
@@ -283,7 +291,7 @@
 			if (!isset($questions[$i])) {
 				print_simple_box_start('center', '90%');
 				echo '<strong><font size="+1">' . $number . '</font></strong><br />';
-				notify(get_string('errormissingquestion', 'quiz', $i));
+				notify(get_string('errormissingquestion', 'game', $i));
 				print_simple_box_end();
 				$number++; // Just guessing that the missing question would have lenght 1
 				continue;
@@ -319,3 +327,5 @@
 			$number += $questions[$i]->length;
 		}
 	}
+
+?>

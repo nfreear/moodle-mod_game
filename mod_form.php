@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.7 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: mod_form.php,v 1.8 2010/07/26 00:07:13 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -8,25 +8,17 @@
  */
 
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
-require( 'locallib.php');
 
 class mod_game_mod_form extends moodleform_mod {
     
-    function set_data($default_values) {
-        if( $default_values->gamekind == 'millionaire'){        
-            $default_values->param8 = '#'.strtoupper( dechex( $default_values->param8));
-        }
-
-        parent::set_data($default_values);
-    }
-
     function definition() {
-        global $CFG, $COURSE;
+        global $CFG, $DB, $COURSE;
 
         $mform =& $this->_form;
+        $id = $this->_instance;
 
         if(!empty($this->_instance)){
-            if($g = get_record('game', 'id', (int)$this->_instance)){
+            if($g = $DB->get_record('game', array('id' => $id))){
                 $gamekind = $g->gamekind;
             }
             else{
@@ -41,7 +33,7 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'gamekind', $gamekind);
         $mform->setDefault('gamekind',$gamekind);
         $mform->addElement('hidden', 'type', $gamekind);
-        $mform->setDefault('type',$gamekind);
+        $mform->setDefault('type', $gamekind);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -68,7 +60,7 @@ class mod_game_mod_form extends moodleform_mod {
 
         if($hasglossary){
             $a = array();
-            if($recs = get_records_select('glossary', "course='$COURSE->id'", 'id,name')){
+            if($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')){
                 foreach($recs as $rec){
                     $a[$rec->id] = $rec->name;
                 }                                            
@@ -89,10 +81,11 @@ class mod_game_mod_form extends moodleform_mod {
                 $select = 'g.id IN ('.substr( $select, 1).')';
             }
             $select .= ' AND g.id=gc.glossaryid';
-            $table = "glossary g, {$CFG->prefix}glossary_categories gc";
+            $table = "{glossary} g, {glossary_categories} gc";
             $a = array();
             $a[ ] = '';
-            if($recs = get_records_select( $table, $select, 'g.name,gc.name', 'gc.id,gc.name,g.name as name2')){
+            $sql = "SELECT gc.id,gc.name,g.name as name2 FROM $table WHERE $select ORDER BY g.name,gc.name";
+            if($recs = $DB->get_records_sql( $sql)){
                 foreach($recs as $rec){
                     $a[$rec->id] = $rec->name2.' -> '.$rec->name;
                 }
@@ -103,39 +96,50 @@ class mod_game_mod_form extends moodleform_mod {
 
         
         //*********************
-        // Question Category
+        // Question Category - Short Answer
+
         if( $gamekind != 'bookquiz'){
-            $select = '';
-            $recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
-            foreach( $recs as $rec){
-                if( array_key_exists( 'course', $rec)){
-                    $select = "course=$course->id";
-                }else{
-                    $context = get_context_instance(50, $COURSE->id);
-	        		$select = " contextid in ($context->id)";
-                }
-                break;
-            }
+            $context = get_context_instance(50, $COURSE->id);
+            $select = " contextid in ($context->id)";
 
             $a = array();
-            if( $recs = get_records_select( 'question_categories', $select, 'id,name')){
-                foreach( $recs as $rec){
+            if($recs = $DB->get_records_select('question_categories', $select, null, 'id,name')){
+                foreach($recs as $rec){
                     $s = $rec->name;
-                    if( ($count = count_records_select( 'question', "category={$rec->id}")) != 0){
+                    if(($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0){
                         $s .= " ($count)";
                     }
-                    $a[ $rec->id] = $s;
+                    $a[$rec->id] = $s;
+                }
+            }
+            
+            $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
+            $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
+        }
+
+        if($gamekind == 'hangman' || $gamekind == 'cross' || $gamekind == 'cryptex' || $gamekind == 'sudoku' || $gamekind == 'hiddenpicture' || $gamekind == 'snakes'){
+            $a = array();
+            $sql = "SELECT DISTINCT cat.id, cat.name FROM {question_categories} cat LEFT JOIN mdl_question qst ON cat.id=qst.category WHERE cat.contextid=8 AND qst.qtype='shortanswer'";
+            if($recs = $DB->get_records_sql($sql)){
+                foreach($recs as $rec){
+                    $s = $rec->name;
+                    if(($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0){
+                        $s .= " ($count)";
+                    }
+                    $a[$rec->id] = $s;
                 }
             }
             $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
             $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
         }
 
+
         //***********************
-        // Quiz        
+        // Quiz Category
+        
         if( $gamekind != 'bookquiz'){
             $a = array();
-            if( $recs = get_records_select( 'quiz', "course='$COURSE->id'", 'id,name')){
+            if( $recs = $DB->get_records('quiz', array( 'course' => $COURSE->id), 'id,name')){
                 foreach( $recs as $rec){
                     $a[$rec->id] = $rec->name;
                 }
@@ -149,7 +153,7 @@ class mod_game_mod_form extends moodleform_mod {
         // Book
         if($gamekind == 'bookquiz'){
             $a = array();
-            if($recs = get_records_select('book', "course='$COURSE->id'", 'id,name')){
+            if($recs = $DB->get_records('book', array( 'course' => $COURSE->id), 'id,name')){
                 foreach($recs as $rec){
                     $a[$rec->id] = $rec->name;
                 }                                            
@@ -189,7 +193,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('selectyesno', 'param6', get_string('hangman_showcorrectanswer', 'game'));
 
             $a = array();
-            $a = get_list_of_languages();
+            $a = get_string_manager()->get_list_of_translations();
 		    $a[ ''] = '----------';
             ksort( $a);
             $mform->addElement('select', 'language', get_string('hangman_language','game'), $a);
@@ -229,10 +233,16 @@ class mod_game_mod_form extends moodleform_mod {
 // Millionaire options
 
         if($gamekind == 'millionaire'){
-            $mform->addElement('header', 'millionaire', get_string( 'millionaire_options', 'game'));
+            global $OUTPUT, $PAGE;
 
+            $mform->addElement('header', 'millionaire', get_string( 'millionaire_options', 'game'));
             $mform->addElement('text', 'param8', get_string('millionaire_background', 'game'));
             $mform->setDefault('param8', '#408080');
+
+
+            //$mform->addElement('colorpicker', 'param8', get_string('millionaire_background', 'game'));
+            //$mform->registerRule('color','regex','/^#([a-fA-F0-9]{6})$/');
+            //$mform->addRule('config_bgcolor','Enter a valid RGB color - # and then 6 characters','color');
 
             $mform->addElement('selectyesno', 'shuffle', get_string('millionaire_shuffle','game'));
         }
@@ -251,7 +261,7 @@ class mod_game_mod_form extends moodleform_mod {
         if($gamekind == 'snakes'){
             $mform->addElement('header', 'snakes', get_string( 'snakes_options', 'game'));
             $snakesandladdersbackground = array();
-            if($recs = get_records_select( 'game_snakes_database', "", 'id,name')){
+            if($recs = $DB->get_records( 'game_snakes_database', null, 'id,name')){
                 foreach( $recs as $rec){
                     $snakesandladdersbackground[$rec->id] = $rec->name;
                 }
@@ -259,7 +269,7 @@ class mod_game_mod_form extends moodleform_mod {
             if(count($snakesandladdersbackground) == 0){
                 require("{$CFG->dirroot}/mod/game/db/importsnakes.php");
 
-                if($recs = get_records_select('game_snakes_database', "", 'id,name')){
+                if($recs = $DB->get_records('game_snakes_database', null, 'id,name')){
                     foreach($recs as $rec){
                         $snakesandladdersbackground[$rec->id] = $rec->name;
                     }
@@ -279,48 +289,30 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setType('param2', PARAM_INT);
 
             $a = array();
-            if($recs = get_records_select('glossary', "course='$COURSE->id'", 'id,name')){
+            if($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')){
                 foreach($recs as $rec){
-                    $a[$rec->id] = $rec->name;
+                    $cmg = get_coursemodule_from_instance('glossary', $rec->id, $COURSE->id);
+                    $context = get_context_instance(CONTEXT_MODULE, $cmg->id);
+                    if( $DB->record_exists( 'files', array( 'contextid' => $context->id))){
+                        $a[$rec->id] = $rec->name;
+                    }
                 }                                            
             }
             $mform->addElement('select', 'glossaryid2', get_string('hiddenpicture_pictureglossary', 'game'), $a);
 
-            if( count( $a) == 0)
-                $select = 'glossaryid=-1';
-            else if( count( $a) == 1)
-                $select = 'glossaryid='.$rec->id;
-            else
-            {
-                $select = '';
-                foreach($recs as $rec){
-                    $select .= ','.$rec->id;
-                }
-                $select = 'g.id IN ('.substr( $select, 1).')';
-            }
-            $select .= ' AND g.id=gc.glossaryid';
-            $table = "glossary g, {$CFG->prefix}glossary_categories gc";
-            $a = array();
-            $a[ ] = '';
-            if($recs = get_records_select( $table, $select, 'g.name,gc.name', 'gc.id,gc.name,g.name as name2')){
-                foreach($recs as $rec){
-                    $a[$rec->id] = $rec->name2.' -> '.$rec->name;
-                }
-            }
-            $mform->addElement('select', 'glossarycategoryid2', get_string('hiddenpicture_pictureglossarycategories', 'game'), $a);
-            $mform->disabledIf('glossarycategoryid2', 'glossaryid', 'eq', 0);
-
             $mform->addElement('text', 'param4', get_string('hiddenpicture_width', 'game'));
             $mform->setType('param4', PARAM_INT);
+            $mform->setDefault('param4',3);
             $mform->addELement('text', 'param5', get_string('hiddenpicture_height', 'game'));
             $mform->setType('param5', PARAM_INT);
+            $mform->setDefault('param5',3);
             $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
         }
 
 //---------------------------------------------------------------------------
 // Header/Footer options
 
-        $mform->addElement('header', 'headerfooteroptions', get_string( 'headerfooter_options', 'game'));
+        $mform->addElement('header', 'headerfooteroptions', 'Header/Footer Options');
         $mform->addElement('htmleditor', 'toptext', get_string('toptext','game'));
         $mform->addElement('htmleditor', 'bottomtext', get_string('bottomtext','game'));
 
@@ -333,13 +325,21 @@ class mod_game_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
-    function data_preprocessing(&$default_values){
-
-    }
 
     function validation($data, $files){
         $errors = parent::validation($data, $files);
         return $errors;
     }
+
+
+    function set_data($default_values) {
+        if( isset( $default_values->gamekind)){
+            if( $default_values->gamekind == 'millionaire'){
+                if( isset( $default_values->param8))
+                    $default_values->param8 = '#'.strtoupper( dechex( $default_values->param8));
+            }
+        }
+
+        parent::set_data($default_values);
+    }
 }
-?>

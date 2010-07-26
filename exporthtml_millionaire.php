@@ -1,32 +1,32 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.7 2010/07/24 02:04:30 arborrow Exp $
+<?php  // $Id: exporthtml_millionaire.php,v 1.8 2010/07/26 00:07:13 bdaloukas Exp $
 /**
  * This page export the game millionaire to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.7 2010/07/24 02:04:30 arborrow Exp $
+ * @version $Id: exporthtml_millionaire.php,v 1.8 2010/07/26 00:07:13 bdaloukas Exp $
  * @package game
  **/
 function game_millionaire_html_getquestions( $game, &$max)
 {
-	global $CFG, $USER;
+	global $CFG, $DB, $USER;
 	
 	$max = 0;
 	
 	if( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')){
-		error( get_string('millionaire_sourcemodule_must_quiz_question', 'game'));
+		error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $attempt->sourcemodule));
 	}
 	
 	if( $game->sourcemodule == 'quiz'){
 		if( $game->quizid == 0){
-			error( get_string( 'must_select_quiz', 'game'));
+			print_error( get_string( 'must_select_quiz', 'game'));
 		}		
 		$select = "qtype='multichoice' AND quiz='$game->quizid' ".
 						" AND qqi.question=q.id";
-		$table = "question q,{$CFG->prefix}quiz_question_instances qqi";
+		$table = "{question} q,{quiz_question_instances} qqi";
 	}else
 	{
 		if( $game->questioncategoryid == 0){
-			error( get_string( 'must_select_questioncategory', 'game'));
+			print_error( get_string( 'must_select_questioncategory', 'game'));
 		}
 		
 		//include subcategories				
@@ -42,11 +42,11 @@ function game_millionaire_html_getquestions( $game, &$max)
 		$table = "question q";
 	}
 	$select .= " AND q.hidden=0";
-	
-	$recs = get_records_select( $table, $select, '', "q.id as id, q.questiontext");
+	$sql = "SELECT q.id as id, q.questiontext FROM $table WHERE $select";
+	$recs = $DB->get_records_sql( $sql);
 	$ret = '';
 	foreach( $recs as $rec){
-	    $recs2 = get_records_select( 'question_answers', "question=$rec->id", 'fraction DESC', 'id,answer');
+	    $recs2 = $DB->get_records( 'question_answers', array( 'question' => $rec->id), 'fraction DESC', 'id,answer');
 	    $line = $rec->questiontext;
 	    foreach( $recs2 as $rec2)
 	        $line .= '#'.str_replace( array( '"', '#'), array( "'", ' '), $rec2->answer);

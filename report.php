@@ -1,9 +1,10 @@
-<?php  // $Id: report.php,v 1.3 2010/07/24 02:04:29 arborrow Exp $
+<?php  // $Id: report.php,v 1.4 2010/07/26 00:07:14 bdaloukas Exp $
 
 // This script uses installed report plugins to print game reports
 
     require_once("../../config.php");
-    require_once("locallib.php");
+    require_once($CFG->dirroot.'/mod/game/locallib.php');
+    require_once($CFG->dirroot.'/mod/game/report/reportlib.php');
 
     $id = optional_param('id',0,PARAM_INT);    // Course Module ID, or
     $q = optional_param('q',0,PARAM_INT);     // game ID
@@ -12,32 +13,32 @@
 
     if ($id) {
         if (! $cm = get_coursemodule_from_id('game', $id)) {
-            error("There is no coursemodule with id $id");
+            print_error( "There is no coursemodule with id $id");
         }
 
-        if (! $course = get_record("course", "id", $cm->course)) {
-            error("Course is misconfigured");
+        if (! $course = $DB->get_record('course', array( 'id' => $cm->course))) {
+            print_error( 'Course is misconfigured');
         }
 
-        if (! $game = get_record("game", "id", $cm->instance)) {
-            error("The game with id $cm->instance corresponding to this coursemodule $id is missing");
+        if (! $game = $DB->get_record( 'game', array( 'id' => $cm->instance))) {
+            print_error( "The game with id $cm->instance corresponding to this coursemodule $id is missing");
         }
 
     } else {
-        if (! $game = get_record("game", "id", $q)) {
-            error("There is no game with id $q");
+        if (! $game = $DB->get_record( 'game', array( 'id' => $q))) {
+            print_error( "There is no game with id $q");
         }
-        if (! $course = get_record("course", "id", $game->course)) {
-            error("The course with id $game->course that the game with id $a belongs to is missing");
+        if (! $course = $DB->get_record( 'course', array( 'id' => $game->course))) {
+            print_error( "The course with id $game->course that the game with id $a belongs to is missing");
         }
-        if (! $cm = get_coursemodule_from_instance("game", $game->id, $course->id)) {
-            error("The course module for the game with id $q is missing");
+        if (! $cm = get_coursemodule_from_instance( 'game', $game->id, $course->id)) {
+            print_error( "The course module for the game with id $q is missing");
         }
     }
 
     require_login($course->id, false);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-    //require_capability('mod/game:viewreports', $context);
+    require_capability('mod/game:viewreports', $context);
 
     // if no questions have been set up yet redirect to edit.php
     //if (!$game->questions and has_capability('mod/game:manage', $context)) {
@@ -67,14 +68,12 @@
     include("report/default.php");  // Parent class
     include("report/$mode/report.php");
 
-    $report = new game_report();
+    $report = new game_overview_report();
 
     if (! $report->display( $game, $cm, $course)) {             // Run the report!
-        error("Error occurred during pre-processing!");
+        print_error( 'Error occurred during pre-processing!');
     }
 
 /// Print footer
 
     print_footer($course);
-
-?>

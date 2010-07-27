@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.12 2010/07/26 00:41:15 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.13 2010/07/27 14:16:41 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.12 2010/07/26 00:41:15 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.13 2010/07/27 14:16:41 bdaloukas Exp $
  * @package game
  **/
     require_once( "../../config.php");
@@ -126,17 +126,20 @@
     		$attempt = game_getattempt( $game, $detail);
     		$finishattempt = array_key_exists( 'finishattempt', $_POST);
     		game_sudoku_check_questions( $id, $game, $attempt, $detail, $finishattempt, $course);
+            $continue = true;
             break;
         case 'sudokucheckg':		//the student tries to guess a glossaryenry
     		$attempt = game_getattempt( $game, $detail);
     		$endofgame = array_key_exists( 'endofgame', $_GET);
     		$continue = game_sudoku_check_glossaryentries( $id, $game, $attempt, $detail, $endofgame, $course);
+            $continue = true;
             break;
         case 'sudokucheckn':	//the user tries to guess a number
     		$attempt = game_getattempt( $game, $detail);
     		$pos = $_GET[ 'pos'];
     		$num = $_GET[ 'num'];
     		game_sudoku_check_number( $id, $game, $attempt, $detail, $pos, $num);
+            $continue = true;
             break;
     	case 'cryptexcheck':	//the user tries to guess a question
     		$attempt = game_getattempt( $game, $detail);
@@ -164,7 +167,7 @@
         case 'hiddenpicturecheckg':		//the student tries to guess a glossaryenry
 	    	$attempt = game_getattempt( $game, $detail);
 	    	$endofgame = array_key_exists( 'endofgame', $_GET);
-	    	$continue = game_hiddenpicture_check_mainquestion( $id, $game, $attempt, $detail, $endofgame);
+	    	game_hiddenpicture_check_mainquestion( $id, $game, $attempt, $detail, $endofgame);
             break;
         default:
             $continue = true;

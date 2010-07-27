@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.9 2010/07/26 22:43:25 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.10 2010/07/27 14:16:41 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -115,22 +115,10 @@ class mod_game_mod_form extends moodleform_mod {
             
             $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
             $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
-        }
 
-        if($gamekind == 'hangman' || $gamekind == 'cross' || $gamekind == 'cryptex' || $gamekind == 'sudoku' || $gamekind == 'hiddenpicture' || $gamekind == 'snakes'){
-            $a = array();
-            $sql = "SELECT DISTINCT cat.id, cat.name FROM {question_categories} cat LEFT JOIN {question} qst ON cat.id=qst.category WHERE cat.contextid=8 AND qst.qtype='shortanswer'";
-            if($recs = $DB->get_records_sql($sql)){
-                foreach($recs as $rec){
-                    $s = $rec->name;
-                    if(($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0){
-                        $s .= " ($count)";
-                    }
-                    $a[$rec->id] = $s;
-                }
-            }
-            $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
-            $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
+            //subcategories
+            $mform->addElement('selectyesno', 'subcategories', get_string('sourcemodule_include_subcategories', 'game'));
+            $mform->disabledIf('subcategories', 'sourcemodule', 'neq', 'question');
         }
 
 
@@ -286,8 +274,10 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('header', 'hiddenpicture', get_string( 'hiddenpicture_options', 'game'));
             $mform->addElement('text', 'param1', get_string('hiddenpicture_across', 'game'));
             $mform->setType('param1', PARAM_INT);
+            $mform->setDefault('param1', 3);
             $mform->addElement('text', 'param2', get_string('hiddenpicture_down', 'game'));
             $mform->setType('param2', PARAM_INT);
+            $mform->setDefault('param2', 3);
 
             $a = array();
             if($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')){

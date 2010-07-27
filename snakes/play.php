@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.9 2010/07/27 06:25:23 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.10 2010/07/27 14:16:41 bdaloukas Exp $
 
 // This files plays the game "Snakes and Ladders"
 
@@ -90,7 +90,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 	<tr>
 		<td>
 		
-<DIV ID="board" STYLE="position:relative; left:0px;top:0px; width:<?php p($board->width); ?>px; height:<?php p($board->height); ?>px;"><br>
+<DIV ID="board" STYLE="position:relative; left:0px;top:0px; width:<?php p($board->width); ?>px; height:<?php p($board->height); ?>px;">
 <b><center><img src="snakes/boards/<?php p($board->fileboard);?>"></img></center>
 </DIV>
 
@@ -113,11 +113,11 @@ function game_snakes_showdice( $snakes, $board)
 {
 	$pos = game_snakes_computeplayerposition( $snakes, $board);
 ?>
-<DIV ID="player1" STYLE="position:relative; left:<?php p( $pos->x);?>px;top:<?php p( $pos->y - $board->height);?>px; width:0px; height:23px;"><br>
+<DIV ID="player1" STYLE="position:relative; left:<?php p( $pos->x);?>px;top:<?php p( $pos->y - $board->height-50);?>px; width:0px; height:23px;"><br>
 <center><img src="snakes/1/player1.gif"></img></center>
 </DIV>	
 
-	<DIV ID="dice" STYLE="position:relative; left:<?php p( $board->width + round($board->width/3));?>px;top:<?php p( round($board->height/2) - $board->height);?>px; width:0px; height:0px;"><br>
+	<DIV ID="dice" STYLE="position:relative; left:<?php p( $board->width + round($board->width/3));?>px;top:<?php p( -2*round($board->height/3));?>px; width:0px; height:0px;"><br>
 	<img src="snakes/1/dice<?php  p( $snakes->dice);?>.gif"></img>
 	</DIV>	
 <?php
@@ -138,9 +138,9 @@ function game_snakes_computeplayerposition( $snakes, $board)
 		if( ($y % 2) == 1){
 			$x = $board->cols  - $x - 1;
 		}
-		$pos->x = round( $board->headerx + $x * $cellwidth + ($cellwidth-22) / 2);
-		$pos->y = round( $board->footery + ($board->rows - $y) * $cellheight - $cellheight/2);
-
+		$pos->x = round( $board->headerx + $x * $cellwidth + $cellwidth/ 2 - 9);
+		$pos->y = round( $board->footery + ($board->rows - $y) * $cellheight);
+//print_r( $board);echo "y=$y cellheight=$cellheight";print_r( $pos);
 		break;
 	}
 	
@@ -203,7 +203,7 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
     $questions = game_sudoku_getquestions( $questionlist);
 
 	/// Start the form
-	echo '<br>';
+	//echo '<br>';
     echo "<form id=\"responseform\" method=\"post\" action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
 	echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
 
@@ -224,6 +224,7 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
         $cmoptions->shuffleanswers = $question->options->shuffleanswers = false;
         $cmoptions->optionflags->optionflags = 0;
 		$cmoptions->id = 0;
+        $cmoptions->questiondecimalpoints = 2;
 		$attempt = 0;
 		if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
 			error( 'game_sudoku_showquestions_quiz: problem');
@@ -239,6 +240,7 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 		$options->correct_responses = 0;
 		$options->feedback = 0;
 		$options->readonly = 0;
+        $options->flags = false;
 		
 		print_question($question, $state, '', $cmoptions, $options);	
 				
@@ -289,7 +291,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes)
 		return;
 	}
 
-	$questionlist = $DB->get_field( 'game_queries', array( 'questionid' => 'id', $responses->queryid));
+	$questionlist = $DB->get_field( 'game_queries', 'questionid', array(  'id' => $responses->queryid));
 
     $questions = game_sudoku_getquestions( $questionlist);
 
@@ -313,12 +315,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes)
         $QTYPES[$question->qtype]->grade_responses( $question, $state, $cmoptions);
 		
 		unset( $query);
-        $select = "attemptid=$attempt->id ";
-        $select .= " AND questionid=$question->id";
-        if( ($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0){
-			print_error( "problem game_sudoku_check_questions (select=$select)");
-            continue;
-        }
+        $query->id = $snakes->queryid;
 
         $grade = $state->raw_grade;
         if( $grade < 50){

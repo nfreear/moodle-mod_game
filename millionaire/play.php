@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.19 2010/07/26 00:41:17 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.20 2010/07/27 14:16:41 bdaloukas Exp $
 /**
  * This file plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.19 2010/07/26 00:41:17 bdaloukas Exp $
+ * @version $Id: play.php,v 1.20 2010/07/27 14:16:41 bdaloukas Exp $
  * @package game
  **/
 
@@ -305,11 +305,11 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
         }  						
 		$select .= " AND qtype='multichoice'";
 		
-		$table = 'question';
+		$table = '{question} q';
 	}
-	$select .= ' AND {question}.hidden=0';
+	$select .= ' AND hidden=0';
 	if( $game->shuffle or $game->quizid == 0)
-		$questionid = game_question_selectrandom( $game, $table, $select, '{question}.id as id');
+		$questionid = game_question_selectrandom( $game, $table, $select, 'id as id');
 	else
 		$questionid = game_millionaire_select_serial_question( $game, $table, $select, '{question}.id as id', $millionaire->level);
 	

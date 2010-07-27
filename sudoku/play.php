@@ -1,4 +1,4 @@
-<?php
+<?php  // $Id: play.php,v 1.11 2010/07/27 14:16:41 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -187,7 +187,7 @@ function game_sudoku_getclosed( $data)
 
 function game_sudoku_showsudoku( $data, $guess, $bShowLegend, $bShowSolution, $offsetquestions, $correctquestions, $id, $attempt, $game)
 {
-	global $CFG;
+	global $CFG, $DB;
 	
 	$correct = $count = 0;
 	
@@ -363,7 +363,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
     // Add a hidden field with the quiz id
     echo '<div>';
     echo '<input type="hidden" name="id" value="' . s($id) . "\" />\n";
-    echo '<input type="hidden" name="action" value="'.get_string($game->gamekind).'check" />';
+    echo '<input type="hidden" name="action" value="sudokucheck" />';
 
 	/// Print all the questions
 
@@ -384,6 +384,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
         $cmoptions->optionflags->optionflags = 0;
 		$cmoptions->id = 0;
 		$cmoptions->shuffleanswers = 1;
+        $cmoptions->questiondecimalpoints = 0;
 		$attempt = 0;
 		if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
 			print_error( 'game_sudoku_showquestions_quiz: problem');
@@ -399,6 +400,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
 		$options->correct_responses = 0;
 		$options->feedback = 0;
 		$options->readonly = 0;
+        $options->flags = 0;
 
 		if( $showsolution){
 			$state->responses = $QTYPES[$question->qtype]->get_correct_responses($question, $state);
@@ -532,7 +534,7 @@ function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishatte
 
 		unset( $query);
 
-        $select = "attemptid=$attempt->id and score < 0.5";
+        $select = "attemptid=$attempt->id";
         $select .= " AND questionid=$question->id";
         if( ($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0){
 			die( "problem game_sudoku_check_questions (select=$select)");

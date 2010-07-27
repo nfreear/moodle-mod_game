@@ -1,4 +1,4 @@
-<?php  // $Id: locallib.php,v 1.29 2010/07/26 16:35:59 bdaloukas Exp $
+<?php  // $Id: locallib.php,v 1.30 2010/07/27 14:16:41 bdaloukas Exp $
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
@@ -108,21 +108,21 @@ function game_question_shortanswer_glossary( $game, $allowspaces, $use_repetitio
 	}
 
     $select = "glossaryid={$game->glossaryid}";
-	$table = 'glossary_entries';
+	$table = '{glossary_entries} ge';
 	if( $game->glossarycategoryid){
-		$table .= ',{glossary_entries_categories}';
-		$select .= ' AND {glossary_entries_categories}.entryid = {glossary_entries}.id '.
-					    " AND {glossary_entries_categories}.categoryid = {$game->glossarycategoryid}";
+		$table .= ',{glossary_entries_categories} gec';
+		$select .= ' AND gec.entryid = ge.id '.
+					    " AND gec.categoryid = {$game->glossarycategoryid}";
 	}
 	if( $allowspaces == false){
     	$select .= " AND concept NOT LIKE '% %'  ";
     }
-	
-    if( ($id = game_question_selectrandom( $game, $table, $select, '{glossary_entries}.id', $use_repetitions)) == false)
+
+    if( ($id = game_question_selectrandom( $game, $table, $select, 'ge.id', $use_repetitions)) == false)
         return false;
               
     $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment, 0 as answerid'.
-           " FROM {glossary_entries} WHERE id = $id";
+           " FROM {glossary_entries} ge WHERE id = $id";
     if( ($rec = $DB->get_record_sql( $sql)) == false)
         return false;
         
@@ -157,9 +157,9 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $use_repetitions)
 	          "qa.answer as answertext, q.id as questionid, ".
 	          "0 as glossaryentryid, '' as attachment";
     
-    //Maybe there are more answers to one question. I use as correct the one with bigger fraction
-	$recs = $DB->get_records_select( $table, $select, null, 'fraction DESC', $fields, 0, 1);
-	if( $recs == false){
+    //Maybe there are more answers to one question. I use as correct the one with bigger fraction   
+    $sql = "SELECT $fields FROM $table WHERE $select ORDER BY fraction DESC";
+	if( ($recs=$DB->get_records_sql( $sql, null, 0, 1)) == false){
 	    return false;
 	}
 	foreach( $recs as $rec){
@@ -185,7 +185,7 @@ function game_question_shortanswer_question( $game, $allowspaces, $use_repetitio
     }
 	$select .= " AND qtype='shortanswer'";
 	
-	$table = 'question';
+	$table = '{question} q';
 	$fields = 'q.id';
 
     if( ($id = game_question_selectrandom( $game, $table, $select, $fields, $use_repetitions)) == false)
@@ -199,8 +199,8 @@ function game_question_shortanswer_question( $game, $allowspaces, $use_repetitio
 	          "0 as glossaryentryid, '' as attachment";
     
     //Maybe there are more answers to one question. I use as correct the one with bigger fraction
-	$recs = $DB->get_records_select( $table, $select, 'fraction DESC', $fields, 0, 1);
-	if( $recs == false){
+    $sql = "SELECT $fields FROM $table WHERE $select ORDER BY fraction DESC"; 
+	if( ($recs = $DB->get_records_sql( $sql, null, 0, 1)) == false){
 	    return false;
 	}
 	foreach( $recs as $rec){
@@ -212,15 +212,15 @@ function game_question_shortanswer_question( $game, $allowspaces, $use_repetitio
 function game_question_selectrandom( $game, $table, $select, $id_fields='id', $use_repetitions=true)
 {
     global $DB, $USER; 
-		
-    $count = $DB->count_records_select( $table, $select);
+
+    $count = $DB->get_field_sql( "SELECT COUNT(*) FROM $table WHERE $select");
     $min_num = 0;
     $min_id = 0;
     for($i=1; $i <= CONST_GAME_TRIES_REPETITION; $i++){
         $sel = mt_rand(0, $count-1);
-	        
-	    $sql  = "SELECT $id_fields,$id_fields FROM {".$table."} WHERE $select";
-    	if( ($recs = $DB->get_records_sql( $sql, null, $sel)) == false){
+	    
+        $sql  = "SELECT $id_fields,$id_fields FROM ".$table." WHERE $select";
+    	if( ($recs = $DB->get_records_sql( $sql, null, $sel, 1)) == false){
             return false;
         }
 
@@ -343,7 +343,7 @@ function game_questions_selectrandom( $game, $count=1)
 		if( $game->questioncategoryid == 0){
 			print_error( get_string( 'must_select_questioncategory', 'game'));
 		}
-		$table = 'question';
+		$table = '{question} q';
 		
 		//inlcude subcategories
         $select = 'category='.$game->questioncategoryid;        
@@ -410,8 +410,6 @@ function game_questions_selectrandom_detail( $table, $select, $id_field="id", $c
 		return $a;
 	}else
 	{
-		srand();
-		
 		$id = array_rand(  $a, $count);
 		return ( $count == 1  ? array( $id) : $id);
 	}
@@ -464,22 +462,6 @@ function game_getallletters( $word, $lang='')
     return '';
 }
 
-/*
-function game_get_string_lang( $identifier, $module, $lang)
-{
-    global $CFG;
-    
-    $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
-
-    if ($result = get_string_from_file( $identifier, $langfile, "\$ret")) {
-        eval($result);
-        if( $ret != '')
-            return $ret;
-    }
-
-    return get_string( $identifier, $module);
-}
-*/
 
 function hangman_existall( $str, $strfind)
 {
@@ -547,7 +529,7 @@ function game_questions_shortanswer_quiz( $game)
 					" AND qqi.question=q.id".
 					" AND qa.question=q.id".
 					" AND q.hidden=0";
-	$table = "question q,{quiz_question_instances} qqi,{question_answers} qa";
+	$table = "{question} q,{quiz_question_instances} qqi,{question_answers} qa";
 	$fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
 				   "qa.answer as answertext, q.id as questionid,".
 				   " 0 as glossaryentryid,'' as attachment";
@@ -585,7 +567,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 {
     global $DB;
     
-	$sql = "SELECT $fields FROM {".$table."} WHERE $select ORDER BY fraction DESC";
+	$sql = "SELECT $fields FROM ".$table." WHERE $select ORDER BY fraction DESC";
     
 	$recs = $DB->get_records_sql( $sql);
 	if( $recs == false){

@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.17 2010/07/26 22:43:25 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.18 2010/07/27 14:16:41 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.17 2010/07/26 22:43:25 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.18 2010/07/27 14:16:41 bdaloukas Exp $
  * @package game
  **/
 
@@ -141,7 +141,7 @@ function game_before_add_or_update(&$game) {
  **/
 function game_delete_instance($gameid) {
     global $DB;
-       
+
     $result = true;
 
     # Delete any dependent records here #
@@ -177,7 +177,7 @@ function game_delete_instance($gameid) {
 		}
 	}
 		    
-    $tables = array( 'game_attempts', 'game_grades', 'game_export_javame', 'game_bookquiz_questions', 'game_queries');
+    $tables = array( 'game_attempts', 'game_grades', 'game_bookquiz_questions', 'game_queries', 'game_repetitions');
     foreach( $tables as $t){
         if( $result == false){
             break;
@@ -189,6 +189,7 @@ function game_delete_instance($gameid) {
 	}
 	
 	if( $result){
+        $tables = array( 'game_export_javame', 'game_export_html', 'game');
         if (!$DB->delete_records( 'game', array( 'id' => $gameid))) {
             $result = false;
         }

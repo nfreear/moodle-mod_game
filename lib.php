@@ -1,14 +1,24 @@
-<?php  // $Id: lib.php,v 1.18 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.19 2010/07/27 23:07:35 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.18 2010/07/27 14:16:41 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.19 2010/07/27 23:07:35 bdaloukas Exp $
  * @package game
  **/
 
 
 /// CONSTANTS ///////////////////////////////////////////////////////////////////
+
+/**#@+
+ * Options determining how the grades from individual attempts are combined to give
+ * the overall grade for a user
+ */
+define('GAME_GRADEHIGHEST', 1);
+define('GAME_GRADEAVERAGE', 2);
+define('GAME_ATTEMPTFIRST', 3);
+define('GAME_ATTEMPTLAST', 4);
+/**#@-*/
 
 /**#@+
  * The different review options are stored in the bits of $game->review
@@ -714,10 +724,10 @@ function game_format_grade($game, $grade) {
  */
 function game_get_grading_options() {
     return array (
-            QUIZ_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
-            QUIZ_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
-            QUIZ_ATTEMPTFIRST => get_string('attemptfirst', 'quiz'),
-            QUIZ_ATTEMPTLAST  => get_string('attemptlast', 'quiz'));
+            GAME_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
+            GAME_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
+            GAME_ATTEMPTFIRST => get_string('attemptfirst', 'quiz'),
+            GAME_ATTEMPTLAST  => get_string('attemptlast', 'quiz'));
 }
 
 /**

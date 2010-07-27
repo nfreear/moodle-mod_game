@@ -1,4 +1,4 @@
-<?php  // $Id: locallib.php,v 1.30 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: locallib.php,v 1.31 2010/07/27 23:07:35 bdaloukas Exp $
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
@@ -1263,12 +1263,12 @@ function game_get_latest_attempt_by_user($gameid, $userid) {
 }
 
 /**
- * @param int $option one of the values QUIZ_GRADEHIGHEST, QUIZ_GRADEAVERAGE, QUIZ_ATTEMPTFIRST or QUIZ_ATTEMPTLAST.
+ * @param int $option one of the values GAME_GRADEHIGHEST, GAME_GRADEAVERAGE, GAME_ATTEMPTFIRST or GAME_ATTEMPTLAST.
  * @return the lang string for that option.
  */
 function game_get_grading_option_name($option) {
     if( $option == 0)
-        $option = QUIZ_GRADEHIGHEST;
+        $option = GAME_GRADEHIGHEST;
 
     $strings = game_get_grading_options();
     return $strings[$option];

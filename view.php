@@ -1,4 +1,4 @@
-<?php  // $Id: view.php,v 1.8 2010/07/26 00:07:14 bdaloukas Exp $
+<?php  // $Id: view.php,v 1.9 2010/07/27 23:07:35 bdaloukas Exp $
 
 // This page prints a particular instance of game
 
@@ -169,7 +169,7 @@
                 $datecompleted = userdate($attempt->timefinish);
             } else
             {
-                // The attempt is still in progress.
+                // The a is still in progress.
                 $timetaken = format_time($timenow - $attempt->timestart);
                 $datecompleted = '';
             }

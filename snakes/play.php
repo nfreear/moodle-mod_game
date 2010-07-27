@@ -1,4 +1,6 @@
-<?PHP
+<?php  // $Id: play.php,v 1.9 2010/07/27 06:25:23 bdaloukas Exp $
+
+// This files plays the game "Snakes and Ladders"
 
 function game_snakes_continue( $id, $game, $attempt, $snakes)
 {
@@ -12,11 +14,13 @@ function game_snakes_continue( $id, $game, $attempt, $snakes)
 	
 	$newrec->id = $attempt->id;
 	$newrec->snakesdatabaseid = $game->param3;
+    if( $newrec->snakesdatabaseid == 0)
+        $newrec->snakesdatabaseid = 1;
 	$newrec->position = 1;
 	$newrec->queryid = 0;
     $newrec->dice = rand( 1, 6);
 	if( !game_insert_record(  'game_snakes', $newrec)){
-		error( 'game_snakes_continue: error inserting in game_snakes');
+		print_error( 'game_snakes_continue: error inserting in game_snakes');
 	}
 	
 	game_updateattempts( $game, $attempt, 0, 0);
@@ -26,15 +30,22 @@ function game_snakes_continue( $id, $game, $attempt, $snakes)
 
 function game_snakes_play( $id, $game, $attempt, $snakes)
 {
-	global $CFG;
+	global $CFG, $DB;
 	
-	$board = get_record_select( 'game_snakes_database', "id=$snakes->snakesdatabaseid");
+	$board = $DB->get_record( 'game_snakes_database', array( 'id' => $snakes->snakesdatabaseid));
+    if( $board == false)
+    {
+        require_once(dirname(__FILE__) . '/../db/importsnakes.php');
+    	$board = $DB->get_record( 'game_snakes_database', array( 'id' => $snakes->snakesdatabaseid));
+    }
+    if( $board == false)
+        print_error( 'No board');
 
 	if( $snakes->position > $board->cols * $board->rows && $snakes->queryid <> 0){
 		$finish = true;
 	
-		if (! $cm = get_record("course_modules", "id", $id)) {
-			error("Course Module ID was incorrect id=$id");
+		if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
+			print_error("Course Module ID was incorrect id=$id");
 		}
 	
 		echo '<B>'.get_string( 'snakes_win', 'game').'</B><BR>';	
@@ -52,7 +63,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes)
 			game_snakes_computenextquestion( $game, $snakes, $query);
 		}else
 		{
-			$query = get_record( 'game_queries', 'id', $snakes->queryid);
+			$query = $DB->get_record( 'game_queries', array( 'id' => $snakes->queryid));
 		}
 		if( $game->toptext != ''){
 		    echo $game->toptext.'<br>';
@@ -128,7 +139,7 @@ function game_snakes_computeplayerposition( $snakes, $board)
 			$x = $board->cols  - $x - 1;
 		}
 		$pos->x = round( $board->headerx + $x * $cellwidth + ($cellwidth-22) / 2);
-		$pos->y = round( $board->footery + ($board->rows - $y) * $cellheight - $cellheight/2 - 23);
+		$pos->y = round( $board->footery + ($board->rows - $y) * $cellheight - $cellheight/2);
 
 		break;
 	}
@@ -138,7 +149,7 @@ function game_snakes_computeplayerposition( $snakes, $board)
 
 function game_snakes_computenextquestion( $game, &$snakes, &$query)
 {
-	global $USER;
+	global $DB, $USER;
 	
 	if( ($recs = game_questions_selectrandom( $game, 1)) == false){
 		return false;
@@ -154,8 +165,8 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query)
 		$query->glossaryentryid = $rec->glossaryentryid;
 		$query->score = 0;
 		$query->timelastattempt = time();
-		if( !($query->id = insert_record( 'game_queries', $query))){
-			error( "Can't insert to table game_queries");
+		if( !($query->id = $DB->insert_record( 'game_queries', $query))){
+			print_error( "Can't insert to table game_queries");
 		}
 		
 		$snakes->queryid = $query->id;
@@ -164,8 +175,8 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query)
 		$updrec->queryid = $query->id;
 		$updrec->dice = rand( 1, 6);
 		
-		if( !update_record(  'game_snakes', $updrec)){
-			error( 'game_questions_selectrandom: error updating in game_snakes');
+		if( !$DB->update_record(  'game_snakes', $updrec)){
+			print_error( 'game_questions_selectrandom: error updating in game_snakes');
 		}
 
 		return true;
@@ -239,9 +250,9 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 
 function game_snakes_showquestion_glossary( $id, $snakes, $query)
 {
-	global $CFG;
+	global $CFG, $DB;
 	
-	$entry = get_record( 'glossary_entries', 'id', $query->glossaryentryid);
+	$entry = $DB->get_record( 'glossary_entries', array('id' => $query->glossaryentryid));
 
 	/// Start the form
 	echo '<br>';
@@ -269,7 +280,7 @@ function game_snakes_showquestion_glossary( $id, $snakes, $query)
 
 function game_snakes_check_questions( $id, $game, $attempt, $snakes)
 {
-	global $QTYPES, $CFG;
+	global $QTYPES, $CFG, $DB;
 
     $responses = data_submitted();
 
@@ -278,7 +289,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes)
 		return;
 	}
 
-	$questionlist = get_field( 'game_queries', 'questionid', 'id', $responses->queryid);
+	$questionlist = $DB->get_field( 'game_queries', array( 'questionid' => 'id', $responses->queryid));
 
     $questions = game_sudoku_getquestions( $questionlist);
 
@@ -304,8 +315,8 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes)
 		unset( $query);
         $select = "attemptid=$attempt->id ";
         $select .= " AND questionid=$question->id";
-        if( ($query->id = get_field_select( 'game_queries', 'id', $select)) == 0){
-			die("problem game_sudoku_check_questions (select=$select)");
+        if( ($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0){
+			print_error( "problem game_sudoku_check_questions (select=$select)");
             continue;
         }
 
@@ -327,7 +338,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes)
 
 function game_snakes_check_glossary( $id, $game, $attempt, $snakes)
 {
-	global $QTYPES, $CFG;
+	global $QTYPES, $CFG, $DB;
 
     $responses = data_submitted();
 
@@ -336,9 +347,9 @@ function game_snakes_check_glossary( $id, $game, $attempt, $snakes)
 		return;
 	}
 
-	$query = get_record( 'game_queries', 'id', $responses->queryid);
+	$query = $DB->get_record( 'game_queries', array( 'id' => $responses->queryid));
 
-    $glossaryentry = get_record( 'glossary_entries', 'id', $query->glossaryentryid);
+    $glossaryentry = $DB->get_record( 'glossary_entries', array( 'id' => $query->glossaryentryid));
     
     $name = 'resp'.$query->glossaryentryid;
     $useranswer = $responses->answer;
@@ -362,7 +373,9 @@ function game_snakes_check_glossary( $id, $game, $attempt, $snakes)
 
 function game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query)
 {
-	$data = get_field( 'game_snakes_database', 'data', 'id', $snakes->snakesdatabaseid);
+    global $DB;
+
+	$data = $DB->get_field( 'game_snakes_database', 'data', array( 'id' => $snakes->snakesdatabaseid));
 
 	if( $correct){		
 		if( ($next=game_snakes_foundlander( $snakes->position, $data))){
@@ -382,11 +395,11 @@ function game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query)
 	$updrec->position = $snakes->position;
 	$updrec->queryid = 0;
 	
-	if( !update_record( 'game_snakes', $updrec)){
-		error( "game_snakes_position: Can't update game_snakes");
+	if( !$DB->update_record( 'game_snakes', $updrec)){
+		print_error( "game_snakes_position: Can't update game_snakes");
 	}
 
-	$board = get_record_select( 'game_snakes_database', "id=$snakes->snakesdatabaseid");
+	$board = $DB->get_record_select( 'game_snakes_database', "id=$snakes->snakesdatabaseid");
 	$gradeattempt = $snakes->position / ($board->cols  * $board->rows);
 	$finished = ( $snakes->position > $board->cols  * $board->rows ? 1 : 0);
 

@@ -1,11 +1,11 @@
-<?php  // $Id: attempt.php,v 1.13 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.14 2010/07/28 06:59:36 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.13 2010/07/27 14:16:41 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.14 2010/07/28 06:59:36 bdaloukas Exp $
  * @package game
- **/
+ **/    
     require_once( "../../config.php");
     require_once( "lib.php");
     require_once( "locallib.php");

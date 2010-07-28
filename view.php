@@ -1,4 +1,4 @@
-<?php  // $Id: view.php,v 1.9 2010/07/27 23:07:35 bdaloukas Exp $
+<?php  // $Id: view.php,v 1.10 2010/07/28 06:59:36 bdaloukas Exp $
 
 // This page prints a particular instance of game
 
@@ -24,7 +24,7 @@
     require_capability('mod/game:view', $context);
 
 /// Cache some other capabilites we use several times.
-    $canattempt = has_capability('mod/game:attempt', $context);
+    $canattempt = true;
 
     $timenow = time();
 

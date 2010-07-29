@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.11 2010/07/26 22:43:26 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2010/07/29 11:31:46 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.11 2010/07/26 22:43:26 bdaloukas Exp $
+ * @version $Id: play.php,v 1.12 2010/07/29 11:31:46 bdaloukas Exp $
  * @package game
  **/
 
@@ -283,6 +283,7 @@ width:	240pt;
 		if( $showsolution){
 			echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
 		}
+        echo '<br>';
 	}
 	
 	if( $game->bottomtext != ''){

@@ -1,4 +1,4 @@
-<?php  // $Id: locallib.php,v 1.31 2010/07/27 23:07:35 bdaloukas Exp $
+<?php  // $Id: locallib.php,v 1.32 2010/07/29 11:21:07 bdaloukas Exp $
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
@@ -246,8 +246,8 @@ function game_question_selectrandom( $game, $table, $select, $id_fields='id', $u
         else
             $questionid = $id;
         
-        $select2 = "gameid=$game->id AND userid='$USER->id' AND questionid='$questionid' AND glossaryentryid='$glossaryentryid'";
-        if( ($rec = $DB->get_record_select( 'game_repetitions', $select2, 'id,repetitions r')) != false){
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $questionid, 'glossaryentryid' => $glossaryentryid);
+        if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions r')) != false){
             if( ($rec->r < $min_num) or ($min_num == 0)){
                 $min_num = $rec->r;
                 $min_id = $id;
@@ -271,8 +271,8 @@ function game_question_selectrandom( $game, $table, $select, $id_fields='id', $u
 function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryid){
     global $DB;
 
-    $select = "gameid=$gameid AND userid='$userid' AND questionid='$questionid' AND glossaryentryid='$glossaryentryid'";
-    if( ($rec = $DB->get_record_select( 'game_repetitions', $select, null, 'id,repetitions r')) != false){
+    $a = array( 'gameid' => $gameid, 'userid' => $userid, 'questionid' => $questionid, 'glossaryentryid' => $glossaryentryid);
+    if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions r')) != false){
         $updrec->id = $rec->id;
         $updrec->repetitions = $rec->r + 1;
         if( !$DB->update_record( 'game_repetitions', $updrec)){
@@ -768,7 +768,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 					$_SESSION[ $key] = $attempt->id;
 				}
 				
-				$detail = $DB->get_record_select( 'game_'.$game->gamekind, "id=$attempt->id");
+				$detail = $DB->get_record( 'game_'.$game->gamekind, array( 'id' => $attempt->id));
 
 				return $attempt;
 			}
@@ -1151,12 +1151,12 @@ function game_sudoku_getquestions( $questionlist)
 function game_filtertext( $text, $courseid){
     $formatoptions->noclean = true;
     $formatoptions->filter = 1;
-    
     $text = trim( format_text( $text, FORMAT_MOODLE, $formatoptions, $courseid));
-    
-    if( substr( $text, 0, 3) == '<p>'){
-        if( substr( $text, -4) == '</p>'){
-            $text = substr( $text, 3, -4);
+
+    $start = '<div class="text_to_html">';
+    if( substr( $text, 0, strlen( $start)) == $start){
+        if( substr( $text, -6) == '</div>'){
+            $text = substr( $text, strlen( $start), -6);
         }
     }
     if( substr( $text, 0, 3) == '<p>'){

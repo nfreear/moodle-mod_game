@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.11 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2010/07/29 11:21:07 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -464,7 +464,7 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
             continue;   //I don't show the correct answers
         }
 
-		$s = 'A'.$ofs.'. '.game_filtertext( $entry->definition, 0).'<BR>';
+		$s = '<b>A'.$ofs.'.</b> '.game_filtertext( $entry->definition, 0).'<br>';
 		if( $showsolution){
 			$s .= get_string( 'answer').': ';
 			$s .= "<input type=\"text\" name=\"resp{$entry->id}\" value=\"$entry->concept\"size=30 /><br>";
@@ -472,7 +472,7 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
 			$s .= get_string( 'answer').': ';
 			$s .= "<input type=\"text\" name=\"resp{$entry->id}\" size=30 /><br>";
 		}
-		echo $s."<br/>\r\n";
+		echo $s."<hr>\r\n";
     }
 
     echo "</div>";

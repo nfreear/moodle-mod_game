@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.10 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.11 2010/08/03 20:48:52 bdaloukas Exp $
 
 // This files plays the game "Snakes and Ladders"
 
@@ -151,38 +151,56 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query)
 {
 	global $DB, $USER;
 	
-	if( ($recs = game_questions_selectrandom( $game, 1)) == false){
+    //Retrieves CONST_GAME_TRIES_REPETITION words and select the one which is used fewer times
+	if( ($recs = game_questions_selectrandom( $game, 1, CONST_GAME_TRIES_REPETITION)) == false){
 		return false;
 	}
-	
-	foreach( $recs as $rec)
-	{
-		$query->attemptid = $snakes->id;
-		$query->gameid = $game->id;
-		$query->userid = $USER->id;
-		$query->sourcemodule = $game->sourcemodule;
-		$query->questionid = $rec->questionid;
-		$query->glossaryentryid = $rec->glossaryentryid;
-		$query->score = 0;
-		$query->timelastattempt = time();
-		if( !($query->id = $DB->insert_record( 'game_queries', $query))){
-			print_error( "Can't insert to table game_queries");
-		}
-		
-		$snakes->queryid = $query->id;
-		
-		$updrec->id = $snakes->id;
-		$updrec->queryid = $query->id;
-		$updrec->dice = rand( 1, 6);
-		
-		if( !$DB->update_record(  'game_snakes', $updrec)){
-			print_error( 'game_questions_selectrandom: error updating in game_snakes');
-		}
 
-		return true;
-	}
+    $glossaryid = 0;
+    $questionid = 0;
+    $min_num = 0;
+    foreach( $recs as $rec){
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false){
+            if( ($rec2->r < $min_num) or ($min_num == 0)){
+                $min_num = $rec2->r;
+                $query->glossaryentryid = $rec->glossaryentryid;
+                $query->questionid = $rec->questionid;
+            }
+        }
+        else{
+            $query->glossaryentryid = $rec->glossaryentryid;
+            $query->questionid = $rec->questionid;
+            break;
+        }
+    }
 	
-	return false;
+    if( ($query->glossaryentryid == 0) AND ($query->questionid == 0))
+        return false;
+
+    $query->attemptid = $snakes->id;
+    $query->gameid = $game->id;
+    $query->userid = $USER->id;
+    $query->sourcemodule = $game->sourcemodule;
+    $query->score = 0;
+    $query->timelastattempt = time();
+    if( !($query->id = $DB->insert_record( 'game_queries', $query))){
+        error( "Can't insert to table game_queries");
+    }
+		
+    $snakes->queryid = $query->id;
+		
+    $updrec->id = $snakes->id;
+    $updrec->queryid = $query->id;
+    $updrec->dice = rand( 1, 6);
+		
+	if( !$DB->update_record(  'game_snakes', $updrec)){
+        error( 'game_questions_selectrandom: error updating in game_snakes');
+    }
+
+	game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
+
+    return true;
 }
 
 function game_snakes_showquestion( $id, $game, $snakes, $query)

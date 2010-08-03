@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.12 2010/07/29 11:21:07 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.13 2010/08/03 20:48:52 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -33,32 +33,34 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame='')
 	$newrec->opened  = $recsudoku->opened;
 
 	$need = 81 - $recsudoku->opened;
-	$recs = game_questions_selectrandom( $game, $need);
-	
-	if( $recs === false){
-		print_error( get_string('no_questions', 'game'));
-	}
-	
 	$closed = game_sudoku_getclosed( $newrec->data);
-	$n = min( count($closed), count( $recs));
-	
+	$n = min( count($closed), $need);
 	//if the teacher set the maximum number of questions
 	if( $game->param2 > 0){
 		if( $game->param2 < $n){
 			$n = $game->param2;
 		}
 	}
-	$closed = array_rand( $closed, $n);
+	$recs = game_questions_selectrandom( $game, CONST_GAME_TRIES_REPETITION*$n);
+	
+	if( $recs === false){
+		error( get_string( 'no_questions', 'game'));
+	}
+	
+	$closed = array_rand($closed, $n);
 
-	if( !game_insert_record(  'game_sudoku', $newrec)){
-		print_error( 'error inserting in game_sudoku');
+    $selected_recs = game_select_from_repetitions( $game, $recs, $n);
+
+	if(!game_insert_record('game_sudoku', $newrec)){
+		print_error('error inserting in game_sudoku');
 	}
 	    
 	$i = 0;
+    $field = ($game->sourcemodule == 'glossary' ? 'glossaryentryid' : 'questionid');
 	foreach( $recs as $rec)
 	{
-		if( $i >= $n)
-			break;
+        if( !array_key_exists( $rec->$field, $selected_recs))
+            continue;
 
 		unset( $query);
 		$query->attemptid = $newrec->id;
@@ -73,6 +75,8 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame='')
 		if( ($query->id = $DB->insert_record( 'game_queries', $query)) == 0){
 			print_error( 'error inserting in game_queries');
 		}
+
+        game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
 	}
 	
 	game_updateattempts( $game, $attempt, 0, 0);

@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.14 2010/07/26 13:38:44 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.15 2010/08/03 20:48:51 bdaloukas Exp $
 
 // This files plays the game "Crossword"
 
@@ -6,7 +6,9 @@ require( "cross_class.php");
 require( "crossdb_class.php");
 
 function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame='')
-{	
+{
+    global $DB, $USER;
+
 	if( $endofgame){
 		if( $g == ''){
 			game_updateattempts( $game, $attempt, -1, true);
@@ -34,6 +36,7 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame=''
 		print_error( 'game_cross_continue: '.get_string( 'cross_nowords', 'game'));
 	}
 	$infos = array();
+    $reps = array();
 	foreach( $recs as $rec){
 	    if( $game->param7 == false){	        
     		if( $textlib->strpos( $rec->answertext, ' ')){
@@ -44,9 +47,14 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g='', $endofgame=''
 		$rec->answertext = game_upper( $rec->answertext);
 		$answers[ $rec->answertext] = game_repairquestion( $rec->questiontext);
 		$infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
+
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false){
+            $reps[ $rec->answertext] = $rec2->r;
+        }
 	}
 	
-	$cross->setwords( $answers, $game->param1);
+	$cross->setwords( $answers, $game->param1, $reps);
 	
 	if( $cross->computedata( $crossm, $crossd, $game->param2)){		
 		$new_crossd = array();

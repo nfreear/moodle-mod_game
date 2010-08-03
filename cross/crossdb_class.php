@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.10 2010/07/26 13:38:44 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.11 2010/08/03 20:48:51 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.10 2010/07/26 13:38:44 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.11 2010/08/03 20:48:51 bdaloukas Exp $
  * @package game
  **/
 
@@ -33,6 +33,7 @@ class CrossDB extends Cross
 			if (!$DB->insert_record( 'game_queries', $rec)){
 				print_error( 'Insert page: new page game_queries not inserted');
 			}
+            game_update_repetitions($game->id, $USER->id, $rec->questionid, $rec->glossaryentryid);
 		}
 
         return true;

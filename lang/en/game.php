@@ -1,4 +1,4 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:16 bdaloukas Exp $
+<?php // $Id: game.php,v 1.2 2010/08/03 20:48:52 bdaloukas Exp $
       // translated by Vasilis Daloukas
 
 //bookquiz/importodt.php
@@ -226,7 +226,10 @@ $string[ 'timetaken'] = 'Time taken';
 $string[ 'unfinished'] = 'open';
 
 //showanswers.php
+$string[ 'clearrepetitions'] = 'Clear statistics';
+$string[ 'computerepetitions'] = 'Compute statistics again';
 $string[ 'feedbacks'] = 'Messages correct answer';
+$string[ 'repetitions'] = 'Repetitions';
 $string[ 'showanswers'] = 'Show answers';
 
 //showattempts.php

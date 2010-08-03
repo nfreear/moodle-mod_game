@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.12 2010/07/26 00:41:16 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.13 2010/08/03 20:48:51 bdaloukas Exp $
 
 // This file plays the game Hidden Picture
 
@@ -27,7 +27,8 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 
 	//new attempt
     $n = $game->param1 * $game->param2;
-    $recs = game_questions_selectrandom( $game, $n);
+    $recs = game_questions_selectrandom( $game, CONST_GAME_TRIES_REPETITION*$n);
+    $selected_recs = game_select_from_repetitions( $game, $recs, $n);
 
     $newrec = game_hiddenpicture_selectglossaryentry( $game, $attempt);
 	
@@ -43,10 +44,11 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 	    }
 	}
 	$i = 0;
+    $field = ($game->sourcemodule == 'glossary' ? 'glossaryentryid' : 'questionid');
 	foreach( $recs as $rec)
 	{
-		if( $i >= $n)
-			break;
+        if( !array_key_exists( $rec->$field, $selected_recs))
+            continue;
 
 		unset( $query);
 		$query->attemptid = $newrec->id;
@@ -65,6 +67,7 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture)
 		if( ($query->id = $DB->insert_record( 'game_queries', $query)) == 0){
 			error( 'error inserting in game_queries');
 		}
+        game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
 	}
 	
 	//The score is zero
@@ -125,10 +128,30 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
         print_error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;
     }
-    $sel = mt_rand(0, count( $ids)-1);
+
+    //Have to select randomly one glossaryentry
+    shuffle( $ids);
+    $min_num = 0;
+    $attachement = '';
+    for($i=0;$i<count($ids);$i++){
+        $tempid = $ids[ $i];
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid);
+        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false){
+            if( ($rec2->r < $min_num) or ($min_num == 0)){
+                $min_num = $rec2->r;
+                $glossaryentryid = $tempid;
+                $attachement = $keys[ $i];
+            }
+        }
+        else{
+            $glossaryentryid = $tempid;
+            $attachement = $keys[ $i];
+            break;
+        }
+    }
                   
     $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, 0 as questionid, glossaryid, attachment'.
-           " FROM {glossary_entries} WHERE id = ".$ids[ $sel];
+           ' FROM {glossary_entries} WHERE id = '.$glossaryentryid;
     if( ($rec = $DB->get_record_sql( $sql)) == false)
         return false;
         
@@ -141,7 +164,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     $query->sourcemodule = 'glossary';
     $query->questionid = 0;
     $query->glossaryentryid = $rec->glossaryentryid;
-	$query->attachment = $keys[ $sel];
+	$query->attachment = $attachement;
 	$query->questiontext = $rec->questiontext;
 	$query->answertext = $rec->answertext;
     $query->score = 0;
@@ -153,6 +176,8 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
 	if( !game_insert_record(  'game_hiddenpicture', $newrec)){
 		print_error( 'Error inserting in game_hiddenpicture');
 	}
+
+    game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
 	
 	return $newrec;
 }

@@ -34,10 +34,23 @@ class Cross
     var $m_minrow;    //computed by ComputePuzzleInfo
     var $m_maxrow;    //computed by ComputePuzzleInfo
     var $m_cLetter;   //computed by ComputePuzzleInfo
+    var $m_reps;        //repetition of each word
+    var $m_average_reps;//average of repetitions
 	
-	function setwords( $answers, $maxcols)
+	function setwords( $answers, $maxcols, $reps)
 	{
 		$textlib = textlib_get_instance();
+
+        $this->m_reps = array();
+		foreach( $reps as $word => $r){
+			$this->m_reps[ game_upper( $word)] = $r;
+		}
+
+        $this->m_average_reps=0;
+        foreach( $reps as $r)
+            $this->m_average_reps += $r;
+        if( count( $reps))
+            $this->m_average_reps /= count( $reps);
 
 		$this->m_input_answers = array();
 		foreach( $answers as $word => $answer){
@@ -185,7 +198,7 @@ class Cross
 		}
 
     $n_words = count( $cross_word);
-	$score = $this->computescore( $puzzle, $N20, $N22, $N2222, $n_words, $n_connectors, $n_filleds, $cSpaces);
+	$score = $this->computescore( $puzzle, $N20, $N22, $N2222, $n_words, $n_connectors, $n_filleds, $cSpaces, $cross_word);
 
 	if ($score > $this->m_best_score)
 	{
@@ -215,8 +228,10 @@ class Cross
 	return true;
 }
 
-    function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$n_filleds, &$cSpaces)
+    function computescore( $puzzle, $N20, $N22, $N2222, $n_words, &$n_connectors, &$n_filleds, &$cSpaces, $cross_word)
     {
+        $textlib = textlib_get_instance();
+
 		$n_connectors = $n_filleds = 0;
 		$puzzle00 = str_replace('.', '0', $puzzle);
 
@@ -236,8 +251,16 @@ class Cross
 
         $cSpaces = substr_count( $puzzle, ".");
         $score = ($n_words * 5) + ($n_connectors * 3) + $n_filleds;
-	
-        return $score;
+
+        $sum_rep = 0;
+        foreach( $cross_word as $word){
+            $word = $textlib->substr( $word, 1, -1);        
+
+            if( array_key_exists( $word, $this->m_reps))
+                $sum_rep += $this->m_reps[ $word] - $this->m_average_reps;
+        }
+	    
+        return $score-10*$sum_rep;
     }
 
  

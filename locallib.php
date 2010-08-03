@@ -1,4 +1,4 @@
-<?php  // $Id: locallib.php,v 1.32 2010/07/29 11:21:07 bdaloukas Exp $
+<?php  // $Id: locallib.php,v 1.33 2010/08/03 20:48:51 bdaloukas Exp $
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
@@ -1276,4 +1276,53 @@ function game_get_grading_option_name($option) {
 
 function game_right_to_left( $lang){
     return ( get_string_manager()->get_string('thisdirection', 'langconfig', NULL, $lang) == 'rtl');
+}
+
+function game_compute_reserve_print( $attempt, &$wordrtl, &$reverseprint){
+    if( function_exists( 'right_to_left')){
+        if( $attempt->language != '')
+            $wordrtl = game_right_to_left( $attempt->language);
+        else
+            $wordrtl = right_to_left();
+        $reverseprint = ($wordrtl != right_to_left());
+    }else{
+        $reverseprint = false;
+        $wordrtl = 'ltr';
+    }
+}
+
+function game_select_from_repetitions( $game, $recs, $need){
+    global $DB, $USER;
+
+    $ret = array();
+
+    if( count($recs) <= $need){
+        foreach( $recs as $id => $rec)
+            $ret[ $id] = 1;
+        return $ret;
+    }
+
+    $field = ($game->sourcemodule == 'glossary' ? 'glossaryentryid' : 'questionid');
+
+    $countzero = 0;
+    foreach( $recs as $rec){
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        $id = $rec->$field;
+        if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions r')) != false){
+            $reps[ $id] = $rec->r;
+        }else
+        {
+            $reps[ $id] = 0;
+            if( ++$countzero >= $need)
+                break;
+        }
+    }
+    asort( $reps);
+    foreach( $reps as $id => $r){
+        $ret[ $id] = 1;
+        if( count( $ret) >= $need)
+            break;
+    }
+
+    return $ret;
 }

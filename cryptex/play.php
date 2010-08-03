@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.12 2010/07/29 11:31:46 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.13 2010/08/03 20:48:51 bdaloukas Exp $
 /**
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.12 2010/07/29 11:31:46 bdaloukas Exp $
+ * @version $Id: play.php,v 1.13 2010/08/03 20:48:51 bdaloukas Exp $
  * @package game
  **/
 
@@ -11,7 +11,7 @@ require_once( "cryptexdb_class.php");
 
 function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame)
 {
-    global $DB;
+    global $DB, $USER;
 
 	if( $endofgame){
 		game_updateattempts( $game, $attempt, -1, true);
@@ -39,7 +39,9 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame)
 	if( $recs == false){
 		print_error( get_string( 'cryptex_nowords', 'game'));
 	}
+
 	$infos = array();
+    $reps = array();
 	foreach( $recs as $rec){
 	    if( $game->param7 == false){	        
     		if( $textlib->strpos( $rec->answertext, ' ')){
@@ -50,9 +52,14 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame)
 		$rec->answertext = game_upper( $rec->answertext);
 		$answers[ $rec->answertext] = game_repairquestion( $rec->questiontext);
 		$infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid);
+
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false){
+            $reps[ $rec->answertext] = $rec2->r;
+        }
 	}
 
-	$cryptex->setwords( $answers, $game->param1);
+	$cryptex->setwords( $answers, $game->param1, $reps);
 	
 	if( $cryptex->computedata( $crossm, $crossd, $letters, $game->param2)){
 		$new_crossd = array();

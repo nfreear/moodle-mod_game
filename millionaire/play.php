@@ -1,9 +1,9 @@
-<?php  // $Id: play.php,v 1.20 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.21 2010/08/03 20:48:52 bdaloukas Exp $
 /**
  * This file plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.20 2010/07/27 14:16:41 bdaloukas Exp $
+ * @version $Id: play.php,v 1.21 2010/08/03 20:48:52 bdaloukas Exp $
  * @package game
  **/
 
@@ -309,7 +309,7 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	}
 	$select .= ' AND hidden=0';
 	if( $game->shuffle or $game->quizid == 0)
-		$questionid = game_question_selectrandom( $game, $table, $select, 'id as id');
+		$questionid = game_question_selectrandom( $game, $table, $select, 'id as id', true);
 	else
 		$questionid = game_millionaire_select_serial_question( $game, $table, $select, '{question}.id as id', $millionaire->level);
 	
@@ -351,7 +351,8 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	$query->gamekind = $game->gamekind;
 	$query->gameid = $game->id;
 	$query->userid = $USER->id;
-	$query->sourcemodule = $game->sourcemodule;	
+	$query->sourcemodule = $game->sourcemodule;
+    $query->glossaryentryid = 0;
 	$query->questionid = $questionid;
 	$query->questiontext = addslashes( $q->questiontext);
 	$query->answertext = implode( ',', $ids);

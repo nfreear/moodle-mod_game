@@ -220,9 +220,9 @@ class CryptexDB extends CrossDB
 	}
 
 
-	function setwords( $answers, $maxcols)
-	{		
-		return Cross::setwords( $answers, $maxcols);
+	function setwords( $answers, $maxcols, $reps)
+	{
+		return Cross::setwords( $answers, $maxcols, $reps);
 	}
     
 	function computedata( &$crossm, &$crossd, &$letters, $maxwords)

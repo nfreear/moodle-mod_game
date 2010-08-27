@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.10 2010/07/27 14:16:41 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.11 2010/08/27 11:53:21 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -264,7 +264,30 @@ class mod_game_mod_form extends moodleform_mod {
                     }
                 }
             }
+            $snakesandladdersbackground[ 0] = get_string( 'userdefined', 'game');
+            ksort( $snakesandladdersbackground);
             $mform->addElement('select', 'param3', get_string('snakes_background', 'game'), $snakesandladdersbackground);
+
+            $mform->addElement('textarea', 'snakes_board', get_string('snakes_board', 'game'), 'rows="2" cols="70"');
+            $mform->disabledIf('snakes_board', 'param3', 'neq', '0');
+
+            $mform->addElement('text', 'snakes_cols', get_string('snakes_cols', 'game'), array('size' => 4));
+            $mform->disabledIf('snakes_cols', 'param3', 'neq', '0');
+
+            $mform->addElement('text', 'snakes_rows', get_string('snakes_rows', 'game'), array('size' => 4));
+            $mform->disabledIf('snakes_rows', 'param3', 'neq', '0');
+
+            $mform->addElement('text', 'snakes_headerx', get_string('snakes_headerx', 'game'), array('size' => 4));
+            $mform->disabledIf('snakes_headerx', 'param3', 'neq', '0');
+
+            $mform->addElement('text', 'snakes_headery', get_string('snakes_headery', 'game'), array('size' => 4));
+            $mform->disabledIf('snakes_headery', 'param3', 'neq', '0');
+
+            $mform->addElement('text', 'snakes_footerx', get_string('snakes_footerx', 'game'), array('size' => 4));
+            $mform->disabledIf('snakes_footerx', 'param3', 'neq', '0');
+
+            $mform->addElement('text', 'snakes_footery', get_string('snakes_footery', 'game'), array('size' => 4));
+            $mform->disabledIf('snakes_footery', 'param3', 'neq', '0');
         }
 
 //---------------------------------------------------------------------------
@@ -324,10 +347,26 @@ class mod_game_mod_form extends moodleform_mod {
 
 
     function set_data($default_values) {
+        global $DB;
+
         if( isset( $default_values->gamekind)){
             if( $default_values->gamekind == 'millionaire'){
                 if( isset( $default_values->param8))
                     $default_values->param8 = '#'.strtoupper( dechex( $default_values->param8));
+            }
+        }
+
+        if( isset( $default_values->param3)){
+            $board = $default_values->param3;
+            if( $board != 0){
+                $rec = $DB->get_record( 'game_snakes_database', array( 'id' => $board));
+                $default_values->snakes_board = $rec->data;
+                $default_values->snakes_cols = $rec->cols;
+                $default_values->snakes_rows = $rec->rows;
+                $default_values->snakes_headerx = $rec->headerx;
+                $default_values->snakes_headery = $rec->headery;
+                $default_values->snakes_footerx = $rec->footerx;
+                $default_values->snakes_footery = $rec->footery;
             }
         }
 

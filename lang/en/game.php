@@ -1,5 +1,15 @@
-<?php // $Id: game.php,v 1.2 2010/08/03 20:48:52 bdaloukas Exp $
+<?php // $Id: game.php,v 1.3 2010/08/27 10:21:36 bdaloukas Exp $
       // translated by Vasilis Daloukas
+
+$string[ 'pluginadministration'] = 'Game activity administration';
+$string[ 'game:attempt'] = 'Play game';
+$string[ 'game:deleteattempts'] = 'Delete attempts';
+$string[ 'game:manage'] = 'Manage';
+$string[ 'game:manageoverrides'] = 'Manage overrides';
+$string[ 'game:reviewmyattempts'] = 'reviewmyattempts';
+$string[ 'game:view'] = 'view';
+$string[ 'game:viewreports'] = 'viewreports';
+
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Import from an OpenOffice file (odt)';

@@ -1,9 +1,9 @@
-<?php  // $Id: attempt.php,v 1.14 2010/07/28 06:59:36 bdaloukas Exp $
+<?php  // $Id: attempt.php,v 1.15 2010/08/27 10:21:36 bdaloukas Exp $
 /**
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.14 2010/07/28 06:59:36 bdaloukas Exp $
+ * @version $Id: attempt.php,v 1.15 2010/08/27 10:21:36 bdaloukas Exp $
  * @package game
  **/    
     require_once( "../../config.php");
@@ -61,7 +61,6 @@
         /// Cache some other capabilites we use several times.
         $canattempt = has_capability('mod/game:attempt', $context);
         $canreviewmine = has_capability('mod/game:reviewmyattempts', $context);
-        $canpreview = has_capability('mod/game:preview', $context);
 
         /// Create an object to manage all the other (non-roles) access rules.
         $timenow = time();

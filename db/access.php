@@ -63,42 +63,6 @@ $capabilities = array(
         )
     ),
 
-    // Preview the game.
-    'mod/game:preview' => array(
-        'captype' => 'write', // Only just a write.
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'teacher' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
-
-    // Manually grade and comment on student attempts at a question.
-    'mod/game:grade' => array(
-        'riskbitmask' => RISK_SPAM,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'teacher' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
-
-    // Regrade gamezes.
-    'mod/game:regrade' => array(
-        'riskbitmask' => RISK_SPAM,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'teacher' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' =>  'mod/game:grade'
-    ),
-
     // View the game reports.
     'mod/game:viewreports' => array(
         'riskbitmask' => RISK_PERSONAL,

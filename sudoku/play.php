@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.13 2010/08/03 20:48:52 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.14 2010/08/27 10:21:36 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -397,6 +397,8 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
 		$state->last_graded = new StdClass;
 		$state->last_graded->event = QUESTION_EVENTOPEN;
 		$state->event = QUESTION_EVENTOPEN;
+        $state->attempt = 0;
+        $state->question = '';
 		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';

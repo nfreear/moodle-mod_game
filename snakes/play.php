@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.11 2010/08/03 20:48:52 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.12 2010/08/27 10:21:36 bdaloukas Exp $
 
 // This files plays the game "Snakes and Ladders"
 
@@ -251,6 +251,8 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 		$state->last_graded = new StdClass;
 		$state->last_graded->event = QUESTION_EVENTOPEN;
 		$state->event = QUESTION_EVENTOPEN;
+        $state->attempt = 0;
+        $state->question = '';
 		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';

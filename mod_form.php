@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.12 2010/08/29 11:16:21 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.13 2010/08/31 06:28:23 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -268,7 +268,8 @@ class mod_game_mod_form extends moodleform_mod {
             ksort( $snakesandladdersbackground);
             $mform->addElement('select', 'param3', get_string('snakes_background', 'game'), $snakesandladdersbackground);
 
-            $mform->addElement('file', 'snakes_file', get_string('snakes_file', 'game'));
+            $attachmentoptions = array('subdirs'=>false, 'maxfiles'=>1);
+            $mform->addElement('filepicker', 'snakes_file', get_string('snakes_file', 'game'), $attachmentoptions);
 
             $mform->addElement('textarea', 'snakes_board', get_string('snakes_board', 'game'), 'rows="2" cols="70"');
             $mform->disabledIf('snakes_board', 'param3', 'neq', '0');

@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.13 2010/08/31 06:28:23 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.14 2010/09/02 19:04:45 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -264,10 +264,10 @@ class mod_game_mod_form extends moodleform_mod {
                     }
                 }
             }
-            $snakesandladdersbackground[ 0] = get_string( 'userdefined', 'game');
+            //$snakesandladdersbackground[ 0] = get_string( 'userdefined', 'game');
             ksort( $snakesandladdersbackground);
             $mform->addElement('select', 'param3', get_string('snakes_background', 'game'), $snakesandladdersbackground);
-
+/*
             $attachmentoptions = array('subdirs'=>false, 'maxfiles'=>1);
             $mform->addElement('filepicker', 'snakes_file', get_string('snakes_file', 'game'), $attachmentoptions);
 
@@ -290,7 +290,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->disabledIf('snakes_footerx', 'param3', 'neq', '0');
 
             $mform->addElement('text', 'snakes_footery', get_string('snakes_footery', 'game'), array('size' => 4));
-            $mform->disabledIf('snakes_footery', 'param3', 'neq', '0');
+            $mform->disabledIf('snakes_footery', 'param3', 'neq', '0'); */
         }
 
 //---------------------------------------------------------------------------

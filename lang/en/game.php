@@ -1,4 +1,4 @@
-<?php // $Id: game.php,v 1.4 2010/08/27 11:53:21 bdaloukas Exp $
+<?php // $Id: game.php,v 1.5 2010/09/03 12:41:55 bdaloukas Exp $
       // translated by Vasilis Daloukas
 
 $string[ 'pluginadministration'] = 'Game activity administration';
@@ -208,6 +208,7 @@ $string[ 'millionaire_shuffle'] = 'Randomize questions';
 $string[ 'snakes_background'] = 'Background';
 $string[ 'snakes_board'] = 'Board';
 $string[ 'snakes_cols'] = 'Cols';
+$string[ 'snakes_file'] = 'File for background';
 $string[ 'snakes_footerx'] = 'Space at bootom left';
 $string[ 'snakes_footery'] = 'Space at bottom right';
 $string[ 'snakes_headerx'] = 'Space at up left';

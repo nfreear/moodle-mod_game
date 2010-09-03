@@ -1,4 +1,4 @@
-<?php  //$Id: upgrade.php,v 1.23 2010/07/26 13:38:44 bdaloukas Exp $
+<?php  //$Id: upgrade.php,v 1.24 2010/09/03 12:41:55 bdaloukas Exp $
 
 // This file keeps track of upgrades to the game module
 //
@@ -1416,6 +1416,22 @@ function xmldb_game_upgrade($oldversion) {
         // game savepoint reached
         upgrade_mod_savepoint(true, 2010072605, 'game');
     }
+
+    if ($oldversion < 2010090301) {
+
+        // Define field param9 to be added to game
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('param9', XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'param8');
+
+        // Conditionally launch add field param9
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // game savepoint reached
+        upgrade_mod_savepoint(true, 2010090301, 'game');
+    }
+
 
     
     return true;

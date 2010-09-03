@@ -1,4 +1,4 @@
-<?php  // $Id: mod_form.php,v 1.14 2010/09/02 19:04:45 bdaloukas Exp $
+<?php  // $Id: mod_form.php,v 1.15 2010/09/03 12:41:55 bdaloukas Exp $
 /**
  * Form for creating and modifying a game 
  *
@@ -267,6 +267,8 @@ class mod_game_mod_form extends moodleform_mod {
             //$snakesandladdersbackground[ 0] = get_string( 'userdefined', 'game');
             ksort( $snakesandladdersbackground);
             $mform->addElement('select', 'param3', get_string('snakes_background', 'game'), $snakesandladdersbackground);
+
+            //param4 = itemid for file_storage
 /*
             $attachmentoptions = array('subdirs'=>false, 'maxfiles'=>1);
             $mform->addElement('filepicker', 'snakes_file', get_string('snakes_file', 'game'), $attachmentoptions);
@@ -290,7 +292,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->disabledIf('snakes_footerx', 'param3', 'neq', '0');
 
             $mform->addElement('text', 'snakes_footery', get_string('snakes_footery', 'game'), array('size' => 4));
-            $mform->disabledIf('snakes_footery', 'param3', 'neq', '0'); */
+            $mform->disabledIf('snakes_footery', 'param3', 'neq', '0');*/
         }
 
 //---------------------------------------------------------------------------
@@ -356,6 +358,19 @@ class mod_game_mod_form extends moodleform_mod {
             if( $default_values->gamekind == 'millionaire'){
                 if( isset( $default_values->param8))
                     $default_values->param8 = '#'.strtoupper( dechex( $default_values->param8));
+            }
+
+            if( $default_values->gamekind == 'snakes'){
+                if( isset( $default_values->param9)){
+                    $a = explode( '#',$default_values->param9);
+                    foreach( $a as $s){
+                        $pos = strpos( $s, ':');
+                        if( $pos){
+                            $name = substr( $s, 0, $pos);
+                            $default_values->$name = substr( $s, $pos+1);
+                        }
+                    }
+                }
             }
         }
 

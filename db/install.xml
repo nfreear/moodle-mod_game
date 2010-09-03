@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/game/db" VERSION="20100726" COMMENT="XMLDB file for Moodle mod/game"
+<XMLDB PATH="mod/game/db" VERSION="20100903" COMMENT="XMLDB file for Moodle mod/game"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -23,8 +23,9 @@
         <FIELD NAME="param5" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param4" NEXT="param6"/>
         <FIELD NAME="param6" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param5" NEXT="param7"/>
         <FIELD NAME="param7" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param6" NEXT="param8"/>
-        <FIELD NAME="param8" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param7" NEXT="shuffle"/>
-        <FIELD NAME="shuffle" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" DEFAULT="1" SEQUENCE="false" PREVIOUS="param8" NEXT="timemodified"/>
+        <FIELD NAME="param8" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param7" NEXT="param9"/>
+        <FIELD NAME="param9" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" PREVIOUS="param8" NEXT="shuffle"/>
+        <FIELD NAME="shuffle" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" DEFAULT="1" SEQUENCE="false" PREVIOUS="param9" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="shuffle" NEXT="gameinputid"/>
         <FIELD NAME="gameinputid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timemodified" NEXT="toptext"/>
         <FIELD NAME="toptext" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="gameinputid" NEXT="bottomtext"/>

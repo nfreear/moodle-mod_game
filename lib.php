@@ -1,9 +1,9 @@
-<?php  // $Id: lib.php,v 1.19 2010/07/27 23:07:35 bdaloukas Exp $
+<?php  // $Id: lib.php,v 1.20 2010/09/03 12:41:55 bdaloukas Exp $
 /**
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.19 2010/07/27 23:07:35 bdaloukas Exp $
+ * @version $Id: lib.php,v 1.20 2010/09/03 12:41:55 bdaloukas Exp $
  * @package game
  **/
 
@@ -138,6 +138,26 @@ function game_before_add_or_update(&$game) {
         {
             $game->param8 = hexdec(substr( $game->param8, 1));
         }
+    }else if( $game->gamekind == 'snakes')
+    {
+        $s = '';
+        if( $game->param3 == 0)
+        {
+            $draftitemid = file_get_submitted_draft_itemid('snakes_file');
+            $cmg = get_coursemodule_from_instance('game', $game->id, $game->course);
+            $modcontext = get_context_instance(CONTEXT_MODULE, $cmg->id);
+            file_prepare_draft_area($draftitemid, $modcontext->id, 'mod_game', 'snakes_file', $game->id);
+            $game->param4 = $draftitemid;
+    
+            if( isset( $_POST[ 'snakes_cols']))
+            {
+                $fields = array( 'snakes_board', 'snakes_cols', 'snakes_rows', 'snakes_headerx', 'snakes_headery', 'snakes_footerx', 'snakes_footery');
+                foreach( $fields as $f)
+                    $s .= '#'.$f.':'.$_POST[ $f];
+                $s = substr( $s, 1);
+            }
+        }
+        $game->param9 = $s;
     }
 }
 

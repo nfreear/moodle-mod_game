@@ -1,5 +1,7 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:17 bdaloukas Exp $
-      //Albanian translation by Gkotslari Orianta
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:20 bdaloukas Exp $
+      // translation to Українська (uk) by by Anastasiya Kolomoytseva
+
+$string[ 'lettersall'] = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЧШЩЬЮЯ';
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Shtim nga një format OpenOffice (odt)';

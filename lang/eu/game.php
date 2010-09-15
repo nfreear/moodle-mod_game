@@ -1,4 +1,5 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:16 bdaloukas Exp $
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:19 bdaloukas Exp $
+      // translated to Euskara (eu)
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'OpenOffice (odt) fitxategitik inportatu';
@@ -41,6 +42,7 @@ $string[ 'cross_welcome'] = '<h3>Ongi etorri!</h3><p>Hasteko hitz batean klik eg
 $string[ 'cross_win'] = 'Zorionak!!!';
 $string[ 'letter'] = 'letra';
 $string[ 'letters'] = 'letrak';
+$string[ 'print'] = 'Imprimatu';
 
 //cryptex/play.php
 $string[ 'cryptex_nowords'] = 'Ez da hitzik aurkitu';
@@ -69,6 +71,7 @@ $string[ 'hiddenpicture_win'] = 'Zorionak!';
 $string[ 'must_select_glossary'] = 'Glosategia aukeratu behar duzu';
 
 //millionaire/play.php
+$string[ 'millionaire_helppeople'] = 'Publikoaren laguntza';
 $string[ 'millionaire_info_people'] = 'Jendeak zera dio: ';
 $string[ 'millionaire_info_telephone'] = 'Nire ustez, erantzun zuzena hau da: ';
 $string[ 'millionaire_info_wrong_answer'] = 'Erantzun zuzena ezkerraldean markatuta dago.<br>Zure erantzun hau desegokia da:';
@@ -78,7 +81,9 @@ $string[ 'millionaire_nowords'] = 'Ez da hitzik aurkitu';
 $string[ 'millionaire_sourcemodule_must_quiz_question'] = 'Aberatsa jolaserako iturria {$a} edo galderak izango dira eta ez';
 $string[ 'millionaire_win'] = 'Zorionak!!!!';
 $string[ 'must_select_questioncategory'] = 'Galdera-kategoria bat aukeratu behar duzu';
+$string[ 'millionaire_quit'] = 'Irten';
 $string[ 'must_select_quiz'] = 'Galdetegi bat aukeratu behar duzu';
+$string[ 'millionaire_telephone'] = 'Telefono-deia';
 
 //report/default.php
 $string[ 'modulename'] = 'Jolasa';
@@ -94,6 +99,7 @@ $string[ 'sudoku_create_start'] = 'Sudokuak sortzen hasi';
 $string[ 'sudoku_creating'] = '<b>{$a}</b> sudokua sortzen';
 
 //sudoku/play.php
+$string[ 'noglossaryentriesfound'] = 'Ez da glosategi-sarrerarik aurkitu';
 $string[ 'sudoku_finishattemptbutton'] = 'Sudokua bukatu da';
 $string[ 'sudoku_guessnumber'] = 'Zenbaki zuzena asmatu';
 $string[ 'sudoku_noentriesfound'] = 'Glosategian ez da hitzik aurkitu';
@@ -114,11 +120,17 @@ $string[ 'startagain'] = 'Berriz hasi';
 
 //export.php
 $string[ 'export'] = 'Esportatu';
+$string[ 'html_hascheckbutton'] = 'Saiakera-botoia:';
+$string[ 'html_hasprintbutton'] = 'Imprimatzeko botoia:';
+$string[ 'html_title'] = 'Html izenburua:';
 $string[ 'javame_createdby'] = 'Egilea:';
 $string[ 'javame_description'] = 'Deskribapena:';
 $string[ 'javame_filename'] = 'Fitxategia:';
 $string[ 'javame_icon'] = 'Ikurra:';
+$string[ 'javame_maxpictureheight'] = 'Irudiaren gehienezko altuera:';
+$string[ 'javame_maxpicturewidth'] = 'Irudiaren gehienezko zabalera:';
 $string[ 'javame_name'] = 'Izena:';
+$string[ 'javame_type'] = 'Mota:';
 $string[ 'javame_vendor'] = 'Vendor:';
 $string[ 'javame_version'] = 'Bertsioa:';
 
@@ -135,6 +147,8 @@ $string[ 'game'] = 'Jolasa';
 
 //lib.php
 $string[ 'attempt'] = 'saiakera';
+$string[ 'export_to_html'] = 'HTMLera esportatu';
+$string[ 'export_to_javame'] = 'Javame-ra esportatu';
 $string[ 'game_bookquiz'] = 'Galdera-,liburua';
 $string[ 'game_cross'] = 'Gurutzegrama';
 $string[ 'game_cryptex'] = 'Hitz Zopa';
@@ -159,8 +173,11 @@ $string[ 'cross_layout0'] = 'Definizioak behealdean';
 $string[ 'cross_layout1'] = 'Definizioak eskuin aldean';
 $string[ 'cross_maxcols'] = 'Gurutzegramaren gehienezko zutabe-kopurua';
 $string[ 'cross_maxwords'] = 'Gurutzegramaren gehienezko hitz-kopurua';
+$string[ 'cross_options'] = 'Gurutzegramaren aukerak';
 $string[ 'cryptex_maxcols'] = 'Zutabe/lerroen gehienezko kopurua Hitz Zopan';
+$string[ 'cryptex_maxtries'] = 'Saiakeren gehinezko kopurua';
 $string[ 'cryptex_maxwords'] = 'Gehienezko hitz-kopurua Hitz Zopan';
+$string[ 'cryptex_options'] = 'Hitz Zoparen aukerak';
 $string[ 'gradeaverage'] = 'Batezbesteko emaitza';
 $string[ 'gradehighest'] = 'Emaitza altuena';
 $string[ 'grademethod'] = 'Kalifikazio-metodoa';
@@ -169,6 +186,7 @@ $string[ 'hangman_allowsub'] = 'Baimendu sinboloak - hitzetan';
 $string[ 'hangman_imageset'] = 'Urkatuarentzako irudiak aukeratu';
 $string[ 'hangman_language'] = 'Hitzen hizkuntza';
 $string[ 'hangman_maxtries'] = 'Hitz-kopurua jolaseko';
+$string[ 'hangman_options'] = 'Urkatuaren aukerak';
 $string[ 'hangman_showcorrectanswer'] = 'Bukatutakoan hitza erakutsi';
 $string[ 'hangman_showfirst'] = 'Urkatuaren lehenengo letra erakutsi';
 $string[ 'hangman_showlast'] = 'Urkatuaren azken letra erakutsi';
@@ -176,9 +194,14 @@ $string[ 'hangman_showquestion'] = 'Galderak erakutsi?';
 $string[ 'hiddenpicture_across'] = 'Laukitxo horizontalen kopurua';
 $string[ 'hiddenpicture_down'] = 'Laukitxo bertikalen kopurua';
 $string[ 'hiddenpicture_height'] = 'Irudiaren altuera neurri honetara egokitu: ';
+$string[ 'hiddenpicture_options'] = '\'Irudi Izkutuaren\' aukerak';
 $string[ 'hiddenpicture_pictureglossary'] = 'Galdera nagusiaren glosategia';
 $string[ 'hiddenpicture_width'] = 'Irudiaren zabalera neurri honetara egokitu: ';
+$string[ 'millionaire_background'] = 'Hondoko kolorea';
+$string[ 'millionaire_options'] = 'Aberatsaren aukerak';
+$string[ 'millionaire_shuffle'] = 'Galderak nahastu';
 $string[ 'snakes_background'] = 'Hondoa';
+$string[ 'snakes_options'] = '\'Sugeak eta Eskailerak\' aukerak';
 $string[ 'sourcemodule'] = 'Galdera-iturria';
 $string[ 'sourcemodule_book'] = 'Liburu bat aukeratu';
 $string[ 'sourcemodule_glossary'] = 'Glosategia aukeratu';
@@ -188,6 +211,8 @@ $string[ 'sourcemodule_question'] = 'Galderak';
 $string[ 'sourcemodule_questioncategory'] = 'Galdera-kategoria bat aukeratu';
 $string[ 'sourcemodule_quiz'] = 'Galdetegia aukeratu';
 $string[ 'sudoku_maxquestions'] = 'Gehienezko galdera-kopurua';
+$string[ 'sudoku_options'] = 'Sudokuren aukerak';
+$string[ 'toptext'] = 'Goialdeko testua';
 
 //preview.php
 $string[ 'only_teachers'] = 'Horri hau irakasleak bakarrik ikus dezake';
@@ -210,6 +235,7 @@ $string[ 'showanswers'] = 'Erantzunak erakutsi';
 
 //showattempts.php
 $string[ 'lastip'] = 'Ikaslearen IPa';
+$string[ 'showattempts'] = 'Saiakerak erakutsi';
 $string[ 'showsolution'] = 'soluzioa';
 $string[ 'timefinish'] = 'Jolasa bukatu da';
 $string[ 'timelastattempt'] = 'Azken saiakera';

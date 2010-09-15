@@ -1,6 +1,6 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:17 bdaloukas Exp $ 
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:20 bdaloukas Exp $ 
       // game.php - created with Moodle 2.0 (2007101509)
-      // local modifications from http://localhost
+      // translation to Norsk - bokmål (no)
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Importer fra en Open Office tekstfil (odt)';

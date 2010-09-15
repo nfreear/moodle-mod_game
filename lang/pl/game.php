@@ -1,5 +1,5 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:17 bdaloukas Exp $ 
-//Translated by Paweł Strzałkowski
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:20 bdaloukas Exp $ 
+      // translation to Polski (pl) by Paweł Strzałkowski
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Import z pliku OpenOffice (odt)';

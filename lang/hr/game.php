@@ -1,4 +1,5 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:16 bdaloukas Exp $
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:20 bdaloukas Exp $
+      // translation to Hrvatski (hr)
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Uvezi iz OpenOffice datoteke (odt)';
@@ -98,6 +99,7 @@ $string[ 'sudoku_create_start'] = 'Započni pravljenje sudou zadataka';
 $string[ 'sudoku_creating'] = 'Pravim <b>{$a}</b> sudoku';
 
 //sudoku/play.php
+$string[ 'noglossaryentriesfound'] = 'U rječniku nije pronađen ni jedan pojam';
 $string[ 'sudoku_finishattemptbutton'] = 'Kraj igre';
 $string[ 'sudoku_guessnumber'] = 'Pogodite točan broj';
 $string[ 'sudoku_noentriesfound'] = 'U rječniku nije pronađena ni jedna riječ';
@@ -172,8 +174,11 @@ $string[ 'cross_layout0'] = 'Fraze ispod križaljke';
 $string[ 'cross_layout1'] = 'Fraze desno od križaljke';
 $string[ 'cross_maxcols'] = 'Maksimaln broj stupaca u križaljci';
 $string[ 'cross_maxwords'] = 'Maksimalan broj riječi u križaljci';
+$string[ 'cross_options'] = 'Postavke križaljke';
 $string[ 'cryptex_maxcols'] = 'Maksimalan broj stupaca/redova cryptexa';
+$string[ 'cryptex_maxtries'] = 'Maksimalan broj pokušaja';
 $string[ 'cryptex_maxwords'] = 'Maksimalan broj riječi cryptexa';
+$string[ 'cryptex_options'] = 'Cryptex postavke';
 $string[ 'gradeaverage'] = 'Prosječna ocjena';
 $string[ 'gradehighest'] = 'Najveća ocjena';
 $string[ 'grademethod'] = 'Metoda ocjenjivanja';
@@ -182,6 +187,7 @@ $string[ 'hangman_allowsub'] = 'Dozvoli znak - u riječima';
 $string[ 'hangman_imageset'] = 'Odaberite sliku vješala';
 $string[ 'hangman_language'] = 'Jezik riječi';
 $string[ 'hangman_maxtries'] = 'Broj riječi po igri';
+$string[ 'hangman_options'] = 'Postavke vješala';
 $string[ 'hangman_showcorrectanswer'] = 'Prikaži ispravan odgovor nakon završetka';
 $string[ 'hangman_showfirst'] = 'Prikaži prvo slovo vješala';
 $string[ 'hangman_showlast'] = 'Prikaži zadnje slovo vješala';
@@ -189,11 +195,14 @@ $string[ 'hangman_showquestion'] = 'Prikaži pitanje?';
 $string[ 'hiddenpicture_across'] = 'Ćelije vodoravno';
 $string[ 'hiddenpicture_down'] = 'Ćelije okomito';
 $string[ 'hiddenpicture_height'] = 'Postavi visinu slike na';
+$string[ 'hiddenpicture_options'] = 'Postavke skrivene slike';
 $string[ 'hiddenpicture_pictureglossary'] = 'Rječnik za glavno pitanje i sliku';
 $string[ 'hiddenpicture_width'] = 'Postavi širinu slike na';
 $string[ 'millionaire_background'] = 'Boja pozadine';
+$string[ 'millionaire_options'] = 'Postavke Milijunaša';
 $string[ 'millionaire_shuffle'] = 'Izmješaj pitanja';
 $string[ 'snakes_background'] = 'Pozadina';
+$string[ 'snakes_options'] = 'Postavke \'Zmije i ljestve\'';
 $string[ 'sourcemodule'] = 'Izvor pitanja';
 $string[ 'sourcemodule_book'] = 'Odaberite knjigu';
 $string[ 'sourcemodule_glossary'] = 'Odaberite rječnik';
@@ -203,6 +212,8 @@ $string[ 'sourcemodule_question'] = 'Pitanja';
 $string[ 'sourcemodule_questioncategory'] = 'Kategorija pitanja';
 $string[ 'sourcemodule_quiz'] = 'Odaberite igru';
 $string[ 'sudoku_maxquestions'] = 'Maksimalan broj pitanja';
+$string[ 'sudoku_options'] = 'Sudoku postavke';
+$string[ 'toptext'] = 'Tekst na vrhu';
 
 //preview.php
 $string[ 'only_teachers'] = 'Samo učitelj može vidjeti ovu stranicu';
@@ -220,11 +231,15 @@ $string[ 'timetaken'] = 'Proteklo vrijeme';
 $string[ 'unfinished'] = 'nije završeno';
 
 //showanswers.php
+$string[ 'clearrepetitions'] = 'Obriši statistiku';
+$string[ 'computerepetitions'] = 'Ponovo izračunaj statistiku';
 $string[ 'feedbacks'] = 'Poruke ispravnih odgovora';
+$string[ 'repetitions'] = 'Ponavljanja';
 $string[ 'showanswers'] = 'Prikaži odgovore';
 
 //showattempts.php
 $string[ 'lastip'] = 'Adresa računala';
+$string[ 'showattempts'] = 'Prikaži pokušaje';
 $string[ 'showsolution'] = 'Rješenje';
 $string[ 'timefinish'] = 'Kraj igre';
 $string[ 'timelastattempt'] = 'Posljednji pokušaj';

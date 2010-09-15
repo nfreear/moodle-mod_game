@@ -1,6 +1,6 @@
- <?php // $Id: game.php,v 1.1 2010/07/26 00:41:16 bdaloukas Exp $
+ <?php // $Id: game.php,v 1.2 2010/09/15 21:08:19 bdaloukas Exp $
        // game.php - created with Moodle 2.0
-       // translated by Vasilis Daloukas
+       // translated to Ελληνικά (el) by Vasilis Daloukas
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Εισαγωγή από ένα αρχείο OpenOffice (odt)';
@@ -101,6 +101,7 @@ $string[ 'sudoku_create_start'] = 'Έναρξη δημιουργίας sudoku';
 $string[ 'sudoku_creating'] = 'Δημιουργήθηκε  <b>{$a}</b> sudoku';
 
 //sudoku/play.php
+$string[ 'noglossaryentriesfound'] = 'Δεν βρέθηκαν λέξεις στο λεξικό';
 $string[ 'sudoku_finishattemptbutton'] = 'Τέλος παιχνιδιού';
 $string[ 'sudoku_guessnumber'] = 'Μαντέψτε το νούμερο';
 $string[ 'sudoku_noentriesfound'] = 'Δεν βρέθηκαν λέξεις στο λεξικό';
@@ -235,11 +236,15 @@ $string[ 'timetaken'] = 'Χρόνος που χρειάστηκε';
 $string[ 'unfinished'] = 'Ατελείωτο';
 
 //showanswers.php
+$string[ 'clearrepetitions'] = 'Μηδενισμός στατιστικών';
+$string[ 'computerepetitions'] = 'Επαναϋπολογισμός στατιστικών';
 $string[ 'feedbacks'] = 'Μήνυμα σωστής απάντησης';
+$string[ 'repetitions'] = 'Επαναλήψεις';
 $string[ 'showanswers'] = 'Εμφάνιση απαντήσεων';
 
 //showattempts.php
 $string[ 'lastip'] = 'IP σπουδαστή';
+$string[ 'showattempts'] = 'Εμφάνιση προσπαθειών';
 $string[ 'showsolution'] = 'Λύση';
 $string[ 'timefinish'] = 'Τέλος παιχνιδιού';
 $string[ 'timelastattempt'] = 'Τελευταία προσπάθεια';

@@ -1,6 +1,8 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:17 bdaloukas Exp $ 
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:20 bdaloukas Exp $ 
       // game.php - created with Moodle 1.6.3
-      // translated by Ивченко Анатолий
+      // translation to Русский (ru) by Ивченко Анатолий
+
+$string[ 'lettersall'] = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ';
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'Импортировать из файла OpenOffice(odt)';

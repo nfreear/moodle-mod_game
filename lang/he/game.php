@@ -1,5 +1,7 @@
-<?php // $Id: game.php,v 1.1 2010/07/26 00:41:16 bdaloukas Exp $
-      //Hebrew translation by Nadav Kavalerchik 
+<?php // $Id: game.php,v 1.2 2010/09/15 21:08:20 bdaloukas Exp $
+      // translation to Hebrew (he) by Nadav Kavalerchik 
+
+$string[ 'lettersall'] = 'אבגדהוזחטיכלמנסעפצקרשתךףץןם ';
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'יבוא מקובץ אופן אופיס (odt)';

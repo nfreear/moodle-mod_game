@@ -1,7 +1,16 @@
-<?php // $Id: game.php,v 1.2 2010/09/15 21:08:19 bdaloukas Exp $
-      // translated to Deutsch (de) by Dimitris Mpelos
+<?php // $Id: game.php,v 1.3 2010/10/05 15:51:09 bdaloukas Exp $
+      // translated to Deutsch (de) by Dimitris Mpelos, Joachim Vogelgesang
 
+$string[ 'game:attempt'] = 'Spiel starten';
+$string[ 'game:deleteattempts'] = 'Versuche löschen';
+$string[ 'game:manage'] = 'Verwalten';
+$string[ 'game:manageoverrides'] = 'Eingriffe verwalten';
+$string[ 'game:reviewmyattempts'] = 'Meine Versuche wiederholen';
+$string[ 'game:view'] = 'sehen';
+$string[ 'game:viewreports'] = 'Berichte sehen';
+$string[ 'gameadministration'] = 'Spieleverwaltung';
 $string[ 'overview'] = 'Übersicht';
+$string[ 'pluginadministration'] = 'Spielaktivitätsverwaltung';
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'OpenOffice Datei hinzufügen (odt)';
@@ -84,6 +93,7 @@ $string[ 'millionaire_quit'] = 'Verlassen';
 $string[ 'millionaire_sourcemodule_must_quiz_question'] = 'Für Wer wird Millionär: die Quelle der Fragen müsste {$a} oder Fragen sein, und nicht';
 $string[ 'millionaire_telephone'] = 'Telefonische Hilfe';
 $string[ 'millionaire_win'] = 'Glückwünsch!!!!';
+$string[ 'must_select_questioncategory'] = 'Sie müssen eine Fragekategorie aussuchen';
 $string[ 'must_select_quiz'] = 'Sie müssen einen Test auswählen';$string[ 'must_select_questioncategory'] = 'Sie müssen eine Fragenkategorie wählen!';
 
 //report/default.php
@@ -173,8 +183,15 @@ $string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $string[ 'bottomtext'] = 'Text am Ende der Seite';
 $string[ 'cross_maxcols'] = 'Höchstzahl von Zeile des Kreuzworträtzels';
 $string[ 'cross_maxwords'] = 'Höchstzahl von Worter des Kreuzworträtzels';
+$string[ 'cross_layout'] = 'Layout';
+$string[ 'cross_layout0'] = 'Sätze auf der Unterseite des Kreuzes';
+$string[ 'cross_layout1'] = 'Sätze rechts des Kreuzes';
+$string[ 'cross_options'] = 'Kreuzworträtsel Optionen';
+$string[ 'cryptex_maxtries'] = 'Maximale Versuche';
 $string[ 'cryptex_maxcols'] = 'Höchstzahl von Zeile des Kryptex';
 $string[ 'cryptex_maxwords'] = 'Höchstzahl von Wörtern des Kryptex';
+$string[ 'cryptex_options'] = 'Kryptex Optionen';
+$string[ 'grademethod'] = 'Bewertungsmethode';
 $string[ 'hangman_allowspaces'] = 'Wortzwischenräume erlauben';
 $string[ 'hangman_allowsub'] = 'Symbol in Wörtern erlauben';
 $string[ 'hangman_language'] = 'Wortsprache';
@@ -196,6 +213,13 @@ $string[ 'millionaire_options'] = 'Millionär Optionen';
 $string[ 'millionaire_shuffle'] = 'Zufallsfragen';
 $string[ 'snakes_background'] = 'Hintergrund';
 $string[ 'snakes_options'] = '\'Schnecken und Leitern\' options';
+$string[ 'snakes_board'] = 'Spielbrett';
+$string[ 'snakes_cols'] = 'Spalten';
+$string[ 'snakes_footerx'] = 'Raum Boden links';
+$string[ 'snakes_footery'] = 'Raum Boden rechts';
+$string[ 'snakes_headerx'] = 'Raum nach links oben';
+$string[ 'snakes_headery'] = 'Raum nach links unten';
+$string[ 'snakes_rows'] = 'Reihen';
 $string[ 'sourcemodule'] = 'Fragen Quelle';
 $string[ 'sourcemodule_book'] = 'Ein Buch wählen';
 $string[ 'sourcemodule_include_subcategories'] = 'Unterkategorien einschließen';
@@ -206,14 +230,13 @@ $string[ 'sourcemodule_questioncategory'] = 'Fragenkategorie wählen';
 $string[ 'sourcemodule_quiz'] = 'Quiz wählen';
 $string[ 'sudoku_maxquestions'] = 'Maximale Anzahl von Fragen erreicht';
 $string[ 'sudoku_options'] = 'Sudoku Optionen';
-$string[ 'cross_layout'] = 'Layout';
-$string[ 'cross_layout0'] = 'Sätze auf der Unterseite des Kreuzes';
-$string[ 'cross_layout1'] = 'Sätze rechts des Kreuzes';
-$string[ 'cross_options'] = 'Kreuzworträtsel Optionen';
-$string[ 'cryptex_maxtries'] = 'Maximale Versuche';
-$string[ 'cryptex_options'] = 'Kryptex Optionen';
-$string[ 'grademethod'] = 'Bewertungsmethode';
 $string[ 'toptext'] = 'Text oben';
+$string[ 'userdefined'] = 'Nutzer definiert';
+
+
+
+
+
 
 //preview.php
 $string[ 'only_teachers'] = 'Nur Lehrer können diese Seite sehen';
@@ -229,7 +252,10 @@ $string[ 'startagain'] = 'Neu starten';
 $string[ 'timetaken'] = 'Zeitaufwand';
 
 //showanswers.php
+$string[ 'clearrepetitions'] = 'Statistiken löschen';
+$string[ 'computerepetitions'] = 'Statistiken neu berechnen';
 $string[ 'feedbacks'] = 'Meldungen bei korrekter Antwort';
+$string[ 'repetitions'] = 'Wiederholungen';
 $string[ 'showanswers'] = 'Antworten zeigen';
 
 //showattempts.php

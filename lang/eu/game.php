@@ -1,5 +1,16 @@
-<?php // $Id: game.php,v 1.2 2010/09/15 21:08:19 bdaloukas Exp $
-      // translated to Euskara (eu)
+<?php // $Id: game.php,v 1.3 2010/10/05 21:02:52 bdaloukas Exp $
+      // translated to Euskara (eu) by Juan Ezeiza
+
+$string[ 'game:attempt'] = 'Jolastu';
+$string[ 'game:deleteattempts'] = 'Saiakerak ezabatu';
+$string[ 'game:manage'] = 'Kudeatu';
+$string[ 'game:manageoverrides'] = 'Saiakera berriak kudeatu';
+$string[ 'game:reviewmyattempts'] = 'nire saiakerak berriro ikusi';
+$string[ 'game:view'] = 'ikusi';
+$string[ 'game:viewreports'] = 'txostenak ikusi';
+$string[ 'gameadministration'] = 'Jolasen kudeaketa';
+$string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string[ 'pluginadministration'] = 'Jolas jardueraren kudeaketa';
 
 //bookquiz/importodt.php
 $string[ 'bookquiz_import_odt'] = 'OpenOffice (odt) fitxategitik inportatu';
@@ -201,7 +212,14 @@ $string[ 'millionaire_background'] = 'Hondoko kolorea';
 $string[ 'millionaire_options'] = 'Aberatsaren aukerak';
 $string[ 'millionaire_shuffle'] = 'Galderak nahastu';
 $string[ 'snakes_background'] = 'Hondoa';
+$string[ 'snakes_board'] = 'Taula';
+$string[ 'snakes_cols'] = 'Zutabeak';
+$string[ 'snakes_footerx'] = 'Beheko ezker aldeko espazioa';
+$string[ 'snakes_footery'] = 'Beheko eskuin aldeko espazioa';
+$string[ 'snakes_headerx'] = 'Goiko ezker aldeko espazioa';
+$string[ 'snakes_headery'] = 'Goiko eskuin aldeko espazioa';
 $string[ 'snakes_options'] = '\'Sugeak eta Eskailerak\' aukerak';
+$string[ 'snakes_rows'] = 'Lerroak';
 $string[ 'sourcemodule'] = 'Galdera-iturria';
 $string[ 'sourcemodule_book'] = 'Liburu bat aukeratu';
 $string[ 'sourcemodule_glossary'] = 'Glosategia aukeratu';
@@ -213,6 +231,7 @@ $string[ 'sourcemodule_quiz'] = 'Galdetegia aukeratu';
 $string[ 'sudoku_maxquestions'] = 'Gehienezko galdera-kopurua';
 $string[ 'sudoku_options'] = 'Sudokuren aukerak';
 $string[ 'toptext'] = 'Goialdeko testua';
+$string[ 'userdefined'] = 'Erabiltzaileak definitua';
 
 //preview.php
 $string[ 'only_teachers'] = 'Horri hau irakasleak bakarrik ikus dezake';
@@ -230,7 +249,10 @@ $string[ 'timetaken'] = 'Erabilitako denbora';
 $string[ 'unfinished'] = 'irekia';
 
 //showanswers.php
+$string[ 'clearrepetitions'] = 'Estatistikak garbitu';
+$string[ 'computerepetitions'] = 'Estatistikak berriro kalkulatu';
 $string[ 'feedbacks'] = 'Erantzun zuzeneko mezuak';
+$string[ 'repetitions'] = 'Errepikapenak';
 $string[ 'showanswers'] = 'Erantzunak erakutsi';
 
 //showattempts.php

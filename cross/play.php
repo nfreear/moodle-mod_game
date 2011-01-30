@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.15 2010/08/03 20:48:51 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.16 2011/01/30 12:05:32 bdaloukas Exp $
 
 // This files plays the game "Crossword"
 
@@ -1069,15 +1069,12 @@ function game_cross_show_welcome0(){
 <div style="margin-top:1em;"><input id="wordentry" type="text" size="24"
  style="font-weight: bold; text-transform:uppercase;"
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
-<div id="worderror" style="<tr>
 <?php
     if( $game->param3 == 2){
         game_cross_show_welcome( $game);
     }
 ?>
-</tr>
-<tr><tr><td>&nbsp</td></tr>
-color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
+<div id="worderror" style="color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
 <td align="right">

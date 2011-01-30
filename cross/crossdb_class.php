@@ -1,9 +1,9 @@
-<?php  // $Id: crossdb_class.php,v 1.11 2010/08/03 20:48:51 bdaloukas Exp $
+<?php  // $Id: crossdb_class.php,v 1.12 2011/01/30 12:05:32 bdaloukas Exp $
 /**
  * This class is a cross that can load and save to a table
  * 
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.11 2010/08/03 20:48:51 bdaloukas Exp $
+ * @version $Id: crossdb_class.php,v 1.12 2011/01/30 12:05:32 bdaloukas Exp $
  * @package game
  **/
 
@@ -167,7 +167,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 		$done = 1;
 	}
 
-	$grade = $correctletters / ($correctletters + $wrongletters);
+	$grade = $correctletters / ($correctletters + $restletters);
 	$ret .= '<br>'.get_string( 'grade', 'game').' '.round( $grade * 100).' %';
 
 	game_updateattempts( $game, $attempt, $grade, $done);
@@ -189,7 +189,6 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 		$pos += $len;
 		
 		$is_empty = true;
-        $restletters = 0;
 		for($i = 0; $i < $len; $i++)
 		{
 			if( $i < $len_guess)

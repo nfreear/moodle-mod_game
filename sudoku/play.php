@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.14 2010/08/27 10:21:36 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.15 2011/03/02 14:32:46 bdaloukas Exp $
 
 require_once( "../../lib/questionlib.php");
 
@@ -389,6 +389,8 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
 		$cmoptions->id = 0;
 		$cmoptions->shuffleanswers = 1;
         $cmoptions->questiondecimalpoints = 0;
+        $cmoptions->cmid = 48;
+        $cmoptions->thispageurl = ' ';
 		$attempt = 0;
 		if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
 			print_error( 'game_sudoku_showquestions_quiz: problem');
@@ -399,6 +401,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
 		$state->event = QUESTION_EVENTOPEN;
         $state->attempt = 0;
         $state->question = '';
+        $state->manualcommentformat = '';
 		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';

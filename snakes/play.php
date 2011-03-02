@@ -1,4 +1,4 @@
-<?php  // $Id: play.php,v 1.12 2010/08/27 10:21:36 bdaloukas Exp $
+<?php  // $Id: play.php,v 1.13 2011/03/02 14:32:46 bdaloukas Exp $
 
 // This files plays the game "Snakes and Ladders"
 
@@ -243,6 +243,7 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
         $cmoptions->optionflags->optionflags = 0;
 		$cmoptions->id = 0;
         $cmoptions->questiondecimalpoints = 2;
+        $cmoptions->thispageurl = ' ';
 		$attempt = 0;
 		if (!$QTYPES[$question->qtype]->create_session_and_responses( $question, $state, $cmoptions, $attempt)) {
 			error( 'game_sudoku_showquestions_quiz: problem');
@@ -253,6 +254,7 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query)
 		$state->event = QUESTION_EVENTOPEN;
         $state->attempt = 0;
         $state->question = '';
+        $state->manualcommentformat = '';
 		$options->scores->score = 0;
 		$question->maxgrade = 100;
 		$state->manualcomment = '';

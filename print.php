@@ -1,9 +1,9 @@
-<?php  // $Id: print.php,v 1.5 2010/07/26 00:07:14 bdaloukas Exp $
+<?php  // $Id: print.php,v 1.6 2011/03/02 14:32:45 bdaloukas Exp $
 /**
  * This page export the game to html
  * 
  * @author  bdaloukas
- * @version $Id: print.php,v 1.5 2010/07/26 00:07:14 bdaloukas Exp $
+ * @version $Id: print.php,v 1.6 2011/03/02 14:32:45 bdaloukas Exp $
  * @package game
  **/
     require_once("../../config.php");
@@ -29,8 +29,8 @@
     function game_print_cross( $game, $update)
     {
         require( "cross/play.php");
-        $attempt = false;
-        game_getattempt( $game, &$crossrec); 
+
+        $attempt = game_getattempt( $game, &$crossrec); 
         
         game_cross_play( $update, $game, $attempt, $crossrec, '', true, false, false, true, false, false, false);
 
